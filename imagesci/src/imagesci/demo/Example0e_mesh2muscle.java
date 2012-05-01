@@ -1,3 +1,18 @@
+/**
+ * ImageSci Toolkit
+ *
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
+ * The Johns Hopkins University
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.  The license is available for reading at:
+ * http://www.gnu.org/copyleft/lgpl.html
+ *
+ * @author Blake Lucas (blake@cs.jhu.edu)
+ */
 package imagesci.demo;
 
 import imagesci.mogac.WEMOGAC3D;
@@ -24,14 +39,22 @@ import edu.jhu.ece.iacl.jist.structures.geom.EmbeddedSurface;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Example0e_mesh2muscle.
+ */
 public class Example0e_mesh2muscle {
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String args[]) {
 		try {
 			File f = (args.length > 0) ? new File(args[0]) : new File(
 					PlaceHolder.class.getResource("skeleton.vtk").toURI());
-
 			EmbeddedSurface mesh = SurfaceReaderWriter.getInstance().read(f);
-			mesh.scaleVertices(1.8f);
 			int labelCount = SurfaceConnectedComponent.labelComponents(mesh);
 			MeshToMUSCLE mtos = new MeshToMUSCLE(256, 256, 64);
 

@@ -1,3 +1,18 @@
+/**
+ * ImageSci Toolkit
+ *
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
+ * The Johns Hopkins University
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.  The license is available for reading at:
+ * http://www.gnu.org/copyleft/lgpl.html
+ *
+ * @author Blake Lucas (blake@cs.jhu.edu)
+ */
 package imagesci.demo;
 
 import imagesci.utility.PhantomMetasphere;
@@ -15,7 +30,17 @@ import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
 import edu.jhu.ece.iacl.jist.io.PImageReaderWriter;
 import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Example0c_image4d.
+ */
 public class Example0c_image4d {
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			ImageData vecfield = NIFTIReaderWriter.getInstance().read(

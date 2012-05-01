@@ -1,3 +1,18 @@
+/**
+ * ImageSci Toolkit
+ *
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
+ * The Johns Hopkins University
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.  The license is available for reading at:
+ * http://www.gnu.org/copyleft/lgpl.html
+ *
+ * @author Blake Lucas (blake@cs.jhu.edu)
+ */
 package imagesci.demo;
 
 import imagesci.springls.EnrightDemo;
@@ -10,7 +25,17 @@ import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContour3D;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContourMesh3D;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContourVolume3D;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Example3g_enright256.
+ */
 public class Example3g_enright256 {
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		int rows = 256;
 		int cols = 256;
