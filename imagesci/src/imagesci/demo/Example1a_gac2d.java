@@ -34,14 +34,30 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 /**
  * The Class Example1a_gac2d.
  */
-public class Example1a_gac2d {
-	
+public class Example1a_gac2d extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static final void main(String[] args) {
+		(new Example1a_gac2d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Classic level set segmentation with a 2D geodesic active contour.";
+	}
+
+	@Override
+	public String getName() {
+		return "Active Contour 2D";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		File ftarget;
 		try {
 			ftarget = new File(PlaceHolder.class.getResource("target.png")

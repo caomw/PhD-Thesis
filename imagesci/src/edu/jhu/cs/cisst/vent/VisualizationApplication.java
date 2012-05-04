@@ -42,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import processing.core.PImage;
@@ -71,10 +72,10 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/** The play listeners. */
 	protected List<PlayPauseStopEventListener> playListeners = new LinkedList<PlayPauseStopEventListener>();
-	
+
 	/** The show pause button. */
 	protected boolean showPauseButton = false;
-	
+
 	/** The show tool bar. */
 	protected boolean showToolBar = false;
 	/** The visual. */
@@ -98,8 +99,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Instantiates a new visualization application.
-	 *
-	 * @param visual the visual
+	 * 
+	 * @param visual
+	 *            the visual
 	 */
 	public VisualizationApplication(Visualization visual) {
 		this.visual = visual;
@@ -108,8 +110,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Action performed.
-	 *
-	 * @param e the e
+	 * 
+	 * @param e
+	 *            the e
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
@@ -172,8 +175,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Select cache file to load.
-	 *
-	 * @param parent the parent
+	 * 
+	 * @param parent
+	 *            the parent
 	 * @return the file
 	 */
 
@@ -198,8 +202,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Select cache file to save.
-	 *
-	 * @param parent the parent
+	 * 
+	 * @param parent
+	 *            the parent
 	 * @return the file
 	 */
 
@@ -224,8 +229,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Capture.
-	 *
-	 * @param screenshotFile the screenshot file
+	 * 
+	 * @param screenshotFile
+	 *            the screenshot file
 	 */
 	public void capture(File screenshotFile) {
 		capture(screenshotFile, cacheFile);
@@ -233,9 +239,11 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Capture.
-	 *
-	 * @param screenshotFile the screenshot file
-	 * @param tmp the tmp
+	 * 
+	 * @param screenshotFile
+	 *            the screenshot file
+	 * @param tmp
+	 *            the tmp
 	 * @return the p image
 	 */
 	public PImage capture(File screenshotFile, File tmp) {
@@ -302,8 +310,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Run and wait.
-	 *
-	 * @param autoplay the autoplay
+	 * 
+	 * @param autoplay
+	 *            the autoplay
 	 */
 	public void runAndWait(boolean autoplay) {
 
@@ -352,8 +361,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Adds the listener.
-	 *
-	 * @param listener the listener
+	 * 
+	 * @param listener
+	 *            the listener
 	 */
 	public void addListener(PlayPauseStopEventListener listener) {
 		playListeners.add(listener);
@@ -361,8 +371,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Load cache.
-	 *
-	 * @param tmp the tmp
+	 * 
+	 * @param tmp
+	 *            the tmp
 	 */
 	public void loadCache(File tmp) {
 		ParamCollection params = ((ParamCollection) ParamFactory.fromXML(tmp));
@@ -385,8 +396,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Sets the show pause button.
-	 *
-	 * @param showPauseButton the new show pause button
+	 * 
+	 * @param showPauseButton
+	 *            the new show pause button
 	 */
 	public void setShowPauseButton(boolean showPauseButton) {
 		this.showPauseButton = showPauseButton;
@@ -394,8 +406,9 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 
 	/**
 	 * Sets the show tool bar.
-	 *
-	 * @param showToolBar the new show tool bar
+	 * 
+	 * @param showToolBar
+	 *            the new show tool bar
 	 */
 	public void setShowToolBar(boolean showToolBar) {
 		this.showToolBar = showToolBar;
@@ -406,6 +419,11 @@ public class VisualizationApplication extends JFrame implements ActionListener {
 	 */
 	protected void init() {
 		setTitle(visual.getName());
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			System.err.println("Couldn't use system look and feel.");
+		}
 		JToolBar toolbar = new JToolBar();
 		toolbar.setFloatable(false);
 		toolbar.setPreferredSize(new Dimension(300, 40));

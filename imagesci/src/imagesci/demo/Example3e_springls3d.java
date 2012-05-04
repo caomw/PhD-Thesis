@@ -21,6 +21,7 @@ import imagesci.utility.PhantomBubbles;
 import imagesci.utility.PhantomCube;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 
 import javax.vecmath.Point3d;
@@ -37,14 +38,30 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 /**
  * The Class Example3e_springls3d.
  */
-public class Example3e_springls3d {
-	
+public class Example3e_springls3d extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
+		(new Example3e_springls3d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Parametric active contour segmentation without re-sampling.";
+	}
+
+	@Override
+	public String getName() {
+		return "SpringLS 3D with No Re-sampling";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		boolean showGUI = true;
 		boolean volRender = false;
 		if (args.length > 0) {

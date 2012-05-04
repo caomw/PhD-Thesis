@@ -18,43 +18,48 @@ package imagesci.demo;
 import imagesci.springls.ActiveContour3D;
 import imagesci.springls.MeshToSpringls;
 import imagesci.springls.SpringlsActiveContour3D;
-import imagesci.utility.PhantomMetasphere;
 
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-import javax.vecmath.Point3i;
-
-import data.PlaceHolder;
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
-import edu.jhu.cs.cisst.vent.widgets.VisualizationImage2D;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContour3D;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContourVolume3D;
-import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
-import edu.jhu.ece.iacl.jist.io.PImageReaderWriter;
 import edu.jhu.ece.iacl.jist.io.SurfaceReaderWriter;
 import edu.jhu.ece.iacl.jist.structures.geom.EmbeddedSurface;
-import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Example0d_mesh2springls.
  */
-public class Example0d_mesh2springls {
-	
+public class Example0d_mesh2springls extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
+		(new Example0d_mesh2springls()).launch(args);
+	}
 
+	@Override
+	public String getDescription() {
+		return "Converts a triangle mesh to a level set.";
+	}
+
+	@Override
+	public String getName() {
+		return "Convert Mesh to SpringLS";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		try {
-			File f = (args.length > 0) ? new File(args[0]) : new File(
-					PlaceHolder.class.getResource("cow.stl").toURI());
+			File f = new File(workingDirectory, "cow.stl");
 			EmbeddedSurface mesh = SurfaceReaderWriter.getInstance().read(f);
 			MeshToSpringls mtos = new MeshToSpringls(256, 192, 128);
 			ImageDataFloat levelSet = mtos.solve(mesh);
@@ -77,9 +82,6 @@ public class Example0d_mesh2springls {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

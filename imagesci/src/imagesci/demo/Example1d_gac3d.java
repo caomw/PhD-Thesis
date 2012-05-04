@@ -20,6 +20,7 @@ import imagesci.utility.PhantomBubbles;
 import imagesci.utility.PhantomCube;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 
 import javax.vecmath.Point3d;
@@ -33,18 +34,31 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 /**
  * The Class Example1d_gac3d.
  */
-public class Example1d_gac3d {
-	
+public class Example1d_gac3d extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static final void main(String[] args) {
-		System.out.println("Starting Geodesic Active Contour test ...");
-		System.out
-				.println("Did you remember to install the latest OpenCL drivers for your GPU and CPU?");
-		Point3i dims = new Point3i(128, 128, 128);
+		(new Example1d_gac3d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Classic level set segmentation with a 3D topology-preserving geodesic active contour.";
+	}
+
+	@Override
+	public String getName() {
+		return "Active Contour 3D with Topology Constraint";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
+		new Point3i(128, 128, 128);
 		PhantomCube phantom = new PhantomCube(new Point3i(128, 128, 128));
 		phantom.setCenter(new Point3d(0, 0, 0));
 		phantom.setWidth(1.21);
@@ -75,9 +89,9 @@ public class Example1d_gac3d {
 		gac.setAdaptiveConvergence(false);
 		try {
 			gac.init();
-			VisualizationGAC3D vis = new VisualizationGAC3D(512, 512, gac);
+			VisualizationGAC3D vis = new VisualizationGAC3D(600, 600, gac);
 			VisualizationApplication app = new VisualizationApplication(vis);
-			app.setPreferredSize(new Dimension(920, 650));
+			app.setPreferredSize(new Dimension(1024, 768));
 			app.setShowToolBar(true);
 			app.addListener(vis);
 			app.runAndWait();

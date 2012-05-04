@@ -20,9 +20,7 @@ import imagesci.springls.SpringlsActiveContour2D;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.net.URISyntaxException;
 
-import data.PlaceHolder;
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContour2D;
 import edu.jhu.ece.iacl.jist.io.PImageReaderWriter;
@@ -32,77 +30,84 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 /**
  * The Class Example3b_springls2d.
  */
-public class Example3b_springls2d {
-	
+public class Example3b_springls2d extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
+		(new Example3b_springls2d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Parametric active contour segmentation with 2D topology-preserving Spring Level Sets.";
+	}
+
+	@Override
+	public String getName() {
+		return "SpringLS 2D with Topology Constraint";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		boolean showGUI = true;
 		if (args.length > 0 && args[0].equalsIgnoreCase("-nogui")) {
 			showGUI = false;
 		}
 		File ftarget;
-		try {
-			ftarget = new File(PlaceHolder.class.getResource("target.png")
-					.toURI());
+		ftarget = new File(workingDirectory, "target.png");
 
-			File fsource = new File(PlaceHolder.class.getResource("source.png")
-					.toURI());
+		File fsource = new File(workingDirectory, "source.png");
 
-			ImageDataFloat sourceImage = PImageReaderWriter
-					.convertToGray(PImageReaderWriter.getInstance().read(
-							fsource));
+		ImageDataFloat sourceImage = PImageReaderWriter
+				.convertToGray(PImageReaderWriter.getInstance().read(fsource));
 
-			ImageDataFloat refImage = PImageReaderWriter
-					.convertToGray(PImageReaderWriter.getInstance().read(
-							ftarget));
+		ImageDataFloat refImage = PImageReaderWriter
+				.convertToGray(PImageReaderWriter.getInstance().read(ftarget));
 
-			DistanceField2D df = new DistanceField2D();
-			float[][] img = sourceImage.toArray2d();
-			int r = img.length;
-			int c = img[0].length;
-			for (int i = 0; i < r; i++) {
-				for (int j = 0; j < c; j++) {
-					img[i][j] -= 127.5f;
-				}
+		DistanceField2D df = new DistanceField2D();
+		float[][] img = sourceImage.toArray2d();
+		int r = img.length;
+		int c = img[0].length;
+		for (int i = 0; i < r; i++) {
+			for (int j = 0; j < c; j++) {
+				img[i][j] -= 127.5f;
 			}
-			ImageDataFloat initImage = df.solve(sourceImage, 15.0);
+		}
+		ImageDataFloat initImage = df.solve(sourceImage, 15.0);
 
-			SpringlsActiveContour2D simulator = new SpringlsActiveContour2D();
-			simulator.setPreserveTopology(true);
-			simulator.setTargetPressure(230.0f);
-			simulator.setAdvectionWeight(0.0f);
-			simulator.setCurvatureWeight(0.1f);
-			simulator.setPressureWeight(-1.0f);
-			simulator.setResamplingInterval(5);
-			simulator.setMaxIterations(800);
-			simulator.setPressureImage(refImage);
-			simulator.setInitialDistanceFieldImage(initImage);
-			if (showGUI) {
-				try {
-					simulator.init();
-					VisualizationSpringlsActiveContour2D visual = new VisualizationSpringlsActiveContour2D(
-							600, 600, simulator);
-					VisualizationApplication app = new VisualizationApplication(
-							visual);
-					app.setMinimumSize(new Dimension(1024, 768));
-					app.setShowToolBar(true);
-					app.addListener(visual);
-					app.runAndWait();
-					visual.dispose();
-					System.exit(0);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				simulator.solve();
+		SpringlsActiveContour2D simulator = new SpringlsActiveContour2D();
+		simulator.setPreserveTopology(true);
+		simulator.setTargetPressure(230.0f);
+		simulator.setAdvectionWeight(0.0f);
+		simulator.setCurvatureWeight(0.1f);
+		simulator.setPressureWeight(-1.0f);
+		simulator.setResamplingInterval(5);
+		simulator.setMaxIterations(800);
+		simulator.setPressureImage(refImage);
+		simulator.setInitialDistanceFieldImage(initImage);
+		if (showGUI) {
+			try {
+				simulator.init();
+				VisualizationSpringlsActiveContour2D visual = new VisualizationSpringlsActiveContour2D(
+						600, 600, simulator);
+				VisualizationApplication app = new VisualizationApplication(
+						visual);
+				app.setMinimumSize(new Dimension(1024, 768));
+				app.setShowToolBar(true);
+				app.addListener(visual);
+				app.runAndWait();
+				visual.dispose();
+				System.exit(0);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} else {
+			simulator.solve();
 		}
 	}
 

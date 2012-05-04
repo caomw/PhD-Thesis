@@ -17,9 +17,7 @@ package imagesci.demo;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.net.URISyntaxException;
 
-import data.PlaceHolder;
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationImage3D;
 import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
@@ -29,28 +27,38 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 /**
  * The Class Example0b_image3d.
  */
-public class Example0b_image3d {
-	
+public class Example0b_image3d extends AbstractExample {
+	public static void main(String[] args) {
+		(new Example0b_image3d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Displays a 3D image in tri-planar view.";
+	}
+
+	@Override
+	public String getName() {
+		return "View 3D Image";
+	}
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
-	public static final void main(String[] args) {
-		try {
-			File imgFile = (args.length > 0) ? new File(args[0]) : new File(
-					PlaceHolder.class.getResource("metacube.nii").toURI());
-			ImageData img = NIFTIReaderWriter.getInstance().read(imgFile);
+	@Override
+	public void launch(File workingDirectory, String[] args) {
+		File imgFile = new File(workingDirectory, "metacube.nii");
+		ImageData img = NIFTIReaderWriter.getInstance().read(imgFile);
 
-			VisualizationImage3D vis = new VisualizationImage3D(512, 512);
-			vis.addImage(img);
-			VisualizationApplication app = new VisualizationApplication(vis);
-			app.setPreferredSize(new Dimension(920, 600));
-			app.runAndWait();
-			System.exit(0);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		VisualizationImage3D vis = new VisualizationImage3D(600, 600);
+		vis.addImage(img);
+		VisualizationApplication app = new VisualizationApplication(vis);
+		app.setPreferredSize(new Dimension(1024, 768));
+		app.runAndWait();
+		System.exit(0);
+
 	}
 }

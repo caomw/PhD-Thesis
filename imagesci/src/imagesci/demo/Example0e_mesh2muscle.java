@@ -17,23 +17,14 @@ package imagesci.demo;
 
 import imagesci.mogac.WEMOGAC3D;
 import imagesci.muscle.MeshToMUSCLE;
-import imagesci.muscle.MuscleActiveContour3D;
-import imagesci.springls.ActiveContour3D;
-import imagesci.springls.MeshToSpringls;
-import imagesci.springls.SpringlsActiveContour3D;
 import imagesci.utility.SurfaceConnectedComponent;
 
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-import data.PlaceHolder;
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationMOGAC3D;
-import edu.jhu.cs.cisst.vent.widgets.VisualizationMUSCLE3D;
-import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContour3D;
-import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContourVolume3D;
 import edu.jhu.ece.iacl.jist.io.SurfaceReaderWriter;
 import edu.jhu.ece.iacl.jist.structures.geom.EmbeddedSurface;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
@@ -43,17 +34,32 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 /**
  * The Class Example0e_mesh2muscle.
  */
-public class Example0e_mesh2muscle {
-	
+public class Example0e_mesh2muscle extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String args[]) {
+		(new Example0e_mesh2muscle()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Converts a triangle mesh to a collection of level sets represented as a label mask and distance field.";
+	}
+
+	@Override
+	public String getName() {
+		return "Convert Mesh to MUSCLE";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		try {
-			File f = (args.length > 0) ? new File(args[0]) : new File(
-					PlaceHolder.class.getResource("skeleton.vtk").toURI());
+			File f = new File(workingDirectory, "skeleton.vtk");
 			EmbeddedSurface mesh = SurfaceReaderWriter.getInstance().read(f);
 			int labelCount = SurfaceConnectedComponent.labelComponents(mesh);
 			MeshToMUSCLE mtos = new MeshToMUSCLE(256, 256, 64);
@@ -71,8 +77,9 @@ public class Example0e_mesh2muscle {
 			simulator.setCurvatureWeight(0.5f);
 			try {
 				simulator.init(levelSet, labelImage, false);
-				for (int k = 0; k < 5; k++)
+				for (int k = 0; k < 5; k++) {
 					simulator.step();
+				}
 				VisualizationMOGAC3D vis = new VisualizationMOGAC3D(600, 600,
 						simulator);
 				VisualizationApplication app = new VisualizationApplication(vis);
@@ -84,9 +91,6 @@ public class Example0e_mesh2muscle {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

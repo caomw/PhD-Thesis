@@ -21,6 +21,7 @@ import imagesci.utility.PhantomBubbles;
 import imagesci.utility.PhantomCube;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 
 import javax.vecmath.Point3d;
@@ -37,14 +38,30 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 /**
  * The Class Example3d_springls3d.
  */
-public class Example3d_springls3d {
-	
+public class Example3d_springls3d extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
+		(new Example3d_springls3d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Parametric active contour segmentation with 3D topology-preserving Spring Level Sets.";
+	}
+
+	@Override
+	public String getName() {
+		return "SpringLS 3D with Topology Constraint";
+	}
+
+	@Override
+	public void launch(File workingdirectory, String[] args) {
 		boolean showGUI = true;
 		boolean volRender = true;
 		if (args.length > 0) {
@@ -95,11 +112,11 @@ public class Example3d_springls3d {
 			try {
 				simulator.init();
 				VisualizationSpringlsActiveContour3D vis = (volRender) ? new VisualizationSpringlsActiveContourVolume3D(
-						512, 512, simulator)
-						: new VisualizationSpringlsActiveContourMesh3D(512,
-								512, simulator);
+						600, 600, simulator)
+						: new VisualizationSpringlsActiveContourMesh3D(600,
+								600, simulator);
 				VisualizationApplication app = new VisualizationApplication(vis);
-				app.setPreferredSize(new Dimension(920, 650));
+				app.setPreferredSize(new Dimension(1024, 768));
 				app.setShowToolBar(true);
 				app.addListener(vis);
 				app.runAndWait();

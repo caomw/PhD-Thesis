@@ -19,6 +19,7 @@ import imagesci.springls.EnrightDemo;
 import imagesci.springls.SpringlsActiveContour3D;
 
 import java.awt.Dimension;
+import java.io.File;
 
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContour3D;
@@ -29,14 +30,30 @@ import edu.jhu.cs.cisst.vent.widgets.VisualizationSpringlsActiveContourVolume3D;
 /**
  * The Class Example3g_enright256.
  */
-public class Example3g_enright256 {
-	
+public class Example3g_enright256 extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
+		(new Example3g_enright256()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Deforms a sphere into a disk and back again with an invicid flow.";
+	}
+
+	@Override
+	public String getName() {
+		return "Enright Deformation Test at 256^3";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		int rows = 256;
 		int cols = 256;
 		int slices = 256;

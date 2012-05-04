@@ -21,6 +21,7 @@ import imagesci.utility.PhantomMetasphere;
 import imagesci.utility.RandomSphereCollection;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.io.IOException;
 
 import javax.vecmath.Point3i;
@@ -36,14 +37,30 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 /**
  * The Class Example2g_wemogac3d.
  */
-public class Example2g_wemogac3d {
-	
+public class Example2g_wemogac3d extends AbstractExample {
+
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
+		(new Example2g_wemogac3d()).launch(args);
+	}
+
+	@Override
+	public String getDescription() {
+		return "Multi-object segmentation in 3D with Work-Efficient MOGAC";
+	}
+
+	@Override
+	public String getName() {
+		return "Work-Efficient MOGAC 3D";
+	}
+
+	@Override
+	public void launch(File workingDirectory, String[] args) {
 		boolean showGUI = true;
 		if (args.length > 0 && args[0].equalsIgnoreCase("-nogui")) {
 			showGUI = false;
