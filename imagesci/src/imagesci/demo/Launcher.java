@@ -130,7 +130,7 @@ public class Launcher extends JFrame implements TreeSelectionListener,
 	 *            the arguments
 	 */
 	public static void main(String[] args) {
-		File workingDirectory = new File("");
+		File workingDirectory = new File("./");
 		if (args.length > 0) {
 			workingDirectory = new File(args[0]);
 		}

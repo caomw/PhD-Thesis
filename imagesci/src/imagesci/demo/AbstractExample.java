@@ -6,19 +6,19 @@ import java.net.URISyntaxException;
 import data.PlaceHolder;
 
 public abstract class AbstractExample implements Runnable {
-	public static File defaultWorkingDirectory;
+	public static File defaultWorkingDirectory=new File("./data/");
 	protected File workingDirectory;
+	/*
 	static {
 		try {
-			defaultWorkingDirectory = new File(PlaceHolder.class.getResource(
-					"./").toURI());
+			defaultWorkingDirectory = new File(PlaceHolder.class.getResource("./").toURI());
 		} catch (URISyntaxException e) {
 			defaultWorkingDirectory = new File("./");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
+	 */
 	public void setWorkingDirectory(File workingDirectory) {
 		this.workingDirectory = workingDirectory;
 	}
