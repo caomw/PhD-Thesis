@@ -89,11 +89,11 @@ public class Example2g_wemogac3d extends AbstractExample {
 			try {
 				activeContour.init(initDistField, initLabels, false);
 
-				VisualizationMOGAC3D visual = new VisualizationMOGAC3D(512,
-						512, activeContour);
+				VisualizationMOGAC3D visual = new VisualizationMOGAC3D(600,
+						600, activeContour);
 				VisualizationApplication app = new VisualizationApplication(
 						visual);
-				app.setPreferredSize(new Dimension(920, 650));
+				app.setPreferredSize(new Dimension(1024, 768));
 				app.setShowToolBar(true);
 				app.addListener(visual);
 				app.runAndWait();

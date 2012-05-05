@@ -18,6 +18,7 @@ package imagesci.springls;
 import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -25,58 +26,61 @@ import java.nio.IntBuffer;
 import com.jogamp.opencl.CLBuffer;
 import com.jogamp.opencl.CLKernel;
 
+import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
+import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class SpringlsEvolveLevelSet.
  */
 public class SpringlsEvolveLevelSet3D {
-	
+
 	/** The Constant MAX_DISTANCE. */
 	public static final float MAX_DISTANCE = 3.5f;
 	/** The Constant MAX_LAYERS. */
-	public static final int MAX_LAYERS = 2;
-	
+	public static final int MAX_LAYERS = 3;
+
 	/** The Constant STRIDE. */
 	public static final int STRIDE = SpringlsCommon3D.STRIDE;
-	
+
 	/** The active list array size. */
 	protected int activeListArraySize;
-	
+
 	/** The active list buffer. */
 	protected CLBuffer<IntBuffer> activeListBuffer;
-	
+
 	/** The active list size. */
 	protected int activeListSize;
-	
+
 	/** The add elapsed time. */
 	protected long addElapsedTime = 0;
 	/** The commons. */
 	protected SpringlsCommon3D commons;
-	
+
 	/** The compact elapsed time. */
 	protected long compactElapsedTime = 0;
 	/** The curvature weight. */
 	protected float curvatureWeight = 0.25f;
-	
+
 	/** The delete elapsed time. */
 	protected long deleteElapsedTime = 0;
 	/** The dice bins. */
 	CLBuffer<IntBuffer> diceBins = null;
-	
+
 	/** The history buffer. */
 	protected CLBuffer<ByteBuffer> historyBuffer = null;
 	/** The max iterations. */
 	protected int maxIterations = 4;
-	
+
 	/** The max tmp buffer. */
 	protected CLBuffer<FloatBuffer> maxTmpBuffer = null;
-	
+
 	/** The max value buffer. */
 	protected CLBuffer<IntBuffer> maxValueBuffer = null;
-	
+
 	/** The new signed level set buffer. */
 	protected CLBuffer<FloatBuffer> newSignedLevelSetBuffer;
-	
+
 	/** The offset buffer. */
 	protected CLBuffer<IntBuffer> offsetBuffer = null;
 
@@ -150,7 +154,7 @@ public class SpringlsEvolveLevelSet3D {
 
 	/**
 	 * Evolve.
-	 *
+	 * 
 	 * @return the double
 	 */
 	public double evolve() {
@@ -169,8 +173,9 @@ public class SpringlsEvolveLevelSet3D {
 
 	/**
 	 * Evolve.
-	 *
-	 * @param checkConvergence the check convergence
+	 * 
+	 * @param checkConvergence
+	 *            the check convergence
 	 * @return the double
 	 */
 	public double evolve(boolean checkConvergence) {
@@ -197,7 +202,7 @@ public class SpringlsEvolveLevelSet3D {
 
 	/**
 	 * Delete elements.
-	 *
+	 * 
 	 * @return the int
 	 */
 	private int deleteElements() {
@@ -282,7 +287,7 @@ public class SpringlsEvolveLevelSet3D {
 
 	/**
 	 * Adds the elements.
-	 *
+	 * 
 	 * @return the int
 	 */
 	private int addElements() {
@@ -438,35 +443,23 @@ public class SpringlsEvolveLevelSet3D {
 	/**
 	 * Extend unsigned distance field.
 	 * 
+	 * @param layers
+	 *            the layers
 	 */
-	public void extendSignedDistanceField() {
-		commons.kernelMap.get(SpringlsCommon3D.UPDATE_DISTANCE_FIELD);
-		CLKernel copyLevelSet = commons.kernelMap.get("copyLevelSet");
-
-		CLKernel thresholdDistanceField = commons.kernelMap
-				.get("thresholdDistanceField");
-		CLBuffer<FloatBuffer> updateBuff = commons.context.createFloatBuffer(
-				SpringlsCommon3D.roundToWorkgroupPower(commons.rows
-						* commons.cols * commons.slices), READ_WRITE,
-				USE_BUFFER);
-
-		thresholdDistanceField
-				.putArgs(commons.signedLevelSetBuffer, updateBuff).rewind();
-		commons.queue.put1DRangeKernel(
-				thresholdDistanceField,
-				0,
-				SpringlsCommon3D.roundToWorkgroupPower(commons.rows
-						* commons.slices * commons.cols),
-				SpringlsCommon3D.WORKGROUP_SIZE);
-
-		copyLevelSet.putArgs(updateBuff, commons.signedLevelSetBuffer).rewind();
-		commons.queue.put1DRangeKernel(
-				copyLevelSet,
-				0,
-				SpringlsCommon3D.roundToWorkgroupPower(commons.rows
-						* commons.slices * commons.cols),
-				SpringlsCommon3D.WORKGROUP_SIZE);
-		updateBuff.release();
+	public void extendSignedDistanceField(int layers) {
+		CLKernel extendDistanceField = commons.kernelMap
+				.get("extendSignedDistanceField");
+		for (int i = MAX_LAYERS-1; i < layers; i++) {
+			extendDistanceField.putArgs(commons.signedLevelSetBuffer).putArg(i)
+					.rewind();
+			commons.queue.put1DRangeKernel(
+					extendDistanceField,
+					0,
+					SpringlsCommon3D.roundToWorkgroupPower(commons.rows
+							* commons.cols * commons.slices),
+					SpringlsCommon3D.WORKGROUP_SIZE);
+		}
+		commons.queue.finish();
 	}
 
 	/**
@@ -493,8 +486,9 @@ public class SpringlsEvolveLevelSet3D {
 
 	/**
 	 * Sets the adaptive update.
-	 *
-	 * @param adaptive the new adaptive update
+	 * 
+	 * @param adaptive
+	 *            the new adaptive update
 	 */
 	public void setAdaptiveUpdate(boolean adaptive) {
 		this.useAdaptiveActiveSet = adaptive;
@@ -502,8 +496,9 @@ public class SpringlsEvolveLevelSet3D {
 
 	/**
 	 * Sets the adaptive update interval.
-	 *
-	 * @param interval the new adaptive update interval
+	 * 
+	 * @param interval
+	 *            the new adaptive update interval
 	 */
 	public void setAdaptiveUpdateInterval(int interval) {
 		this.sampling_interval = interval;
@@ -567,7 +562,7 @@ public class SpringlsEvolveLevelSet3D {
 			commons.queue.put1DRangeKernel(evolveLevelSet, 0, global_size,
 					SpringlsCommon3D.WORKGROUP_SIZE);
 		}
-		for (int i = 1; i <= MAX_LAYERS + 1; i++) {
+		for (int i = 1; i <= MAX_LAYERS; i++) {
 			updateDistanceField
 					.putArgs(activeListBuffer, commons.signedLevelSetBuffer,
 							newSignedLevelSetBuffer).putArg(i)

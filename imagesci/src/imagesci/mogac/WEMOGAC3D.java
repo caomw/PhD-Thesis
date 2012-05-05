@@ -356,7 +356,7 @@ public class WEMOGAC3D extends MOGAC3D {
 				distanceFieldBuffer, oldDistanceFieldBuffer).rewind();
 		queue.put1DRangeKernel(labelsToLevelSet, 0, roundToWorkgroupPower(rows
 				* cols * slices), WORKGROUP_SIZE);
-		for (int i = 1; i <= 2 * maxLayers; i++) {
+		for (int i = 1; i <= 2 * MAX_LAYERS; i++) {
 			extendDistanceField
 					.putArgs(oldDistanceFieldBuffer, distanceFieldBuffer,
 							imageLabelBuffer).putArg(i).rewind();
@@ -490,7 +490,7 @@ public class WEMOGAC3D extends MOGAC3D {
 			}
 			queue.put1DRangeKernel(applyForces, 0, global_size, WORKGROUP_SIZE);
 		}
-		for (int i = 1; i <= maxLayers; i++) {
+		for (int i = 1; i <= MAX_LAYERS; i++) {
 			extendDistanceField
 					.putArgs(activeListBuffer, oldDistanceFieldBuffer,
 							distanceFieldBuffer, imageLabelBuffer).putArg(i)

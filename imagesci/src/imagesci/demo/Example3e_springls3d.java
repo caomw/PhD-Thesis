@@ -57,7 +57,7 @@ public class Example3e_springls3d extends AbstractExample {
 
 	@Override
 	public String getName() {
-		return "SpringLS 3D with No Re-sampling";
+		return "SpringLS 3D without Re-sampling";
 	}
 
 	@Override
@@ -113,11 +113,11 @@ public class Example3e_springls3d extends AbstractExample {
 			try {
 				simulator.init();
 				VisualizationSpringlsActiveContour3D vis = (volRender) ? new VisualizationSpringlsActiveContourVolume3D(
-						512, 512, simulator)
-						: new VisualizationSpringlsActiveContourMesh3D(512,
-								512, simulator);
+						600, 600, simulator)
+						: new VisualizationSpringlsActiveContourMesh3D(600,
+								600, simulator);
 				VisualizationApplication app = new VisualizationApplication(vis);
-				app.setPreferredSize(new Dimension(920, 650));
+				app.setPreferredSize(new Dimension(1024, 768));
 				app.setShowToolBar(true);
 				app.addListener(vis);
 				app.runAndWait();

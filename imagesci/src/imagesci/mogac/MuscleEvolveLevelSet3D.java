@@ -196,24 +196,6 @@ public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 		return delete;
 	}
 
-	/**
-	 * Extend distance field.
-	 * 
-	 * @param distFieldExtend
-	 *            the dist field extend
-	 */
-	public void extendDistanceField(int distFieldExtend) {
-		CLKernel extendDistanceField = commons.kernelMap
-				.get(SpringlsCommon3D.EXTEND_DISTANCE_FIELD);
-		for (int i = 0; i < distFieldExtend; i++) {
-			extendDistanceField.putArgs(commons.unsignedLevelSetBuffer)
-					.putArg(i).rewind();
-			commons.queue.put1DRangeKernel(extendDistanceField, 0, commons.rows
-					* commons.cols * commons.slices,
-					SpringlsCommon3D.WORKGROUP_SIZE);
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.jhu.cs.cisst.algorithms.mogac.WEMOGAC3D#rebuildNarrowBand()
 	 */
@@ -286,7 +268,7 @@ public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 
 		}
 
-		for (int i = 1; i <= maxLayers; i++) {
+		for (int i = 1; i <= MAX_LAYERS; i++) {
 			extendDistanceField
 					.putArgs(activeListBuffer, oldDistanceFieldBuffer,
 							distanceFieldBuffer, imageLabelBuffer).putArg(i)
@@ -354,4 +336,19 @@ public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 		return true;
 	}
 
+	public void extendDistanceField(int layers) {
+		CLKernel extendDistanceField = commons.kernelMap
+				.get("extendSignedDistanceField");
+		for (int i = MAX_LAYERS - 1; i < layers; i++) {
+			extendDistanceField.putArgs(commons.signedLevelSetBuffer).putArg(i)
+					.rewind();
+			commons.queue.put1DRangeKernel(
+					extendDistanceField,
+					0,
+					SpringlsCommon3D.roundToWorkgroupPower(commons.rows
+							* commons.cols * commons.slices),
+					SpringlsCommon3D.WORKGROUP_SIZE);
+		}
+		commons.queue.finish();
+	}
 }

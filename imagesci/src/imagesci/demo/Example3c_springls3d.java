@@ -112,7 +112,7 @@ public class Example3c_springls3d extends AbstractExample {
 			try {
 				simulator.init();
 				VisualizationSpringlsActiveContour3D vis = (volRender) ? new VisualizationSpringlsActiveContourVolume3D(
-						512, 512, simulator)
+						600, 600, simulator)
 						: new VisualizationSpringlsActiveContourMesh3D(600,
 								600, simulator);
 				VisualizationApplication app = new VisualizationApplication(vis);

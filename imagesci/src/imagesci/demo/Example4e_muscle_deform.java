@@ -16,9 +16,9 @@ import edu.jhu.cs.cisst.vent.widgets.VisualizationMUSCLE3D;
 import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 
-public class Example4d_muscle_deform extends AbstractExample {
+public class Example4e_muscle_deform extends AbstractExample {
 	public static void main(String[] args) {
-		(new Example4d_muscle_deform()).launch(args);
+		(new Example4e_muscle_deform()).launch(args);
 	}
 
 	@Override

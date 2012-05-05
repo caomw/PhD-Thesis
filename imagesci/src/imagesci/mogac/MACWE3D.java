@@ -269,7 +269,7 @@ public class MACWE3D extends WEMOGAC3D {
 			}
 			queue.put1DRangeKernel(applyForces, 0, global_size, WORKGROUP_SIZE);
 		}
-		for (int i = 1; i <= maxLayers; i++) {
+		for (int i = 1; i <= MAX_LAYERS; i++) {
 			extendDistanceField
 					.putArgs(activeListBuffer, oldDistanceFieldBuffer,
 							distanceFieldBuffer, imageLabelBuffer).putArg(i)

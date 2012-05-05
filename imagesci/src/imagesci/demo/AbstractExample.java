@@ -5,8 +5,9 @@ import java.net.URISyntaxException;
 
 import data.PlaceHolder;
 
-public abstract class AbstractExample {
+public abstract class AbstractExample implements Runnable {
 	public static File defaultWorkingDirectory;
+	protected File workingDirectory;
 	static {
 		try {
 			defaultWorkingDirectory = new File(PlaceHolder.class.getResource(
@@ -18,9 +19,18 @@ public abstract class AbstractExample {
 		}
 	}
 
-	public abstract String getDescription();
+	public void setWorkingDirectory(File workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}
 
 	public abstract String getName();
+
+	public void run() {
+		this.launch((workingDirectory == null) ? defaultWorkingDirectory
+				: workingDirectory, new String[] {});
+	}
+
+	public abstract String getDescription();
 
 	public abstract void launch(File workingDirectory, String args[]);
 

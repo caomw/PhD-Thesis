@@ -1722,3 +1722,34 @@ __kernel void markStaticSpringlsMogac(
 		capsules[id]=capsule;
 	}
 }
+kernel void extendUnsignedDistanceField(
+global float* unsignedLevelSet,uint band){
+	uint id=get_global_id(0);
+	int i,j,k;
+	getRowColSlice(id,&i,&j,&k);
+	float v111;
+	float v011;
+	float v121;
+	float v101;
+	float v211;
+	float v110;
+	float v112;	
+	v111 =getImageValue(unsignedLevelSet,i, j, k);
+	v011 =getImageValue(unsignedLevelSet,i - 1, j, k);
+	v121 =getImageValue(unsignedLevelSet,i, j + 1, k);
+	v101 =getImageValue(unsignedLevelSet,i, j - 1, k);
+	v211 =getImageValue(unsignedLevelSet,i + 1, j, k);
+	v110 =getImageValue(unsignedLevelSet,i, j, k - 1);
+	v112 =getImageValue(unsignedLevelSet,i, j, k + 1);
+	if(v111>band+MAX_VEXT){
+		v111=1E10f;
+		v111=min(v011,v111);
+		v111=min(v121,v111);
+		v111=min(v101,v111);
+		v111=min(v211,v111);
+		v111=min(v110,v111);
+		v111=min(v112,v111);	
+		v111+=1.0f;	
+		unsignedLevelSet[getIndex(i,j,k)]=v111;
+	} 
+}

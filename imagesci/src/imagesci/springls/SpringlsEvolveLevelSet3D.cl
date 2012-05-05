@@ -203,6 +203,53 @@ global float* unsignedLevelSet,uint band){
 		unsignedLevelSet[getIndex(i,j,k)]=v111;
 	} 
 }
+kernel void extendSignedDistanceField(
+global float* signedLevelSet,int band){
+	uint id=get_global_id(0);
+	int i,j,k;
+	if(id>=ROWS*COLS*SLICES)return;
+	getRowColSlice(id,&i,&j,&k);
+	float v111;
+	float v011;
+	float v121;
+	float v101;
+	float v211;
+	float v110;
+	float v112;		
+	v111 =signedLevelSet[id];
+	float oldVal=v111;
+	v011 =getImageValue(signedLevelSet,i - 1, j, k);
+	v121 =getImageValue(signedLevelSet,i, j + 1, k);
+	v101 =getImageValue(signedLevelSet,i, j - 1, k);
+	v211 =getImageValue(signedLevelSet,i + 1, j, k);
+	v110 =getImageValue(signedLevelSet,i, j, k - 1);
+	v112 =getImageValue(signedLevelSet,i, j, k + 1);
+	if(v111<-band+0.5f){
+		v111=-(1E10);
+		v111=(v011>1)?v111:max(v011,v111);
+		v111=(v121>1)?v111:max(v121,v111);
+		v111=(v101>1)?v111:max(v101,v111);
+		v111=(v211>1)?v111:max(v211,v111);
+		v111=(v110>1)?v111:max(v110,v111);
+		v111=(v112>1)?v111:max(v112,v111);
+		v111-=1.0f;		
+	} else if(v111>band-0.5f){
+		v111=(1E10);
+		v111=(v011<-1)?v111:min(v011,v111);
+		v111=(v121<-1)?v111:min(v121,v111);
+		v111=(v101<-1)?v111:min(v101,v111);
+		v111=(v211<-1)?v111:min(v211,v111);
+		v111=(v110<-1)?v111:min(v110,v111);
+		v111=(v112<-1)?v111:min(v112,v111);	
+		v111+=1.0f;	
+	}
+	
+	if(oldVal*v111>0){
+		signedLevelSet[id]=v111;		
+	} else {
+		signedLevelSet[id]=oldVal;
+	}
+}
 __kernel void plugLevelSet(global int* activeList,__global float* signedLevelSet,int elements){
 	uint id=get_global_id(0);
 	if(id>=elements)return;

@@ -47,12 +47,12 @@ public class Example4c_muscle3d extends AbstractExample {
 
 	@Override
 	public String getDescription() {
-		return "Parametric multi-object active contour segmentation with 3D topology-preserving MUSCLE.";
+		return "Parametric multi-object active contour segmentation without resampling.";
 	}
 
 	@Override
 	public String getName() {
-		return "MUSCLE 3D with Topology Constraint";
+		return "MUSCLE 3D without Re-sampling";
 	}
 
 	@Override
@@ -87,11 +87,11 @@ public class Example4c_muscle3d extends AbstractExample {
 		if (showGUI) {
 			try {
 				activeContour.init();
-				VisualizationMUSCLE3D visual = new VisualizationMUSCLE3D(512,
-						512, activeContour);
+				VisualizationMUSCLE3D visual = new VisualizationMUSCLE3D(600,
+						600, activeContour);
 				VisualizationApplication app = new VisualizationApplication(
 						visual);
-				app.setPreferredSize(new Dimension(920, 650));
+				app.setPreferredSize(new Dimension(1024, 768));
 				app.setShowToolBar(true);
 				app.addListener(visual);
 				app.runAndWait();

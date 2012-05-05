@@ -56,7 +56,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 public class MuscleActiveContour3D extends SpringlsActiveContour3D {
 
 	/** The evolve. */
-	public WEMOGAC3D evolve;
+	public MuscleEvolveLevelSet3D evolve;
 
 	/** The copy mesh to capsules. */
 	protected ImageDataInt labelImage;
@@ -381,6 +381,7 @@ public class MuscleActiveContour3D extends SpringlsActiveContour3D {
 				if ((commons).activeListSize == 0) {
 					return false;
 				}
+				evolve.extendDistanceField(15);
 				updateLevelSetTime = System.nanoTime() - startTime;
 			}
 		} else {
@@ -475,8 +476,8 @@ public class MuscleActiveContour3D extends SpringlsActiveContour3D {
 					"ufo_distfield.nii").toURI());
 			ImageDataInt initLabels = new ImageDataInt(NIFTIReaderWriter
 					.getInstance().read(flabel));
-			ImageDataFloat initDistfield = new ImageDataFloat(
-					NIFTIReaderWriter.getInstance().read(fdistfield));
+			ImageDataFloat initDistfield = new ImageDataFloat(NIFTIReaderWriter
+					.getInstance().read(fdistfield));
 			PhantomMetasphere metasphere = new PhantomMetasphere(new Point3i(
 					128, 128, 128));
 			metasphere.setNoiseLevel(0.1);

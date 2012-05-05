@@ -158,7 +158,7 @@ public class MOGAC3D extends AbstractCalculation {
 	protected int maxIterations = 100;
 
 	/** The max layers. */
-	protected int maxLayers = 3;
+	protected final int MAX_LAYERS = 3;
 
 	/** The max speed. */
 	protected float maxSpeed = 0.999f;;
@@ -222,8 +222,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Instantiates a new mOGA c3 d.
-	 *
-	 * @param refImage the ref image
+	 * 
+	 * @param refImage
+	 *            the ref image
 	 */
 	public MOGAC3D(ImageData refImage) {
 		this(refImage, CLDevice.Type.GPU);
@@ -231,10 +232,13 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Instantiates a new mGAC open c l3 d.
-	 *
-	 * @param refImage the ref image
-	 * @param context the context
-	 * @param queue the queue
+	 * 
+	 * @param refImage
+	 *            the ref image
+	 * @param context
+	 *            the context
+	 * @param queue
+	 *            the queue
 	 */
 	public MOGAC3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		this.image = refImage;
@@ -278,10 +282,13 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Solve.
-	 *
-	 * @param unsignedImage the unsigned image
-	 * @param labelImage the label image
-	 * @param containsOverlaps the contains overlaps
+	 * 
+	 * @param unsignedImage
+	 *            the unsigned image
+	 * @param labelImage
+	 *            the label image
+	 * @param containsOverlaps
+	 *            the contains overlaps
 	 * @return the image data float
 	 */
 	public ImageDataFloat solve(ImageDataFloat unsignedImage,
@@ -316,10 +323,13 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Inits the.
-	 *
-	 * @param labelImage the label image
-	 * @param containsOverlaps the contains overlaps
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param labelImage
+	 *            the label image
+	 * @param containsOverlaps
+	 *            the contains overlaps
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void init(ImageDataInt labelImage, boolean containsOverlaps)
 			throws IOException {
@@ -328,11 +338,15 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Inits the.
-	 *
-	 * @param unsignedImage the unsigned image
-	 * @param labelImage the label image
-	 * @param containsOverlaps the contains overlaps
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param unsignedImage
+	 *            the unsigned image
+	 * @param labelImage
+	 *            the label image
+	 * @param containsOverlaps
+	 *            the contains overlaps
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void init(ImageDataFloat unsignedImage, ImageDataInt labelImage,
 			boolean containsOverlaps) throws IOException {
@@ -570,7 +584,7 @@ public class MOGAC3D extends AbstractCalculation {
 				distanceFieldBuffer, oldDistanceFieldBuffer).rewind();
 		queue.put1DRangeKernel(labelsToLevelSet, 0, roundToWorkgroupPower(rows
 				* cols * slices), WORKGROUP_SIZE);
-		for (int i = 1; i <= 2 * maxLayers; i++) {
+		for (int i = 1; i <= 2 * MAX_LAYERS; i++) {
 			extendDistanceField
 					.putArgs(oldDistanceFieldBuffer, distanceFieldBuffer,
 							imageLabelBuffer).putArg(i).rewind();
@@ -582,7 +596,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Step.
-	 *
+	 * 
 	 * @return true, if successful
 	 */
 	public boolean step() {
@@ -753,17 +767,16 @@ public class MOGAC3D extends AbstractCalculation {
 								distanceFieldBuffer, imageLabelBuffer,
 								topologyRuleBuffer).putArg(0.5f).putArg(0)
 						.putArg(0).putArg(1).rewind();
-				queue.put1DRangeKernel(applyForces, 0, global_size / 8 / 8,
+				queue.put1DRangeKernel(applyForces, 0, global_size / 8,
 						WORKGROUP_SIZE);
-
 				applyForces
 						.putArgs(oldDistanceFieldBuffer, oldImageLabelBuffer,
 								deltaLevelSetBuffer, idBuffer,
 								distanceFieldBuffer, imageLabelBuffer,
 								topologyRuleBuffer).putArg(0.5f).putArg(0)
 						.putArg(1).putArg(1).rewind();
-				queue.put1DRangeKernel(applyForces, 0,
-						(rows * cols * slices) / 8, WORKGROUP_SIZE);
+				queue.put1DRangeKernel(applyForces, 0, global_size / 8,
+						WORKGROUP_SIZE);
 
 				applyForces
 						.putArgs(oldDistanceFieldBuffer, oldImageLabelBuffer,
@@ -771,8 +784,8 @@ public class MOGAC3D extends AbstractCalculation {
 								distanceFieldBuffer, imageLabelBuffer,
 								topologyRuleBuffer).putArg(0.5f).putArg(1)
 						.putArg(1).putArg(1).rewind();
-				queue.put1DRangeKernel(applyForces, 0,
-						(rows * cols * slices) / 8, WORKGROUP_SIZE);
+				queue.put1DRangeKernel(applyForces, 0, global_size / 8,
+						WORKGROUP_SIZE);
 
 				applyForces
 						.putArgs(oldDistanceFieldBuffer, oldImageLabelBuffer,
@@ -780,8 +793,8 @@ public class MOGAC3D extends AbstractCalculation {
 								distanceFieldBuffer, imageLabelBuffer,
 								topologyRuleBuffer).putArg(0.5f).putArg(1)
 						.putArg(0).putArg(1).rewind();
-				queue.put1DRangeKernel(applyForces, 0,
-						(rows * cols * slices) / 8, WORKGROUP_SIZE);
+				queue.put1DRangeKernel(applyForces, 0, global_size / 8,
+						WORKGROUP_SIZE);
 			}
 		} else {
 			if (!clampSpeed) {
@@ -797,11 +810,6 @@ public class MOGAC3D extends AbstractCalculation {
 						roundToWorkgroupPower(rows * cols), WORKGROUP_SIZE);
 				maxTimeStep.putArg(maxTmpBuffer).rewind();
 				queue.put1DRangeKernel(maxTimeStep, 0, 1, 1);
-				/*
-				 * queue.finish(); queue.putReadBuffer(maxTmpBuffer, true);
-				 * System.out.println("MAX TIME STEP " +
-				 * maxTmpBuffer.getBuffer().get(0));
-				 */
 				applyForces.putArgs(oldDistanceFieldBuffer,
 						oldImageLabelBuffer, deltaLevelSetBuffer, idBuffer,
 						distanceFieldBuffer, imageLabelBuffer, maxTmpBuffer)
@@ -818,7 +826,7 @@ public class MOGAC3D extends AbstractCalculation {
 						WORKGROUP_SIZE);
 			}
 		}
-		for (int i = 1; i <= maxLayers; i++) {
+		for (int i = 1; i <= MAX_LAYERS; i++) {
 			extendDistanceField
 					.putArgs(oldDistanceFieldBuffer, distanceFieldBuffer,
 							imageLabelBuffer).putArg(i).rewind();
@@ -850,8 +858,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Round to workgroup power.
-	 *
-	 * @param length the length
+	 * 
+	 * @param length
+	 *            the length
 	 * @return the int
 	 */
 	public static int roundToWorkgroupPower(int length) {
@@ -911,7 +920,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Load lu t626.
-	 *
+	 * 
 	 * @return true, if successful
 	 */
 	protected boolean loadLUT626() {
@@ -927,8 +936,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Load lut.
-	 *
-	 * @param f the f
+	 * 
+	 * @param f
+	 *            the f
 	 * @return true, if successful
 	 */
 	private boolean loadLUT(File f) {
@@ -960,7 +970,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Gets the distance field.
-	 *
+	 * 
 	 * @return the distance field
 	 */
 	public ImageDataFloat getDistanceField() {
@@ -972,7 +982,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Gets the image labels.
-	 *
+	 * 
 	 * @return the image labels
 	 */
 	public ImageDataInt getImageLabels() {
@@ -1006,8 +1016,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 		boolean showGUI = true;
@@ -1057,9 +1068,11 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Round to workgroup power.
-	 *
-	 * @param length the length
-	 * @param workgroup the workgroup
+	 * 
+	 * @param length
+	 *            the length
+	 * @param workgroup
+	 *            the workgroup
 	 * @return the int
 	 */
 	public static int roundToWorkgroupPower(int length, int workgroup) {
@@ -1082,7 +1095,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Contains overlaps.
-	 *
+	 * 
 	 * @return true, if successful
 	 */
 	public boolean containsOverlaps() {
@@ -1101,7 +1114,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Evolve.
-	 *
+	 * 
 	 * @return the double
 	 */
 	public double evolve() {
@@ -1110,8 +1123,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Evolve.
-	 *
-	 * @param check the check
+	 * 
+	 * @param check
+	 *            the check
 	 * @return the double
 	 */
 	public double evolve(boolean check) {
@@ -1148,7 +1162,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Gets the num colors.
-	 *
+	 * 
 	 * @return the num colors
 	 */
 	public int getNumColors() {
@@ -1213,8 +1227,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Save delta image.
-	 *
-	 * @param clamp the new clamp speed
+	 * 
+	 * @param clamp
+	 *            the new clamp speed
 	 */
 
 	public void setClampSpeed(boolean clamp) {
@@ -1253,8 +1268,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Sets the preserve topology.
-	 *
-	 * @param preserveTopology the new preserve topology
+	 * 
+	 * @param preserveTopology
+	 *            the new preserve topology
 	 */
 	public void setPreserveTopology(boolean preserveTopology) {
 		this.topologyPreservation = preserveTopology;

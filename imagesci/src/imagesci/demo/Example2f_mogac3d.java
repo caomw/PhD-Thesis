@@ -81,17 +81,16 @@ public class Example2f_mogac3d extends AbstractExample {
 		activeContour.setCurvatureWeight(1.0f);
 		activeContour.setTargetPressure(0.5f);
 		activeContour.setMaxIterations(620);
-		activeContour.setPreserveTopology(false);
+		activeContour.setPreserveTopology(true);
 		activeContour.setClampSpeed(true);
 		if (showGUI) {
 			try {
 				activeContour.init(initDistField, initLabels, false);
 
-				VisualizationMOGAC3D visual = new VisualizationMOGAC3D(512,
-						512, activeContour);
+				VisualizationMOGAC3D visual = new VisualizationMOGAC3D(600,600, activeContour);
 				VisualizationApplication app = new VisualizationApplication(
 						visual);
-				app.setPreferredSize(new Dimension(920, 650));
+				app.setPreferredSize(new Dimension(1024,768));
 				app.setShowToolBar(true);
 				app.addListener(visual);
 				app.runAndWait();
