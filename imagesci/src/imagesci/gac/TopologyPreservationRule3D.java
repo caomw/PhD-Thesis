@@ -18,6 +18,7 @@ package imagesci.gac;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.BitSet;
 import java.util.zip.ZipEntry;
@@ -68,17 +69,9 @@ public class TopologyPreservationRule3D extends TopologyRule3D {
 		if (lut6_18 != null) {
 			return true;
 		}
-		try {
-			lut6_18 = loadLUT(new File(
-					new File(TopologyPreservationRule3D.class.getResource("./")
-							.toURI()), "connectivity6_18.zip"));
-
-			return true;
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		lut6_18 = loadLUT(TopologyPreservationRule3D.class
+				.getResourceAsStream("connectivity6_18.zip"));
+		return true;
 	}
 
 	/**
@@ -90,16 +83,9 @@ public class TopologyPreservationRule3D extends TopologyRule3D {
 		if (lut6_26 != null) {
 			return true;
 		}
-		try {
-			lut6_26 = loadLUT(new File(
-					new File(TopologyPreservationRule3D.class.getResource("./")
-							.toURI()), "connectivity6_26.zip"));
-			return true;
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		lut6_26 = loadLUT(TopologyPreservationRule3D.class
+				.getResourceAsStream("connectivity6_26.zip"));
+		return true;
 	}
 
 	/**
@@ -109,16 +95,13 @@ public class TopologyPreservationRule3D extends TopologyRule3D {
 	 *            the f
 	 * @return the bit set
 	 */
-	private BitSet loadLUT(File f) {
+	private BitSet loadLUT(InputStream fis) {
 		final int BUFFER = 4096;
 		try {
-			FileInputStream fis = new FileInputStream(f);
 			ZipInputStream zis = new ZipInputStream(
 					new BufferedInputStream(fis));
 			ZipEntry entry;
 			if ((entry = zis.getNextEntry()) != null) {
-				System.out.println("Extracting: " + entry + " from "
-						+ f.getAbsolutePath());
 				int index = 0;
 				int count = 0;
 				byte[] buff = new byte[(2 << 24)];

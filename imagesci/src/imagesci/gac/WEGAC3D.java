@@ -31,6 +31,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -275,7 +276,6 @@ public class WEGAC3D extends ActiveContour3D {
 
 		this.distFieldImage = initialDistanceFieldImage;
 		if (preserveTopology) {
-			System.err.println("LOADING LUT");
 			loadLUT626();
 		}
 		finish();
@@ -295,14 +295,8 @@ public class WEGAC3D extends ActiveContour3D {
 	 * @return true, if successful
 	 */
 	protected boolean loadLUT626() {
-		try {
-			return loadLUT(new File(new File(TopologyPreservationRule3D.class
-					.getResource("./").toURI()), "connectivity6_26.zip"));
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		return loadLUT(TopologyPreservationRule3D.class
+				.getResourceAsStream("connectivity6_26.zip"));
 	}
 
 	/**
@@ -312,10 +306,9 @@ public class WEGAC3D extends ActiveContour3D {
 	 *            the f
 	 * @return true, if successful
 	 */
-	private boolean loadLUT(File f) {
+	private boolean loadLUT(InputStream fis) {
 		final int BUFFER = 4096;
 		try {
-			FileInputStream fis = new FileInputStream(f);
 			ZipInputStream zis = new ZipInputStream(
 					new BufferedInputStream(fis));
 			if ((zis.getNextEntry()) != null) {
@@ -841,7 +834,7 @@ public class WEGAC3D extends ActiveContour3D {
 		metasphere.solve();
 		ImageDataFloat pressureImage = metasphere.getImage();
 		*/
-		
+
 		PhantomCube phantom = new PhantomCube(new Point3i(128, 128, 128));
 		phantom.setCenter(new Point3d(0, 0, 0));
 		phantom.setWidth(1.21);
@@ -857,16 +850,19 @@ public class WEGAC3D extends ActiveContour3D {
 		bubbles.setInvertImage(true);
 		bubbles.solve();
 		ImageDataFloat pressureImage = bubbles.getImage();
-		
+
 		WEGAC3D gac = new WEGAC3D();
-		gac.setPreserveTopology(false);//Turn off adaptive convergence if you use topology preservation
+		gac.setPreserveTopology(false);// Turn off adaptive convergence if you
+										// use topology preservation
 		gac.setPressure(pressureImage, 0.5f);
 		gac.setReferenceImage(pressureImage);
 		gac.setInitialDistanceFieldImage(levelset);
 		gac.setCurvatureWeight(0.5f);
 		gac.setMaxIterations(200);
 		gac.setTargetPressure(0.5f);
-		gac.setClampSpeed(true);//This is for speed enhancement only, it may cause bad things to happen if not used correctly. 
+		gac.setClampSpeed(true);// This is for speed enhancement only, it may
+								// cause bad things to happen if not used
+								// correctly.
 		gac.setAdaptiveConvergence(true);
 		if (showGUI) {
 			try {

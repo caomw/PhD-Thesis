@@ -29,6 +29,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -349,12 +350,17 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Initialize.
-	 *
-	 * @param rows the rows
-	 * @param cols the cols
-	 * @param slices the slices
-	 * @param preserve the preserve
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param rows
+	 *            the rows
+	 * @param cols
+	 *            the cols
+	 * @param slices
+	 *            the slices
+	 * @param preserve
+	 *            the preserve
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize(int rows, int cols, int slices, boolean preserve)
 			throws IOException {
@@ -363,13 +369,19 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Initialize.
-	 *
-	 * @param surf the surf
-	 * @param rows the rows
-	 * @param cols the cols
-	 * @param slices the slices
-	 * @param preserveTopology the preserve topology
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param surf
+	 *            the surf
+	 * @param rows
+	 *            the rows
+	 * @param cols
+	 *            the cols
+	 * @param slices
+	 *            the slices
+	 * @param preserveTopology
+	 *            the preserve topology
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void initialize(SpringlsSurface surf, int rows, int cols,
 			int slices, boolean preserveTopology) throws IOException {
@@ -418,9 +430,11 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Inits the kernels.
-	 *
-	 * @param queue the queue
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param queue
+	 *            the queue
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	protected void initKernels(CLCommandQueue queue) throws IOException {
 		CLContext context = queue.getContext();
@@ -591,8 +605,9 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Sets the springls.
-	 *
-	 * @param surface the new springls
+	 * 
+	 * @param surface
+	 *            the new springls
 	 */
 	public void setSpringls(SpringlsSurface surface) {
 		this.elements = surface.getCapsules().size();
@@ -622,9 +637,11 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Sets the springls.
-	 *
-	 * @param surfaces the surfaces
-	 * @param labels the labels
+	 * 
+	 * @param surfaces
+	 *            the surfaces
+	 * @param labels
+	 *            the labels
 	 */
 	public void setSpringls(SpringlsSurface[] surfaces, int[] labels) {
 		this.elements = 0;
@@ -660,8 +677,9 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Round array length.
-	 *
-	 * @param elements the elements
+	 * 
+	 * @param elements
+	 *            the elements
 	 * @return the int
 	 */
 	public int roundArrayLength(int elements) {
@@ -685,7 +703,7 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Sets the connectivity rule.
-	 *
+	 * 
 	 */
 	private void loadLUT() {
 		int[] aiCubeEdgeFlags = null;
@@ -727,14 +745,8 @@ public class SpringlsCommon3D {
 	 * @return true, if successful
 	 */
 	private boolean loadLUT626() {
-		try {
-			return loadLUT(new File(new File(TopologyPreservationRule3D.class
-					.getResource("./").toURI()), "connectivity6_26.zip"));
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		return loadLUT(TopologyPreservationRule3D.class
+				.getResourceAsStream("connectivity6_26.zip"));
 	}
 
 	/**
@@ -743,14 +755,9 @@ public class SpringlsCommon3D {
 	 * @return true, if successful
 	 */
 	private boolean loadLUT618() {
-		try {
-			return loadLUT(new File(new File(TopologyPreservationRule3D.class
-					.getResource("./").toURI()), "connectivity6_18.zip"));
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		return loadLUT(TopologyPreservationRule3D.class
+				.getResourceAsStream("connectivity6_18.zip"));
+
 	}
 
 	/**
@@ -760,10 +767,9 @@ public class SpringlsCommon3D {
 	 *            the file to load
 	 * @return the bit set
 	 */
-	private boolean loadLUT(File f) {
+	private boolean loadLUT(InputStream fis) {
 		final int BUFFER = 4096;
 		try {
-			FileInputStream fis = new FileInputStream(f);
 			ZipInputStream zis = new ZipInputStream(
 					new BufferedInputStream(fis));
 			ZipEntry entry;
@@ -982,11 +988,15 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Creates the springls ray cast renderer.
-	 *
-	 * @param applet the applet
-	 * @param rasterWidth the raster width
-	 * @param rasterHeight the raster height
-	 * @param refreshRate the refresh rate
+	 * 
+	 * @param applet
+	 *            the applet
+	 * @param rasterWidth
+	 *            the raster width
+	 * @param rasterHeight
+	 *            the raster height
+	 * @param refreshRate
+	 *            the refresh rate
 	 * @return the renderer processing3 d
 	 */
 	public RendererProcessing3D createSpringlsRayCastRenderer(
@@ -1050,7 +1060,7 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Gets the reference image.
-	 *
+	 * 
 	 * @return the reference image
 	 */
 	public ImageData getReferenceImage() {
@@ -1151,7 +1161,7 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Checks if is active set valid.
-	 *
+	 * 
 	 * @return true, if is active set valid
 	 */
 	public boolean isActiveSetValid() {
@@ -1160,7 +1170,7 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Checks if is resampling enabled.
-	 *
+	 * 
 	 * @return true, if is resampling enabled
 	 */
 	public boolean isResamplingEnabled() {
@@ -1285,8 +1295,9 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Sets the active set valid.
-	 *
-	 * @param valid the new active set valid
+	 * 
+	 * @param valid
+	 *            the new active set valid
 	 */
 	public void setActiveSetValid(boolean valid) {
 		this.isActiveSetValid = valid;
@@ -1336,8 +1347,9 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Sets the reference image.
-	 *
-	 * @param refImage the new reference image
+	 * 
+	 * @param refImage
+	 *            the new reference image
 	 */
 	public void setReferenceImage(ImageData refImage) {
 		this.refImage = refImage;
@@ -1364,8 +1376,9 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Sets the resampling.
-	 *
-	 * @param resample the new resampling
+	 * 
+	 * @param resample
+	 *            the new resampling
 	 */
 	public void setResampling(boolean resample) {
 		this.resamplingEnabled = resample;

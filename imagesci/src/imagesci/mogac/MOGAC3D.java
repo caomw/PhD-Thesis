@@ -29,6 +29,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -924,14 +925,8 @@ public class MOGAC3D extends AbstractCalculation {
 	 * @return true, if successful
 	 */
 	protected boolean loadLUT626() {
-		try {
-			return loadLUT(new File(new File(TopologyPreservationRule3D.class
-					.getResource("./").toURI()), "connectivity6_26.zip"));
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		return loadLUT(TopologyPreservationRule3D.class
+				.getResourceAsStream("connectivity6_26.zip"));
 	}
 
 	/**
@@ -941,10 +936,9 @@ public class MOGAC3D extends AbstractCalculation {
 	 *            the f
 	 * @return true, if successful
 	 */
-	private boolean loadLUT(File f) {
+	private boolean loadLUT(InputStream fis) {
 		final int BUFFER = 4096;
 		try {
-			FileInputStream fis = new FileInputStream(f);
 			ZipInputStream zis = new ZipInputStream(
 					new BufferedInputStream(fis));
 			if ((zis.getNextEntry()) != null) {
