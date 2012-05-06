@@ -390,7 +390,6 @@ public class MuscleActiveContour3D extends SpringlsActiveContour3D {
 			if ((commons).activeListSize == 0) {
 				return false;
 			}
-			hash.updateSpatialHash();
 			evolve.extendDistanceField(15);
 			updateLevelSetTime = System.nanoTime() - startTime;
 		}

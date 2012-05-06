@@ -30,8 +30,9 @@ public class ConvertImageDataToPImage implements ConvertImageData<PImage> {
 
 	/**
 	 * Convert.
-	 *
-	 * @param source the source
+	 * 
+	 * @param source
+	 *            the source
 	 * @return the p image
 	 * @see edu.jhu.cs.cisst.vent.converter.ConvertImageData#convert(edu.jhu.ece.iacl.jist.structures.image.ImageData)
 	 */
@@ -94,13 +95,19 @@ public class ConvertImageDataToPImage implements ConvertImageData<PImage> {
 		int rows = source.getRows();
 		int cols = source.getCols();
 		PImage img = new PImage(rows, cols);
+		float[] hsb = new float[4];
 		if (source.getType() == VoxelType.COLOR
 				|| source.getType() == VoxelType.COLOR_FLOAT
 				|| source.getType() == VoxelType.COLOR_USHORT) {
 			for (int r = 0; r < rows; r++) {
 				for (int c = 0; c < cols; c++) {
-					img.set(r, c, source.getColor(r, c, slice, component)
-							.getRGB());
+					Color color = source.getColor(r, c, slice, component);
+					Color.RGBtoHSB(color.getRed(), color.getGreen(),
+							color.getBlue(), hsb);
+					hsb[2] = (float) Math.max(
+							Math.min(hsb[2] * contrast + brightness, 1.0f),
+							0.0f);
+					img.set(r, c, Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
 				}
 			}
 		} else {
@@ -127,14 +134,21 @@ public class ConvertImageDataToPImage implements ConvertImageData<PImage> {
 
 	/**
 	 * Convert.
-	 *
-	 * @param source the source
-	 * @param slice the slice
-	 * @param component the component
-	 * @param contrast the contrast
-	 * @param brightness the brightness
-	 * @param min the min
-	 * @param max the max
+	 * 
+	 * @param source
+	 *            the source
+	 * @param slice
+	 *            the slice
+	 * @param component
+	 *            the component
+	 * @param contrast
+	 *            the contrast
+	 * @param brightness
+	 *            the brightness
+	 * @param min
+	 *            the min
+	 * @param max
+	 *            the max
 	 * @return the p image
 	 */
 	public PImage convertSlice(ImageData source, int slice, int component,
@@ -144,14 +158,21 @@ public class ConvertImageDataToPImage implements ConvertImageData<PImage> {
 
 	/**
 	 * Convert.
-	 *
-	 * @param source the source
-	 * @param slice the slice
-	 * @param component the component
-	 * @param contrast the contrast
-	 * @param brightness the brightness
-	 * @param min the min
-	 * @param max the max
+	 * 
+	 * @param source
+	 *            the source
+	 * @param slice
+	 *            the slice
+	 * @param component
+	 *            the component
+	 * @param contrast
+	 *            the contrast
+	 * @param brightness
+	 *            the brightness
+	 * @param min
+	 *            the min
+	 * @param max
+	 *            the max
 	 * @return the p image
 	 */
 	public PImage convert(ImageData source, int slice, int component,
@@ -185,14 +206,21 @@ public class ConvertImageDataToPImage implements ConvertImageData<PImage> {
 
 	/**
 	 * Convert.
-	 *
-	 * @param source the source
-	 * @param col the col
-	 * @param component the component
-	 * @param contrast the contrast
-	 * @param brightness the brightness
-	 * @param min the min
-	 * @param max the max
+	 * 
+	 * @param source
+	 *            the source
+	 * @param col
+	 *            the col
+	 * @param component
+	 *            the component
+	 * @param contrast
+	 *            the contrast
+	 * @param brightness
+	 *            the brightness
+	 * @param min
+	 *            the min
+	 * @param max
+	 *            the max
 	 * @return the p image
 	 */
 	public PImage convertColumn(ImageData source, int col, int component,
@@ -226,14 +254,21 @@ public class ConvertImageDataToPImage implements ConvertImageData<PImage> {
 
 	/**
 	 * Convert Row.
-	 *
-	 * @param source the source
-	 * @param row the row
-	 * @param component the component
-	 * @param contrast the contrast
-	 * @param brightness the brightness
-	 * @param min the min
-	 * @param max the max
+	 * 
+	 * @param source
+	 *            the source
+	 * @param row
+	 *            the row
+	 * @param component
+	 *            the component
+	 * @param contrast
+	 *            the contrast
+	 * @param brightness
+	 *            the brightness
+	 * @param min
+	 *            the min
+	 * @param max
+	 *            the max
 	 * @return the p image
 	 */
 	public PImage convertRow(ImageData source, int row, int component,
