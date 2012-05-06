@@ -18,6 +18,7 @@ package edu.jhu.cs.cisst.vent.renderer.processing;
 import java.awt.Color;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.media.j3d.BoundingBox;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
@@ -181,9 +182,11 @@ public class VolumeSliceRenderer3D extends RendererProcessing3D {
 
 	/**
 	 * Instantiates a new volume slice renderer3 d.
-	 *
-	 * @param img the img
-	 * @param applet the applet
+	 * 
+	 * @param img
+	 *            the img
+	 * @param applet
+	 *            the applet
 	 */
 	public VolumeSliceRenderer3D(ImageData img, VisualizationProcessing3D applet) {
 		this(img, null, applet);
@@ -728,8 +731,9 @@ public class VolumeSliceRenderer3D extends RendererProcessing3D {
 
 	/**
 	 * Match scale.
-	 *
-	 * @param img the img
+	 * 
+	 * @param img
+	 *            the img
 	 */
 	public void matchScale(ImageData img) {
 		this.scaleX = img.getRows() / (float) image.getRows();
@@ -779,10 +783,13 @@ public class VolumeSliceRenderer3D extends RendererProcessing3D {
 
 	/**
 	 * Sets the scale.
-	 *
-	 * @param scaleX the scale x
-	 * @param scaleY the scale y
-	 * @param scaleZ the scale z
+	 * 
+	 * @param scaleX
+	 *            the scale x
+	 * @param scaleY
+	 *            the scale y
+	 * @param scaleZ
+	 *            the scale z
 	 */
 	public void setScale(float scaleX, float scaleY, float scaleZ) {
 		this.scaleX = scaleX;
@@ -872,10 +879,14 @@ public class VolumeSliceRenderer3D extends RendererProcessing3D {
 					* scaleZ));
 		}
 		try {
-			String fontFile = (new File(PlaceHolder.class.getResource(
-					"./TheSans-Plain-12.vlw").toURI()).getAbsolutePath());
-			System.out.println(fontFile);
-			applet.textFont(applet.loadFont(fontFile));
+			URL url = PlaceHolder.class.getResource("./TheSans-Plain-12.vlw");
+			if (url != null) {
+				File f = new File(url.toURI());
+				if (f.exists()) {
+					String fontFile = (f.getAbsolutePath());
+					applet.textFont(applet.loadFont(fontFile));
+				}
+			}
 		} catch (URISyntaxException e) {
 
 			// TODO Auto-generated catch block
