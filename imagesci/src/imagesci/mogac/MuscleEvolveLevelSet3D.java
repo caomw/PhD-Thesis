@@ -338,17 +338,12 @@ public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 
 	public void extendDistanceField(int layers) {
 		CLKernel extendDistanceField = commons.kernelMap
-				.get("extendSignedDistanceField");
+				.get(SpringlsCommon3D.EXTEND_DISTANCE_FIELD);
 		for (int i = MAX_LAYERS - 1; i < layers; i++) {
-			extendDistanceField.putArgs(commons.signedLevelSetBuffer).putArg(i)
-					.rewind();
-			commons.queue.put1DRangeKernel(
-					extendDistanceField,
-					0,
-					SpringlsCommon3D.roundToWorkgroupPower(commons.rows
-							* commons.cols * commons.slices),
+			extendDistanceField.putArgs(distanceFieldBuffer).putArg(i).rewind();
+			commons.queue.put1DRangeKernel(extendDistanceField, 0, commons.rows
+					* commons.cols * commons.slices,
 					SpringlsCommon3D.WORKGROUP_SIZE);
 		}
-		commons.queue.finish();
 	}
 }
