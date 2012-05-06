@@ -310,11 +310,11 @@ public class VolumeIsoContourRenderer extends VolumeSliceRenderer2D {
 				componentParam, 4));
 
 		visualizationParameters.add(contrastParam = new ParamFloat("Contrast",
-				-1, 1, contrast));
+				-5, 5, contrast));
 		contrastParam.setInputView(new ParamDoubleSliderInputView(
 				contrastParam, 4, false));
 		visualizationParameters.add(brightnessParam = new ParamFloat(
-				"Brightness", 0, 2, brightness));
+				"Brightness", -5, 5, brightness));
 		brightnessParam.setInputView(new ParamDoubleSliderInputView(
 				brightnessParam, 4, false));
 		visualizationParameters.add(transparencyParam = new ParamFloat(
@@ -406,8 +406,9 @@ public class VolumeIsoContourRenderer extends VolumeSliceRenderer2D {
 
 	/**
 	 * Sets the name.
-	 *
-	 * @param name the new name
+	 * 
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
