@@ -22,6 +22,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -51,7 +54,7 @@ import javax.swing.tree.TreeSelectionModel;
  * The Class Launcher.
  */
 public class Launcher extends JFrame implements TreeSelectionListener,
-		ActionListener {
+		ActionListener, MouseListener {
 
 	/**
 	 * The Class ExampleInfo.
@@ -203,6 +206,7 @@ public class Launcher extends JFrame implements TreeSelectionListener,
 			ExampleInfo ex = (ExampleInfo) nodeInfo;
 			this.dispose();
 			AbstractExample aex = ex.getExample();
+			System.out.println("Launching example, please wait ...");
 			aex.setWorkingDirectory(dataDirectory);
 			Thread th = new Thread(aex);
 			th.start();
@@ -289,7 +293,7 @@ public class Launcher extends JFrame implements TreeSelectionListener,
 		renderer.setLeafIcon(new ImageIcon(getClass().getResource("dot.gif")));
 		renderer.setIconTextGap(4);
 		tree.setCellRenderer(renderer);
-
+		tree.addMouseListener(this);
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		JScrollPane treeView = new JScrollPane(tree);
 
@@ -331,6 +335,28 @@ public class Launcher extends JFrame implements TreeSelectionListener,
 
 	}
 
+	public void mouseClicked(MouseEvent evt) {
+		if (SwingUtilities.isLeftMouseButton(evt)) {
+			if ((evt.getClickCount() == 2) && (tree.getSelectionPath() != null)) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+						.getLastSelectedPathComponent();
+				if (node == null) {
+					return;
+				}
+				Object nodeInfo = node.getUserObject();
+				if (node.isLeaf()) {
+					ExampleInfo ex = (ExampleInfo) nodeInfo;
+					this.dispose();
+					AbstractExample aex = ex.getExample();
+					System.out.println("Launching example, please wait ...");
+					aex.setWorkingDirectory(dataDirectory);
+					Thread th = new Thread(aex);
+					th.start();
+				}
+			}
+		}
+	}
+
 	/**
 	 * Required by TreeSelectionListener interface.
 	 * 
@@ -369,6 +395,30 @@ public class Launcher extends JFrame implements TreeSelectionListener,
 				htmlPane.setText("Could not display page " + startURL + ".");
 			}
 		}
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 
 	}
 }
