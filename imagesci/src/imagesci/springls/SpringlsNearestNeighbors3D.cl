@@ -1072,10 +1072,10 @@ kernel void multiplyLevelSets(global float* levelSetIn,global float* levelSetOut
 	levelSetOut[id]*=levelSetIn[id];
 }
 inline void getBlockRowColSlice(uint index,int* i, int* j, int* k,uint blockSize) {
-	(*k)=(blockSize*blockSize*index)/(ROWS*COLS);
-	uint ij=index-((*k)*ROWS * COLS)/(blockSize*blockSize);
-	(*j)=(blockSize*ij)/ROWS;
-	(*i)=ij-((*j)*ROWS)/blockSize;
+	(*k)=clamp((int)((blockSize*blockSize*index)/(ROWS*COLS)),0,(int)(SLICES/blockSize-1));
+	int ij=index-((*k)*ROWS * COLS)/(blockSize*blockSize);
+	(*j)=clamp((int)((blockSize*ij)/ROWS),0,(int)(COLS/blockSize-1));
+	(*i)=clamp((int)(ij-((*j)*ROWS)/blockSize),0,(int)(ROWS/blockSize-1));
 }
 
 inline float getBlockValue(global float* levelSet,int i,int j,int k){
