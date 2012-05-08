@@ -449,7 +449,7 @@ public class SpringlsEvolveLevelSet3D {
 	public void extendSignedDistanceField(int layers) {
 		CLKernel extendDistanceField = commons.kernelMap
 				.get("extendSignedDistanceField");
-		for (int i = MAX_LAYERS-1; i < layers; i++) {
+		for (int i = MAX_LAYERS - 1; i < layers; i++) {
 			extendDistanceField.putArgs(commons.signedLevelSetBuffer).putArg(i)
 					.rewind();
 			commons.queue.put1DRangeKernel(

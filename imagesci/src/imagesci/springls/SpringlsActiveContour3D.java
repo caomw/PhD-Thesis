@@ -347,8 +347,8 @@ public class SpringlsActiveContour3D extends ActiveContour3D {
 			if ((commons).activeListSize == 0) {
 				return false;
 			}
-			evolve.extendSignedDistanceField(15);
-			hash.updateSpatialHash();
+			evolve.extendSignedDistanceField(5);
+			
 			updateLevelSetTime = System.nanoTime() - startTime;
 		}
 		long computeTime = System.nanoTime() - initTime;
