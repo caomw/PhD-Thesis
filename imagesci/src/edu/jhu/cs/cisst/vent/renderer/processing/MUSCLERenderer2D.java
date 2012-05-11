@@ -20,13 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 
-import imagesci.mogac.WEMOGAC2D;
-import imagesci.muscle.MuscleActiveContour2D;
-import imagesci.muscle.MuscleCommon2D;
-import imagesci.springls.ActiveContour2D;
-import imagesci.springls.PrefixScanCPU;
-import imagesci.springls.SpringlsCommon2D;
-import imagesci.springls.SpringlsConstants;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -42,6 +35,14 @@ import javax.media.opengl.GL2GL3;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLPointerFunc;
 import javax.vecmath.Color4f;
+
+import org.imagesci.mogac.WEMOGAC2D;
+import org.imagesci.muscle.MuscleActiveContour2D;
+import org.imagesci.muscle.MuscleCommon2D;
+import org.imagesci.springls.ActiveContour2D;
+import org.imagesci.springls.PrefixScanCPU;
+import org.imagesci.springls.SpringlsCommon2D;
+import org.imagesci.springls.SpringlsConstants;
 
 import processing.opengl2.PGraphicsOpenGL2;
 

@@ -15,13 +15,14 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-import imagesci.springls.SpringlsCommon3D;
 
 import java.awt.Image;
 import java.io.File;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
+
+import org.imagesci.springls.SpringlsCommon3D;
 
 import processing.core.PImage;
 import edu.jhu.cs.cisst.vent.renderer.processing.RendererProcessing;

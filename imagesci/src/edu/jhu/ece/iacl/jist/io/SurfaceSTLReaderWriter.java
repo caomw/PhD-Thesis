@@ -1,6 +1,5 @@
 package edu.jhu.ece.iacl.jist.io;
 
-import imagesci.utility.GeomUtil;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,6 +24,8 @@ import java.util.regex.Pattern;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import org.imagesci.utility.GeomUtil;
 
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationTriangleMesh;

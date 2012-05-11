@@ -15,11 +15,12 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-import imagesci.springls.SpringlsActiveContour3D;
 
 import java.util.ArrayList;
 
 import javax.vecmath.Matrix4f;
+
+import org.imagesci.springls.SpringlsActiveContour3D;
 
 import edu.jhu.cs.cisst.vent.renderer.processing.RendererProcessing3D;
 import edu.jhu.cs.cisst.vent.renderer.processing.SpringlsMeshRenderer;

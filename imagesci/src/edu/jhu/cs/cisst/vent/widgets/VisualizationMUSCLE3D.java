@@ -15,13 +15,14 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-import imagesci.muscle.MuscleActiveContour3D;
-import imagesci.springls.SpringlsCommon3D;
 
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
+
+import org.imagesci.muscle.MuscleActiveContour3D;
+import org.imagesci.springls.SpringlsCommon3D;
 
 import edu.jhu.cs.cisst.vent.renderer.processing.MUSCLERenderer3D;
 import edu.jhu.cs.cisst.vent.renderer.processing.RendererProcessing3D;

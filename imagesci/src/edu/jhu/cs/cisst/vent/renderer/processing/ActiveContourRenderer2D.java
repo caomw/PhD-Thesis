@@ -19,10 +19,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-import imagesci.gac.WEGAC2D;
-import imagesci.springls.ActiveContour2D;
-import imagesci.springls.PrefixScanCPU;
-import imagesci.springls.SpringlsConstants;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -36,6 +32,11 @@ import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GL2GL3;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLPointerFunc;
+
+import org.imagesci.gac.WEGAC2D;
+import org.imagesci.springls.ActiveContour2D;
+import org.imagesci.springls.PrefixScanCPU;
+import org.imagesci.springls.SpringlsConstants;
 
 import processing.opengl2.PGraphicsOpenGL2;
 

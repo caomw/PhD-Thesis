@@ -14,7 +14,6 @@
  */
 package edu.jhu.ece.iacl.jist.io;
 
-import imagesci.utility.PhantomMetasphere;
 
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -25,6 +24,8 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 
 import javax.vecmath.Point3i;
+
+import org.imagesci.utility.PhantomMetasphere;
 
 import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataByte;

@@ -19,12 +19,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-import imagesci.springls.PrefixScanCPU;
-import imagesci.springls.Springl3D;
-import imagesci.springls.SpringlsCommon3D;
-import imagesci.springls.SpringlsConstants;
-import imagesci.springls.ActiveContour3D.FrameUpdateListener;
-import imagesci.utility.IsoSurfaceGenerator;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -41,6 +35,13 @@ import javax.media.opengl.GL2GL3;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLPointerFunc;
 import javax.vecmath.Point3d;
+
+import org.imagesci.springls.PrefixScanCPU;
+import org.imagesci.springls.Springl3D;
+import org.imagesci.springls.SpringlsCommon3D;
+import org.imagesci.springls.SpringlsConstants;
+import org.imagesci.springls.ActiveContour3D.FrameUpdateListener;
+import org.imagesci.utility.IsoSurfaceGenerator;
 
 import processing.opengl2.PGraphicsOpenGL2;
 

@@ -15,12 +15,13 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-import imagesci.muscle.MuscleActiveContour2D;
 
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
+
+import org.imagesci.muscle.MuscleActiveContour2D;
 
 import processing.core.PImage;
 import edu.jhu.cs.cisst.vent.PlayPauseStopEventListener;

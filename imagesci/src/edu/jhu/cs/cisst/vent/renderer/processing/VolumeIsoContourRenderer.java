@@ -15,12 +15,13 @@
  */
 package edu.jhu.cs.cisst.vent.renderer.processing;
 
-import imagesci.gac.TopologyRule2D;
-import imagesci.utility.IsoContourGenerator;
 
 import java.awt.Color;
 
 import javax.swing.SwingWorker;
+
+import org.imagesci.gac.TopologyRule2D;
+import org.imagesci.utility.IsoContourGenerator;
 
 import processing.core.PImage;
 import edu.jhu.cs.cisst.vent.VisualizationProcessing;

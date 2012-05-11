@@ -15,7 +15,6 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-import imagesci.gac.WEGAC3D;
 
 import java.awt.Image;
 import java.awt.event.MouseWheelEvent;
@@ -24,6 +23,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
+
+import org.imagesci.gac.WEGAC3D;
 
 import processing.core.PImage;
 import edu.jhu.cs.cisst.vent.PlayPauseStopEventListener;

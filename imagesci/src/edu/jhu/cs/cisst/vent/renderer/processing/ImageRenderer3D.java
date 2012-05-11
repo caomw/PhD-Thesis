@@ -15,11 +15,12 @@
  */
 package edu.jhu.cs.cisst.vent.renderer.processing;
 
-import imagesci.utility.IsoContourGenerator;
 
 import java.awt.Color;
 
 import javax.vecmath.Point3d;
+
+import org.imagesci.utility.IsoContourGenerator;
 
 import processing.core.PConstants;
 import processing.core.PImage;

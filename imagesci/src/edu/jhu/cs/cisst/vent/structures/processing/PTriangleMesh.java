@@ -15,10 +15,11 @@
  */
 package edu.jhu.cs.cisst.vent.structures.processing;
 
-import imagesci.utility.GeomUtil;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import org.imagesci.utility.GeomUtil;
 
 import processing.core.PApplet;
 import processing.core.PConstants;

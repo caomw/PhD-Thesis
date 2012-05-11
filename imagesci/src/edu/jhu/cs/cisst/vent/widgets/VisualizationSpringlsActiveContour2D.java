@@ -15,13 +15,14 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-import imagesci.springls.ActiveContour2D;
-import imagesci.springls.SpringlsActiveContour2D;
 
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
+
+import org.imagesci.springls.ActiveContour2D;
+import org.imagesci.springls.SpringlsActiveContour2D;
 
 import processing.core.PImage;
 import edu.jhu.cs.cisst.vent.PlayPauseStopEventListener;

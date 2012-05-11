@@ -22,10 +22,6 @@ import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 import static java.lang.Math.sqrt;
 
-import imagesci.springls.Springl3D;
-import imagesci.springls.SpringlsCommon3D;
-import imagesci.springls.SpringlsConstants;
-import imagesci.springls.ActiveContour3D.FrameUpdateListener;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -46,6 +42,11 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import org.imagesci.springls.Springl3D;
+import org.imagesci.springls.SpringlsCommon3D;
+import org.imagesci.springls.SpringlsConstants;
+import org.imagesci.springls.ActiveContour3D.FrameUpdateListener;
 
 import processing.opengl2.PGraphicsOpenGL2;
 

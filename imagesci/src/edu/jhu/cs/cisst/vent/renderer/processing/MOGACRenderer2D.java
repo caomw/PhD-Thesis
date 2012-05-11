@@ -20,11 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 
-import imagesci.mogac.MOGAC2D;
-import imagesci.springls.PrefixScanCPU;
-import imagesci.springls.SpringlsCommon2D;
-import imagesci.springls.SpringlsConstants;
-import imagesci.utility.ContourArray;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -39,6 +34,12 @@ import javax.media.opengl.GL2GL3;
 import javax.media.opengl.fixedfunc.GLPointerFunc;
 import javax.vecmath.Color4f;
 import javax.vecmath.Point2f;
+
+import org.imagesci.mogac.MOGAC2D;
+import org.imagesci.springls.PrefixScanCPU;
+import org.imagesci.springls.SpringlsCommon2D;
+import org.imagesci.springls.SpringlsConstants;
+import org.imagesci.utility.ContourArray;
 
 import processing.core.PConstants;
 import processing.core.PImage;

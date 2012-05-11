@@ -22,12 +22,6 @@ import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 import static java.lang.Math.sqrt;
 
-import imagesci.mogac.MOGAC3D;
-import imagesci.muscle.MuscleActiveContour3D;
-import imagesci.springls.ActiveContour3D;
-import imagesci.springls.Springl3D;
-import imagesci.springls.SpringlsCommon3D;
-import imagesci.springls.SpringlsConstants;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -48,6 +42,13 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import org.imagesci.mogac.MOGAC3D;
+import org.imagesci.muscle.MuscleActiveContour3D;
+import org.imagesci.springls.ActiveContour3D;
+import org.imagesci.springls.Springl3D;
+import org.imagesci.springls.SpringlsCommon3D;
+import org.imagesci.springls.SpringlsConstants;
 
 import processing.opengl2.PGraphicsOpenGL2;
 
