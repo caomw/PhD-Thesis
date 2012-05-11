@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project imagesci with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Blake/Desktop/imagesci.jar">
+            <manifest>
+                <attribute name="Main-Class" value="imagesci.demo.Launcher"/>
+                <attribute name="Class-Path" value=". imagesci_lib/opencsv-1.8.jar imagesci_lib/xom-1.2.1.jar imagesci_lib/xpp3-1.1.4c.jar imagesci_lib/xstream-1.1.3.jar imagesci_lib/vecmath.jar imagesci_lib/Jama.jar imagesci_lib/nifti.jar imagesci_lib/core.jar imagesci_lib/video.jar imagesci_lib/opengl2.jar imagesci_lib/j3dcore.jar imagesci_lib/j3dutils.jar imagesci_lib/jocl.jar imagesci_lib/jogl.all.jar imagesci_lib/gluegen-rt.jar imagesci_lib/nativewindow.all.jar imagesci_lib/newt.all.jar"/>
+            </manifest>
+            <fileset dir="C:/Users/Blake/workspace/imagesci/bin"/>
+        </jar>
+        <delete dir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <mkdir dir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/opencsv-1.8.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/xom-1.2.1.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/xpp3-1.1.4c.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/xstream-1.1.3.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/vecmath.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/Jama.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/nifti.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/core.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/video.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Users/Blake/workspace/imagesci/lib/opengl2.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/j3dcore.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/j3dutils.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/jocl.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/jogl.all.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/gluegen-rt.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/nativewindow.all.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+        <copy file="C:/Program Files/mipav/jre/lib/ext/newt.all.jar" todir="C:/Users/Blake/Desktop/imagesci_lib"/>
+    </target>
+</project>
