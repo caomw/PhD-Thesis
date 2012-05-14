@@ -57,7 +57,7 @@ public class Launcher extends JFrame implements TreeSelectionListener,
 		ActionListener, MouseListener {
 
 	/**
-	 * The Class ExampleInfo.
+	 * The Class Example Info.
 	 */
 	protected class ExampleInfo {
 

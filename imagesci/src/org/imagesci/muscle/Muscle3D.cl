@@ -1645,7 +1645,7 @@ kernel void simpleErodeLevelSet(global float* unsignedLevelSet,global float* lev
 	getRowColSlice(id,&i,&j,&k);
 	if(hasSimpleNearestNeighbor(levelSetIn,i,j,k)){
 		float val=unsignedLevelSet[id];
-		if(val>MAX_VEXT){		
+		if(val>1.5f*MAX_VEXT){		
 			levelSetOut[id]=1;
 		}
 	}

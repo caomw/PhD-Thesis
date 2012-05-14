@@ -1136,7 +1136,7 @@ kernel void erodeLevelSet(global float* unsignedLevelSet,global float* levelSetI
 	if(i+blockSize>ROWS||j+blockSize>COLS||k+blockSize>SLICES)return;
 	if(hasNeighbor(levelSetIn,i,j,k,blockSize)){
 		float val=getLevelSetBlockValue(unsignedLevelSet,i,j,k,blockSize);
-		if(val>MAX_VEXT){		
+		if(val>1.5f*MAX_VEXT){		
 			setBlockValue(levelSetOut,i,j,k,blockSize,1);
 		}
 	}
