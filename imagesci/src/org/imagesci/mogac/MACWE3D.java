@@ -18,7 +18,6 @@ package org.imagesci.mogac;
 import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 
-
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -43,41 +42,47 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MACWE3D.
+ * The Class MACWE3D is an implementation of Multi-object Active Contours
+ * Without Edges 3D
  */
 public class MACWE3D extends WEMOGAC3D {
-	
+
 	/** The areas. */
 	protected CLBuffer<FloatBuffer> areas;
 
 	/** The averages. */
 	protected CLBuffer<FloatBuffer> averages;
-	
+
 	/** The intensity estimation. */
 	protected boolean intensityEstimation = false;
-	
+
 	/** The intensity estimation interval. */
 	protected int intensityEstimationInterval = 10;
-	
-	/** The stddev. */
+
+	/** The std. dev. buffer */
 	protected CLBuffer<FloatBuffer> stddev;
 
 	/**
-	 * Instantiates a new mACW e3 d.
-	 *
-	 * @param refImage the ref image
-	 * @param context the context
-	 * @param queue the queue
+	 * Instantiates a new Multi-object Active Contours Without Edges 3D
+	 * 
+	 * @param refImage
+	 *            the reference image
+	 * @param context
+	 *            the context
+	 * @param queue
+	 *            the queue
 	 */
 	public MACWE3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		super(refImage, context, queue);
 	}
 
 	/**
-	 * Instantiates a new mACW e3 d.
-	 *
-	 * @param refImage the ref image
-	 * @param type the type
+	 * Instantiates a new Multi-object Active Contours Without Edges 3D
+	 * 
+	 * @param refImage
+	 *            the reference image
+	 * @param type
+	 *            the type
 	 */
 	public MACWE3D(ImageData refImage, CLDevice.Type type) {
 		super(refImage, type);
@@ -85,11 +90,15 @@ public class MACWE3D extends WEMOGAC3D {
 
 	/**
 	 * Solve.
-	 *
-	 * @param unsignedImage the unsigned image
-	 * @param labelImage the label image
-	 * @param intensityPriors the intensity priors
-	 * @param containsOverlaps the contains overlaps
+	 * 
+	 * @param unsignedImage
+	 *            the unsigned image
+	 * @param labelImage
+	 *            the label image
+	 * @param intensityPriors
+	 *            the intensity priors
+	 * @param containsOverlaps
+	 *            the contains overlaps
 	 * @return the image data float
 	 */
 	public ImageDataFloat solve(ImageDataFloat unsignedImage,
@@ -124,13 +133,18 @@ public class MACWE3D extends WEMOGAC3D {
 	}
 
 	/**
-	 * Inits the.
-	 *
-	 * @param unsignedLevelSetBuffer the unsigned level set buffer
-	 * @param labelBuffer the label buffer
-	 * @param intensityPriors the intensity priors
-	 * @param containsOverlaps the contains overlaps
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Initializes the OpenCL device.
+	 * 
+	 * @param unsignedLevelSetBuffer
+	 *            the unsigned level set buffer
+	 * @param labelBuffer
+	 *            the label buffer
+	 * @param intensityPriors
+	 *            the intensity priors
+	 * @param containsOverlaps
+	 *            the contains overlaps
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void init(ImageDataFloat unsignedLevelSetBuffer,
 			ImageDataInt labelBuffer, double[] intensityPriors,
@@ -151,8 +165,9 @@ public class MACWE3D extends WEMOGAC3D {
 
 	/**
 	 * Sets the averages.
-	 *
-	 * @param data the new averages
+	 * 
+	 * @param data
+	 *            the new averages
 	 */
 	public void setAverages(double[] data) {
 
@@ -355,8 +370,9 @@ public class MACWE3D extends WEMOGAC3D {
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 		boolean showGUI = true;
@@ -372,8 +388,8 @@ public class MACWE3D extends WEMOGAC3D {
 					"ufo_distfield.nii").toURI());
 			ImageDataInt initLabels = new ImageDataInt(NIFTIReaderWriter
 					.getInstance().read(flabel));
-			ImageDataFloat initDistfield = new ImageDataFloat(
-					NIFTIReaderWriter.getInstance().read(fdistfield));
+			ImageDataFloat initDistfield = new ImageDataFloat(NIFTIReaderWriter
+					.getInstance().read(fdistfield));
 			ImageDataFloat refImage = new ImageDataFloat(NIFTIReaderWriter
 					.getInstance().read(fimg));
 
@@ -433,8 +449,9 @@ public class MACWE3D extends WEMOGAC3D {
 
 	/**
 	 * Sets the intensity estimation.
-	 *
-	 * @param dynamic the new intensity estimation
+	 * 
+	 * @param dynamic
+	 *            the new intensity estimation
 	 */
 	public void setIntensityEstimation(boolean dynamic) {
 		this.intensityEstimation = dynamic;
@@ -442,8 +459,9 @@ public class MACWE3D extends WEMOGAC3D {
 
 	/**
 	 * Sets the intensity estimation interval.
-	 *
-	 * @param interval the new intensity estimation interval
+	 * 
+	 * @param interval
+	 *            the new intensity estimation interval
 	 */
 	public void setIntensityEstimationInterval(int interval) {
 		this.intensityEstimationInterval = interval;
