@@ -20,7 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +47,8 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class WEGAC2D.
+ * The Class WEGAC2D is a Work-Efficient implementation of Geodesic Active
+ * Contours 2D
  */
 public class WEGAC2D extends ActiveContour2D {
 
@@ -67,7 +67,7 @@ public class WEGAC2D extends ActiveContour2D {
 	/** The active list size. */
 	public int activeListSize;
 
-	/** The clamp speed. */
+	/** The clamp speed flag. */
 	protected boolean clampSpeed = false;
 
 	/** The context. */
@@ -75,9 +75,9 @@ public class WEGAC2D extends ActiveContour2D {
 
 	/** The delta level set buffer. */
 	public CLBuffer<FloatBuffer> deltaLevelSetBuffer = null;
-	/** The dist field. */
+	/** The distance field. */
 	protected float[][] distField;
-	/** The dist field image. */
+	/** The distance field image. */
 	protected ImageDataFloat distFieldImage;
 
 	/** The elapsed time. */
@@ -89,10 +89,10 @@ public class WEGAC2D extends ActiveContour2D {
 	protected long lastStartTime = 0;
 	/** The outer iterations. */
 
-	/** The MA x_ distance. */
+	/** The max distance. */
 	final float MAX_DISTANCE = 3.5f;
 
-	/** The max tmp buffer. */
+	/** The max temporary buffer. */
 	protected CLBuffer<FloatBuffer> maxTmpBuffer = null;
 
 	/** The max value buffer. */
@@ -107,27 +107,27 @@ public class WEGAC2D extends ActiveContour2D {
 	/** The pressure buffer. */
 	public CLBuffer<FloatBuffer> pressureBuffer = null;
 
-	/** The queue. */
+	/** The command queue. */
 	public CLCommandQueue queue;
 
 	/** The unsigned level set buffer. */
 	public CLBuffer<FloatBuffer> signedLevelSetBuffer = null;
 
-	/** The tmp active buffer. */
+	/** The temporary active buffer. */
 	protected CLBuffer<IntBuffer> tmpActiveBuffer = null;
 
-	/** The vec field buffer. */
+	/** The vector field buffer. */
 	public CLBuffer<FloatBuffer> vecFieldBuffer = null;
 
 	/**
-	 * Instantiates a new wEGA c2 d.
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D
 	 */
 	public WEGAC2D() {
 		this(CLDevice.Type.CPU);
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D
 	 * 
 	 * @param context
 	 *            the context
@@ -141,10 +141,10 @@ public class WEGAC2D extends ActiveContour2D {
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D
 	 * 
 	 * @param type
-	 *            the type
+	 *            the device type
 	 */
 	public WEGAC2D(CLDevice.Type type) {
 		super();
@@ -174,7 +174,7 @@ public class WEGAC2D extends ActiveContour2D {
 	}
 
 	/**
-	 * Inits the.
+	 * Initializes the OpenCL device.
 	 * 
 	 * @param rows
 	 *            the rows
@@ -261,7 +261,6 @@ public class WEGAC2D extends ActiveContour2D {
 	/**
 	 * Solve.
 	 * 
-	 * @return the image data float
 	 */
 	@Override
 	public void solve() {
@@ -453,9 +452,9 @@ public class WEGAC2D extends ActiveContour2D {
 	}
 
 	/**
-	 * Adds the elements.
+	 * Adds elements to the active list.
 	 * 
-	 * @return the int
+	 * @return the number of added elements.
 	 */
 	protected int addElements() {
 		final CLKernel addCountActiveList = kernelMap.get("addCountActiveList");
@@ -573,9 +572,9 @@ public class WEGAC2D extends ActiveContour2D {
 	}
 
 	/**
-	 * Delete elements.
+	 * Delete elements from the active list.
 	 * 
-	 * @return the int
+	 * @return the number of deleted elements.
 	 */
 	protected int deleteElements() {
 		final CLKernel deleteCountActiveList = kernelMap
@@ -624,7 +623,7 @@ public class WEGAC2D extends ActiveContour2D {
 	 * @param length
 	 *            the length
 	 * @param workgroup
-	 *            the workgroup
+	 *            the workgroup size
 	 * @return the int
 	 */
 	public static int roundToWorkgroupPower(int length, int workgroup) {
@@ -640,7 +639,7 @@ public class WEGAC2D extends ActiveContour2D {
 	 * 
 	 * @param length
 	 *            the length
-	 * @return the int
+	 * @return the workgroup size
 	 */
 	public static int roundToWorkgroupPower(int length) {
 		if (length % WORKGROUP_SIZE == 0) {

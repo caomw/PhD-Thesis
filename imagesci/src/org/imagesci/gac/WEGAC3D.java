@@ -20,7 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -59,7 +58,8 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MGACOpenCL3D.
+ * The Class WEGAC3D is a Work-Efficient implementation of Geodesic Active
+ * Contours 3D.
  */
 public class WEGAC3D extends ActiveContour3D {
 
@@ -88,23 +88,22 @@ public class WEGAC3D extends ActiveContour3D {
 	public CLContext context;
 	/** The delta level set buffer. */
 	public CLBuffer<FloatBuffer> deltaLevelSetBuffer = null;
-	/** The dirty. */
+	/** The dirty bit. */
 	boolean dirty = true;
-	/** The dist field. */
+	/** The distance field. */
 	protected float[][][] distField;
-	/** The dist field image. */
+	/** The distance field image. */
 	protected ImageDataFloat distFieldImage;
 	/** The history buffer. */
 	protected CLBuffer<ByteBuffer> historyBuffer = null;
-
 	/** The kernel map. */
 	public Map<String, CLKernel> kernelMap;
 	/** The last start time. */
 	protected long lastStartTime = 0;
-	/** The MA x_ distance. */
+	/** The Max distance. */
 	final float MAX_DISTANCE = 3.5f;
 
-	/** The max tmp buffer. */
+	/** The max distance temporary buffer. */
 	protected CLBuffer<FloatBuffer> maxTmpBuffer = null;
 
 	/** The max value buffer. */
@@ -119,33 +118,33 @@ public class WEGAC3D extends ActiveContour3D {
 	/** The pressure buffer. */
 	public CLBuffer<FloatBuffer> pressureBuffer = null;
 
-	/** The queue. */
+	/** The command queue. */
 	public CLCommandQueue queue;
 
 	/** The unsigned level set buffer. */
 	public CLBuffer<FloatBuffer> signedLevelSetBuffer = null;
 
-	/** The tmp active buffer. */
+	/** The temporary active buffer. */
 	protected CLBuffer<IntBuffer> tmpActiveBuffer = null;
 
 	/** The topology rule buffer buffer. */
 	public CLBuffer<ByteBuffer> topologyRuleBuffer;
 
-	/** The vec field buffer. */
+	/** The vector field buffer. */
 	public CLBuffer<FloatBuffer> vecFieldBuffer = null;
 
 	/**
-	 * Instantiates a new wEGA c3 d.
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D
 	 */
 	public WEGAC3D() {
 		this(CLDevice.Type.CPU);
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D
 	 * 
 	 * @param type
-	 *            the type
+	 *            the device type
 	 */
 	public WEGAC3D(CLDevice.Type type) {
 		super();
@@ -175,10 +174,10 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param context
 	 *            the context
 	 * @param queue
@@ -192,7 +191,7 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Inits the.
+	 * Initializes the OpenCL device.
 	 * 
 	 * @param rows
 	 *            the rows
@@ -291,7 +290,7 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Load lu t626.
+	 * Load look-up table for 6/26 connectivity
 	 * 
 	 * @return true, if successful
 	 */
@@ -301,10 +300,10 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Load lut.
+	 * Load the look-up table.
 	 * 
 	 * @param f
-	 *            the f
+	 *            the file
 	 * @return true, if successful
 	 */
 	private boolean loadLUT(InputStream fis) {
@@ -571,9 +570,9 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Adds the elements.
+	 * Adds elements to the active list.
 	 * 
-	 * @return the int
+	 * @return the number of added elements.
 	 */
 	protected int addElements() {
 		final CLKernel addCountActiveList = kernelMap.get("addCountActiveList");
@@ -696,9 +695,9 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Delete elements.
+	 * Delete elements from the active list.
 	 * 
-	 * @return the int
+	 * @return the number of deleted elements.
 	 */
 	protected int deleteElements() {
 		final CLKernel deleteCountActiveList = kernelMap
@@ -783,8 +782,8 @@ public class WEGAC3D extends ActiveContour3D {
 	 * @param length
 	 *            the length
 	 * @param workgroup
-	 *            the workgroup
-	 * @return the int
+	 *            the workgroup size
+	 * @return the rounded workgroup size
 	 */
 	public static int roundToWorkgroupPower(int length, int workgroup) {
 		if (length % workgroup == 0) {
@@ -799,7 +798,7 @@ public class WEGAC3D extends ActiveContour3D {
 	 * 
 	 * @param length
 	 *            the length
-	 * @return the int
+	 * @return the workgroup size
 	 */
 	public static int roundToWorkgroupPower(int length) {
 		if (length % WORKGROUP_SIZE == 0) {
