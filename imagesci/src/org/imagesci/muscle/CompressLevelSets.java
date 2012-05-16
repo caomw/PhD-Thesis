@@ -21,20 +21,22 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class CompressLevelSets.
+ * The Class CompressLevelSets compresses level sets into a label mask and
+ * distance field.
  */
 public class CompressLevelSets {
-	
+
 	/** The label image. */
 	protected ImageDataInt labelImage;
-	
+
 	/** The level set image. */
 	protected ImageDataFloat levelSetImage;
 
 	/**
 	 * Instantiates a new compress level sets.
-	 *
-	 * @param images the images
+	 * 
+	 * @param images
+	 *            the images
 	 */
 	public CompressLevelSets(ImageDataFloat[] images) {
 		ImageDataFloat first = images[0];
@@ -108,7 +110,7 @@ public class CompressLevelSets {
 
 	/**
 	 * Gets the distance field image.
-	 *
+	 * 
 	 * @return the distance field image
 	 */
 	public ImageDataFloat getDistanceFieldImage() {
@@ -117,7 +119,7 @@ public class CompressLevelSets {
 
 	/**
 	 * Gets the label image.
-	 *
+	 * 
 	 * @return the label image
 	 */
 	public ImageDataInt getLabelImage() {
