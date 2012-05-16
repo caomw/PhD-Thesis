@@ -67,10 +67,10 @@ public class WEMOGAC3D extends MOGAC3D {
 	/** The history buffer. */
 	protected CLBuffer<IntBuffer> historyBuffer = null;
 
-	/** The MA x_ distance. */
+	/** The max distance. */
 	final float MAX_DISTANCE = 3.5f;
 
-	/** The max tmp buffer. */
+	/** The max temporary buffer. */
 	protected CLBuffer<FloatBuffer> maxTmpBuffer = null;
 
 	/** The max value buffer. */
@@ -82,27 +82,27 @@ public class WEMOGAC3D extends MOGAC3D {
 	/** The sampling_interval. */
 	protected int sampling_interval = 8;
 
-	/** The tmp active buffer. */
+	/** The temporary active buffer. */
 	protected CLBuffer<IntBuffer> tmpActiveBuffer = null;
 
 	/** The use adaptive active set. */
 	protected boolean useAdaptiveActiveSet = false;
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 */
 	public WEMOGAC3D(ImageData refImage) {
 		super(refImage, CLDevice.Type.CPU);
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param context
 	 *            the context
 	 * @param queue
@@ -114,10 +114,10 @@ public class WEMOGAC3D extends MOGAC3D {
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param type
 	 *            the type
 	 */
@@ -576,9 +576,9 @@ public class WEMOGAC3D extends MOGAC3D {
 	}
 
 	/**
-	 * Adds the elements.
+	 * Adds elements to the active list.
 	 * 
-	 * @return the int
+	 * @return the nubmer of added elements.
 	 */
 	protected int addElements() {
 		if (activeListSize == 0) {
@@ -719,9 +719,9 @@ public class WEMOGAC3D extends MOGAC3D {
 	}
 
 	/**
-	 * Delete elements.
+	 * Delete elements from the active list.
 	 * 
-	 * @return the int
+	 * @return the number of deleted elements.
 	 */
 	protected int deleteElements() {
 		final CLKernel deleteCountActiveList = kernelMap

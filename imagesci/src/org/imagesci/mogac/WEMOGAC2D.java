@@ -64,7 +64,7 @@ public class WEMOGAC2D extends MOGAC2D {
 	/** The active list size. */
 	protected int activeListSize;
 
-	/** The max tmp buffer. */
+	/** The max temporary buffer. */
 	protected CLBuffer<FloatBuffer> maxTmpBuffer = null;
 
 	/** The max value buffer. */
@@ -73,24 +73,24 @@ public class WEMOGAC2D extends MOGAC2D {
 	/** The offset buffer. */
 	protected CLBuffer<IntBuffer> offsetBuffer = null;
 
-	/** The tmp active buffer. */
+	/** The temporary active buffer. */
 	protected CLBuffer<IntBuffer> tmpActiveBuffer = null;
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 2D.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 */
 	public WEMOGAC2D(ImageData refImage) {
 		super(refImage, CLDevice.Type.CPU);
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l2 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 2D.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param type
 	 *            the type
 	 */
@@ -100,7 +100,7 @@ public class WEMOGAC2D extends MOGAC2D {
 	}
 
 	/**
-	 * Instantiates a new wEMOGA c2 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 2D.
 	 * 
 	 * @param rows
 	 *            the rows
@@ -561,7 +561,7 @@ public class WEMOGAC2D extends MOGAC2D {
 	}
 
 	/**
-	 * Adds the elements.
+	 * Adds elements from the active list.
 	 */
 	protected void addElements() {
 		final CLKernel addCountActiveList = kernelMap.get("addCountActiveList");
@@ -674,7 +674,7 @@ public class WEMOGAC2D extends MOGAC2D {
 	}
 
 	/**
-	 * Delete elements.
+	 * Delete elements from the active list.
 	 */
 	protected void deleteElements() {
 		final CLKernel deleteCountActiveList = kernelMap
