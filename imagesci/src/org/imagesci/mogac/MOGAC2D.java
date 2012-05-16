@@ -20,7 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +52,8 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MGACOpenCL2D.
+ * The Class MOGAC2D is an implementation of Multi-Object Geodesic Active
+ * Contours 2D.
  */
 public class MOGAC2D extends AbstractCalculation {
 
@@ -106,7 +106,7 @@ public class MOGAC2D extends AbstractCalculation {
 	/** The dice threshold. */
 	protected double diceThreshold = 0.995;
 
-	/** The dirty. */
+	/** The dirty bit. */
 	boolean dirty = false;
 	/** The unsigned level set buffer. */
 	public CLBuffer<FloatBuffer> distanceFieldBuffer = null;
@@ -160,7 +160,7 @@ public class MOGAC2D extends AbstractCalculation {
 	/** The listeners. */
 	protected LinkedList<FrameUpdateListener> listeners = new LinkedList<FrameUpdateListener>();
 
-	/** The MA x_ objects. */
+	/** The maximum number of overlapping objects. */
 	protected final int MAX_OBJECTS = 32;
 
 	/** The outer iterations. */
@@ -227,17 +227,17 @@ public class MOGAC2D extends AbstractCalculation {
 	 * Instantiates a new mGAC open c l2 d.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 */
 	public MOGAC2D(ImageData refImage) {
 		this(refImage, CLDevice.Type.GPU);
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l2 d.
+	 * Instantiates a new Multi-object Geodesic Active Contour 2D
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param type
 	 *            the type
 	 */
@@ -268,7 +268,7 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Instantiates a new mOGA c2 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 2D
 	 * 
 	 * @param rows
 	 *            the rows
@@ -328,7 +328,7 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Inits the.
+	 * Initializes the OpenCL device
 	 * 
 	 * @param labelImage
 	 *            the label image
@@ -343,7 +343,7 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Inits the.
+	 * Initializes the OpenCL device.
 	 * 
 	 * @param unsignedImage
 	 *            the unsigned image
@@ -533,18 +533,18 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Inits the.
+	 * Initializes the OpenCL device.
 	 * 
 	 * @param labelBuffer
 	 *            the label buffer
-	 * @param numClusters
-	 *            the num clusters
+	 * @param numLabels
+	 *            the number of clusters
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	public void init(CLBuffer<IntBuffer> labelBuffer, int numClusters)
+	public void init(CLBuffer<IntBuffer> labelBuffer, int numLabels)
 			throws IOException {
-		init(null, labelBuffer, numClusters);
+		init(null, labelBuffer, numLabels);
 	}
 
 	/**
@@ -554,17 +554,17 @@ public class MOGAC2D extends AbstractCalculation {
 	 *            the unsigned level set buffer
 	 * @param labelBuffer
 	 *            the label buffer
-	 * @param numClusters
-	 *            the num clusters
+	 * @param numLabels
+	 *            the number of labels
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void init(CLBuffer<FloatBuffer> unsignedLevelSetBuffer,
-			CLBuffer<IntBuffer> labelBuffer, int numClusters)
+			CLBuffer<IntBuffer> labelBuffer, int numLabels)
 			throws IOException {
 		int l;
-		numLabels = numClusters;
-		numObjects = numClusters - 1;
+		this.numLabels = numLabels;
+		numObjects = numLabels - 1;
 		this.containsOverlaps = false;
 		CLProgram program = context.createProgram(
 				getClass().getResourceAsStream("MogacEvolveLevelSet2D.cl"))
@@ -597,7 +597,7 @@ public class MOGAC2D extends AbstractCalculation {
 
 		l = 0;
 		labelMasks = new int[numLabels];
-		for (l = 0; l < numClusters; l++) {
+		for (l = 0; l < numLabels; l++) {
 			labelMasks[l] = l;
 		}
 		forceIndexes = new int[numLabels];

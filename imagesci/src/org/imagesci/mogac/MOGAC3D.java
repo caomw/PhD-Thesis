@@ -20,7 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -59,7 +58,8 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MGACOpenCL3D.
+ * The Class MOGAC3D is an implementation of Multi-Object Geodesic Active
+ * Contours 3D.
  */
 public class MOGAC3D extends AbstractCalculation {
 	/**

@@ -20,7 +20,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-
 import java.awt.Dimension;
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -48,10 +47,11 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MGACOpenCL3D.
+ * The Class WEMOGAC3D is an implementation of Work-Effficient Multi-Object
+ * Geodesic Active Contours 3D.
  */
 public class WEMOGAC3D extends MOGAC3D {
-	
+
 	/** The Constant STRIDE. */
 	protected static final int STRIDE = SpringlsCommon3D.STRIDE;
 
@@ -60,38 +60,39 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/** The active list buffer. */
 	public CLBuffer<IntBuffer> activeListBuffer;
-	
+
 	/** The active list size. */
 	public int activeListSize;
-	
+
 	/** The history buffer. */
 	protected CLBuffer<IntBuffer> historyBuffer = null;
-	
+
 	/** The MA x_ distance. */
 	final float MAX_DISTANCE = 3.5f;
-	
+
 	/** The max tmp buffer. */
 	protected CLBuffer<FloatBuffer> maxTmpBuffer = null;
-	
+
 	/** The max value buffer. */
 	protected CLBuffer<IntBuffer> maxValueBuffer = null;
-	
+
 	/** The offset buffer. */
 	protected CLBuffer<IntBuffer> offsetBuffer = null;
-	
+
 	/** The sampling_interval. */
 	protected int sampling_interval = 8;
-	
+
 	/** The tmp active buffer. */
 	protected CLBuffer<IntBuffer> tmpActiveBuffer = null;
-	
+
 	/** The use adaptive active set. */
 	protected boolean useAdaptiveActiveSet = false;
 
 	/**
 	 * Instantiates a new mGAC open c l3 d.
-	 *
-	 * @param refImage the ref image
+	 * 
+	 * @param refImage
+	 *            the ref image
 	 */
 	public WEMOGAC3D(ImageData refImage) {
 		super(refImage, CLDevice.Type.CPU);
@@ -99,10 +100,13 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/**
 	 * Instantiates a new mGAC open c l3 d.
-	 *
-	 * @param refImage the ref image
-	 * @param context the context
-	 * @param queue the queue
+	 * 
+	 * @param refImage
+	 *            the ref image
+	 * @param context
+	 *            the context
+	 * @param queue
+	 *            the queue
 	 */
 	public WEMOGAC3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		super(refImage, context, queue);
@@ -573,7 +577,7 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/**
 	 * Adds the elements.
-	 *
+	 * 
 	 * @return the int
 	 */
 	protected int addElements() {
@@ -716,7 +720,7 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/**
 	 * Delete elements.
-	 *
+	 * 
 	 * @return the int
 	 */
 	protected int deleteElements() {
@@ -803,8 +807,9 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 		boolean showGUI = true;
@@ -856,8 +861,9 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/**
 	 * Sets the adaptive update.
-	 *
-	 * @param adaptive the new adaptive update
+	 * 
+	 * @param adaptive
+	 *            the new adaptive update
 	 */
 	public void setAdaptiveUpdate(boolean adaptive) {
 		this.useAdaptiveActiveSet = adaptive;
@@ -865,8 +871,9 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	/**
 	 * Sets the adaptive update interval.
-	 *
-	 * @param interval the new adaptive update interval
+	 * 
+	 * @param interval
+	 *            the new adaptive update interval
 	 */
 	public void setAdaptiveUpdateInterval(int interval) {
 		this.sampling_interval = interval;

@@ -47,7 +47,8 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MGACOpenCL2D.
+ * The Class WEMOGAC2D is an implementation of Work-Effficient Multi-Object
+ * Geodesic Active Contours 2D.
  */
 public class WEMOGAC2D extends MOGAC2D {
 
