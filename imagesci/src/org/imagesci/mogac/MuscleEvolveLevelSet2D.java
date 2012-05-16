@@ -32,7 +32,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MuscleEvolveLevelSet2D.
+ * The Class MuscleEvolveLevelSet2D tracks a springls constellation with MOGAC.
  */
 public class MuscleEvolveLevelSet2D extends WEMOGAC2D {
 	
@@ -45,7 +45,7 @@ public class MuscleEvolveLevelSet2D extends WEMOGAC2D {
 	/**
 	 * Instantiates a new muscle evolve level set2 d.
 	 *
-	 * @param refImage the ref image
+	 * @param refImage the reference image
 	 * @param type the type
 	 */
 	public MuscleEvolveLevelSet2D(ImageData refImage, Type type) {
@@ -54,10 +54,10 @@ public class MuscleEvolveLevelSet2D extends WEMOGAC2D {
 	}
 
 	/**
-	 * Instantiates a new muscle evolve level set2 d.
+	 * Instantiates a new muscle evolve level set 2d.
 	 *
 	 * @param commons the commons
-	 * @param refImage the ref image
+	 * @param refImage the reference image
 	 * @param curvatureWeight the curvature weight
 	 */
 	public MuscleEvolveLevelSet2D(SpringlsCommon2D commons, ImageData refImage,
@@ -160,7 +160,7 @@ public class MuscleEvolveLevelSet2D extends WEMOGAC2D {
 	/**
 	 * Extend distance field.
 	 *
-	 * @param distFieldExtend the dist field extend
+	 * @param distFieldExtend the distance field extend
 	 */
 	public void extendDistanceField(int distFieldExtend) {
 		CLKernel extendDistanceField = commons.kernelMap

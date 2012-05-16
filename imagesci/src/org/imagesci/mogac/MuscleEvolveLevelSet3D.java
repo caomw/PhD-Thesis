@@ -18,7 +18,6 @@ package org.imagesci.mogac;
 import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 
-
 import java.nio.IntBuffer;
 
 import org.imagesci.springls.SpringlsCommon3D;
@@ -30,7 +29,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MuscleEvolveLevelSet3D.
+ * The Class MuscleEvolveLevelSet3D tracks a springls constellation with MOGAC.
  */
 public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 
@@ -40,12 +39,12 @@ public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 	protected float stepSize = 0.75f;
 
 	/**
-	 * Instantiates a new muscle evolve level set3 d.
+	 * Instantiates a new muscle evolve level set 3d.
 	 * 
 	 * @param commons
 	 *            the commons
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param curvatureWeight
 	 *            the curvature weight
 	 */
@@ -337,6 +336,11 @@ public class MuscleEvolveLevelSet3D extends WEMOGAC3D {
 		return true;
 	}
 
+	/**
+	 * Extend distance field.
+	 *
+	 * @param layers the layers
+	 */
 	public void extendDistanceField(int layers) {
 		CLKernel extendDistanceField = commons.kernelMap
 				.get(SpringlsCommon3D.EXTEND_DISTANCE_FIELD);
