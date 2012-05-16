@@ -86,7 +86,7 @@ public class MOGAC3D extends AbstractCalculation {
 		public void frameUpdate(long time, double fps);
 	}
 
-	/** The WORKGROU p_ size. */
+	/** The WORKGROUP size. */
 	public static int WORKGROUP_SIZE = 256;
 
 	/** The clamp speed. */
@@ -105,7 +105,7 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/** The dice threshold. */
 	protected double diceThreshold = 0.995;
-	/** The dirty. */
+	/** The dirty bit. */
 	boolean dirty = true;
 	/** The unsigned level set buffer. */
 	public CLBuffer<FloatBuffer> distanceFieldBuffer = null;
@@ -145,7 +145,7 @@ public class MOGAC3D extends AbstractCalculation {
 	/** The label masks. */
 	protected int[] labelMasks;
 
-	/** The labels *. */
+	/** The labels. */
 	protected int[][][] labels;
 	/** The last start time. */
 	protected long lastStartTime = 0;
@@ -153,7 +153,7 @@ public class MOGAC3D extends AbstractCalculation {
 	/** The listeners. */
 	protected LinkedList<FrameUpdateListener> listeners = new LinkedList<FrameUpdateListener>();
 
-	/** The MA x_ objects. */
+	/** The maximum number of overlapping objects. */
 	protected final int MAX_OBJECTS = 32;
 
 	/** The outer iterations. */
@@ -165,13 +165,13 @@ public class MOGAC3D extends AbstractCalculation {
 	/** The max speed. */
 	protected float maxSpeed = 0.999f;;
 
-	/** The max tmp buffer. */
+	/** The max temporary buffer. */
 	CLBuffer<FloatBuffer> maxTmpBuffer = null;
 
 	/** The STRIDE. */
 	protected int numLabels;
 
-	/** The num objects. */
+	/** The number of objects. */
 	protected int numObjects = 0;
 
 	/** The old unsigned level set buffer. */
@@ -213,30 +213,30 @@ public class MOGAC3D extends AbstractCalculation {
 	/** The topology rule buffer buffer. */
 	public CLBuffer<ByteBuffer> topologyRuleBuffer;
 
-	/** The vec field buffer. */
+	/** The vector field buffer. */
 	public CLBuffer<FloatBuffer> vecFieldBuffer = null;
 
-	/** The vec field image. */
+	/** The vector field image. */
 	protected ImageDataFloat vecFieldImage = null;
 
-	/** The vec field weight. */
+	/** The vector field weight. */
 	protected float vecFieldWeight = 0;
 
 	/**
 	 * Instantiates a new mOGA c3 d.
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 */
 	public MOGAC3D(ImageData refImage) {
 		this(refImage, CLDevice.Type.GPU);
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param context
 	 *            the context
 	 * @param queue
@@ -249,10 +249,10 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Instantiates a new mGAC open c l3 d.
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D
 	 * 
 	 * @param refImage
-	 *            the ref image
+	 *            the reference image
 	 * @param type
 	 *            the type
 	 */
@@ -324,7 +324,7 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Inits the.
+	 * Initialize the OpenCL device.
 	 * 
 	 * @param labelImage
 	 *            the label image
@@ -339,7 +339,7 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Inits the.
+	 * Initialize the OpenCL device.
 	 * 
 	 * @param unsignedImage
 	 *            the unsigned image
@@ -863,7 +863,7 @@ public class MOGAC3D extends AbstractCalculation {
 	 * 
 	 * @param length
 	 *            the length
-	 * @return the int
+	 * @return the workgroup size
 	 */
 	public static int roundToWorkgroupPower(int length) {
 		if (length % WORKGROUP_SIZE == 0) {
@@ -931,10 +931,10 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Load lut.
+	 * Load the look-up table.
 	 * 
 	 * @param f
-	 *            the f
+	 *            the file
 	 * @return true, if successful
 	 */
 	private boolean loadLUT(InputStream fis) {
@@ -1067,7 +1067,7 @@ public class MOGAC3D extends AbstractCalculation {
 	 * @param length
 	 *            the length
 	 * @param workgroup
-	 *            the workgroup
+	 *            the workgroup size
 	 * @return the int
 	 */
 	public static int roundToWorkgroupPower(int length, int workgroup) {
@@ -1156,9 +1156,9 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Gets the num colors.
+	 * Gets the number of colors.
 	 * 
-	 * @return the num colors
+	 * @return the number of colors
 	 */
 	public int getNumColors() {
 		return labelMasks[labelMasks.length - 1] + 1;
@@ -1175,7 +1175,7 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Gets the num objects.
+	 * Gets the number of objects.
 	 * 
 	 * @return the num objects
 	 */
@@ -1207,7 +1207,6 @@ public class MOGAC3D extends AbstractCalculation {
 	 * @return the time
 	 */
 	public long getTime() {
-		// TODO Auto-generated method stub
 		return time;
 	}
 
@@ -1308,7 +1307,7 @@ public class MOGAC3D extends AbstractCalculation {
 	 * Sets the vector field.
 	 * 
 	 * @param vecFieldImage
-	 *            the vec field image
+	 *            the vector field image
 	 * @param weight
 	 *            the weight
 	 */
