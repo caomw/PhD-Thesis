@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -134,17 +136,16 @@ public class WEGAC3D extends ActiveContour3D {
 	public CLBuffer<FloatBuffer> vecFieldBuffer = null;
 
 	/**
-	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D.
 	 */
 	public WEGAC3D() {
 		this(CLDevice.Type.CPU);
 	}
 
 	/**
-	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D
-	 * 
-	 * @param type
-	 *            the device type
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D.
+	 *
+	 * @param type the device type
 	 */
 	public WEGAC3D(CLDevice.Type type) {
 		super();
@@ -174,14 +175,11 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D
-	 * 
-	 * @param refImage
-	 *            the reference image
-	 * @param context
-	 *            the context
-	 * @param queue
-	 *            the queue
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 3D.
+	 *
+	 * @param refImage the reference image
+	 * @param context the context
+	 * @param queue the queue
 	 */
 	public WEGAC3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		super();
@@ -290,8 +288,8 @@ public class WEGAC3D extends ActiveContour3D {
 	}
 
 	/**
-	 * Load look-up table for 6/26 connectivity
-	 * 
+	 * Load look-up table for 6/26 connectivity.
+	 *
 	 * @return true, if successful
 	 */
 	protected boolean loadLUT626() {
@@ -301,9 +299,8 @@ public class WEGAC3D extends ActiveContour3D {
 
 	/**
 	 * Load the look-up table.
-	 * 
-	 * @param f
-	 *            the file
+	 *
+	 * @param fis the fis
 	 * @return true, if successful
 	 */
 	private boolean loadLUT(InputStream fis) {

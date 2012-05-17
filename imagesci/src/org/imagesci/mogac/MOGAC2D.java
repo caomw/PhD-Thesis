@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -234,12 +236,10 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Instantiates a new Multi-object Geodesic Active Contour 2D
-	 * 
-	 * @param refImage
-	 *            the reference image
-	 * @param type
-	 *            the type
+	 * Instantiates a new Multi-object Geodesic Active Contour 2D.
+	 *
+	 * @param refImage the reference image
+	 * @param type the type
 	 */
 	public MOGAC2D(ImageData refImage, CLDevice.Type type) {
 		CLPlatform[] platforms = CLPlatform.listCLPlatforms();
@@ -268,16 +268,12 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Instantiates a new Multi-Object Geodesic Active Contour 2D
-	 * 
-	 * @param rows
-	 *            the rows
-	 * @param cols
-	 *            the cols
-	 * @param context
-	 *            the context
-	 * @param queue
-	 *            the queue
+	 * Instantiates a new Multi-Object Geodesic Active Contour 2D.
+	 *
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param context the context
+	 * @param queue the queue
 	 */
 	public MOGAC2D(int rows, int cols, CLContext context, CLCommandQueue queue) {
 		this.context = context;
@@ -328,14 +324,11 @@ public class MOGAC2D extends AbstractCalculation {
 	}
 
 	/**
-	 * Initializes the OpenCL device
-	 * 
-	 * @param labelImage
-	 *            the label image
-	 * @param containsOverlaps
-	 *            the contains overlaps
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * Initializes the OpenCL device.
+	 *
+	 * @param labelImage the label image
+	 * @param containsOverlaps the contains overlaps
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public void init(ImageDataInt labelImage, boolean containsOverlaps)
 			throws IOException {

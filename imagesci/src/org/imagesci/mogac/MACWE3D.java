@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -43,7 +45,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 // TODO: Auto-generated Javadoc
 /**
  * The Class MACWE3D is an implementation of Multi-object Active Contours
- * Without Edges 3D
+ * Without Edges 3D.
  */
 public class MACWE3D extends WEMOGAC3D {
 
@@ -63,26 +65,21 @@ public class MACWE3D extends WEMOGAC3D {
 	protected CLBuffer<FloatBuffer> stddev;
 
 	/**
-	 * Instantiates a new Multi-object Active Contours Without Edges 3D
-	 * 
-	 * @param refImage
-	 *            the reference image
-	 * @param context
-	 *            the context
-	 * @param queue
-	 *            the queue
+	 * Instantiates a new Multi-object Active Contours Without Edges 3D.
+	 *
+	 * @param refImage the reference image
+	 * @param context the context
+	 * @param queue the queue
 	 */
 	public MACWE3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		super(refImage, context, queue);
 	}
 
 	/**
-	 * Instantiates a new Multi-object Active Contours Without Edges 3D
-	 * 
-	 * @param refImage
-	 *            the reference image
-	 * @param type
-	 *            the type
+	 * Instantiates a new Multi-object Active Contours Without Edges 3D.
+	 *
+	 * @param refImage the reference image
+	 * @param type the type
 	 */
 	public MACWE3D(ImageData refImage, CLDevice.Type type) {
 		super(refImage, type);

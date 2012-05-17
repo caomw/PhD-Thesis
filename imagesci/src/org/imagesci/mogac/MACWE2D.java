@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -42,7 +44,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MACWE2D is an implementation of Multi-object Active Contours Without Edges 2D
+ * The Class MACWE2D is an implementation of Multi-object Active Contours Without Edges 2D.
  */
 public class MACWE2D extends MOGAC2D {
 	

@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -48,7 +50,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 // TODO: Auto-generated Javadoc
 /**
  * The Class WEGAC2D is a Work-Efficient implementation of Geodesic Active
- * Contours 2D
+ * Contours 2D.
  */
 public class WEGAC2D extends ActiveContour2D {
 
@@ -120,19 +122,17 @@ public class WEGAC2D extends ActiveContour2D {
 	public CLBuffer<FloatBuffer> vecFieldBuffer = null;
 
 	/**
-	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D.
 	 */
 	public WEGAC2D() {
 		this(CLDevice.Type.CPU);
 	}
 
 	/**
-	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D
-	 * 
-	 * @param context
-	 *            the context
-	 * @param queue
-	 *            the queue
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D.
+	 *
+	 * @param context the context
+	 * @param queue the queue
 	 */
 	public WEGAC2D(CLContext context, CLCommandQueue queue) {
 		super();
@@ -141,10 +141,9 @@ public class WEGAC2D extends ActiveContour2D {
 	}
 
 	/**
-	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D
-	 * 
-	 * @param type
-	 *            the device type
+	 * Instantiates a new Work-Efficient Geodesic Active Contour 2D.
+	 *
+	 * @param type the device type
 	 */
 	public WEGAC2D(CLDevice.Type type) {
 		super();

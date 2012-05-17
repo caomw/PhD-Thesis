@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -48,16 +50,25 @@ public class Example2i_macwe2d extends AbstractExample {
 		(new Example2i_macwe2d()).launch(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Mumford-Shah segmentation with multi-object active contours 2D.";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getName()
+	 */
 	@Override
 	public String getName() {
 		return "MACWE 2D";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#launch(java.io.File, java.lang.String[])
+	 */
 	@Override
 	public void launch(File workingDirectory, String[] args) {
 		boolean showGUI = true;

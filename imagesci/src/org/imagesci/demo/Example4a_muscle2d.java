@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -45,16 +47,25 @@ public class Example4a_muscle2d extends AbstractExample {
 		(new Example4a_muscle2d()).launch(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Parametric multi-object active contour segmentation with 2D MUSCLE.";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getName()
+	 */
 	@Override
 	public String getName() {
 		return "MUSCLE 2D";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#launch(java.io.File, java.lang.String[])
+	 */
 	@Override
 	public void launch(File workingDirectory, String[] args) {
 		boolean showGUI = true;

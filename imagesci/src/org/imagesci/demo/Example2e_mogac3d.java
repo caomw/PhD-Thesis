@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -49,16 +51,25 @@ public class Example2e_mogac3d extends AbstractExample {
 		(new Example2e_mogac3d()).launch(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Multi-object segmentation in 3D with MOGAC";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getName()
+	 */
 	@Override
 	public String getName() {
 		return "MOGAC 3D";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#launch(java.io.File, java.lang.String[])
+	 */
 	@Override
 	public void launch(File workingDirectory, String[] args) {
 		boolean showGUI = true;

@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -47,16 +49,25 @@ public class Example1a_gac2d extends AbstractExample {
 		(new Example1a_gac2d()).launch(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Classic level set segmentation with a 2D geodesic active contour.";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getName()
+	 */
 	@Override
 	public String getName() {
 		return "Active Contour 2D";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#launch(java.io.File, java.lang.String[])
+	 */
 	@Override
 	public void launch(File workingDirectory, String[] args) {
 		File ftarget;

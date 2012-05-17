@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -763,9 +765,8 @@ public class SpringlsCommon3D {
 
 	/**
 	 * Load lut.
-	 * 
-	 * @param f
-	 *            the file to load
+	 *
+	 * @param fis the fis
 	 * @return the bit set
 	 */
 	private boolean loadLUT(InputStream fis) {

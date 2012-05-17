@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -90,9 +92,8 @@ public class TopologyPreservationRule3D extends TopologyRule3D {
 
 	/**
 	 * Load lut.
-	 * 
-	 * @param f
-	 *            the f
+	 *
+	 * @param fis the fis
 	 * @return the bit set
 	 */
 	private BitSet loadLUT(InputStream fis) {

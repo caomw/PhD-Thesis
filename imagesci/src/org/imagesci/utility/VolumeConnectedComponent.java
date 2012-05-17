@@ -1,3 +1,20 @@
+/**
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
+ *
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
+ * The Johns Hopkins University
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.  The license is available for reading at:
+ * http://www.gnu.org/copyleft/lgpl.html
+ *
+ * @author Blake Lucas (blake@cs.jhu.edu)
+ */
 package org.imagesci.utility;
 
 import java.util.ArrayList;
@@ -6,11 +23,31 @@ import java.util.HashMap;
 import java.util.Stack;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class VolumeConnectedComponent.
+ */
 public class VolumeConnectedComponent {
+	
+	/**
+	 * The Class VertexLabel.
+	 */
 	protected static class VertexLabel {
+		
+		/** The k. */
 		public int i, j, k;
+		
+		/** The label. */
 		public int label;
 
+		/**
+		 * Instantiates a new vertex label.
+		 *
+		 * @param i the i
+		 * @param j the j
+		 * @param k the k
+		 * @param label the label
+		 */
 		public VertexLabel(int i, int j, int k, int label) {
 			this.i = i;
 			this.j = j;
@@ -19,6 +56,18 @@ public class VolumeConnectedComponent {
 		}
 	}
 
+	/**
+	 * Gets the neighbor.
+	 *
+	 * @param labels the labels
+	 * @param i the i
+	 * @param j the j
+	 * @param k the k
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @return the neighbor
+	 */
 	private static VertexLabel getNeighbor(VertexLabel[][][] labels, int i,
 			int j, int k, int rows, int cols, int slices) {
 		if (i < 0 || j < 0 || k < 0 || i >= rows || j >= cols || k >= slices)
@@ -26,6 +75,12 @@ public class VolumeConnectedComponent {
 		return labels[i][j][k];
 	}
 
+	/**
+	 * Extract largest non background component.
+	 *
+	 * @param image the image
+	 * @return the image data int
+	 */
 	public static ImageDataInt extractLargestNonBackgroundComponent(
 			ImageDataInt image) {
 		int rows = image.getRows();
@@ -114,6 +169,13 @@ public class VolumeConnectedComponent {
 		return outImage;
 	}
 
+	/**
+	 * Extract largest foreground component.
+	 *
+	 * @param image the image
+	 * @param targetLabel the target label
+	 * @return the image data int
+	 */
 	public static ImageDataInt extractLargestForegroundComponent(
 			ImageDataInt image, int targetLabel) {
 		int rows = image.getRows();
@@ -203,25 +265,52 @@ public class VolumeConnectedComponent {
 		return outImage;
 	}
 
+	/**
+	 * The Class LabelVolume.
+	 */
 	protected static class LabelVolume implements Comparable<LabelVolume> {
+		
+		/** The label. */
 		public int label;
+		
+		/** The volume. */
 		public int volume;
 
+		/**
+		 * Instantiates a new label volume.
+		 *
+		 * @param label the label
+		 * @param volume the volume
+		 */
 		public LabelVolume(int label, int volume) {
 			this.label = label;
 			this.volume = volume;
 		}
 
+		/* (non-Javadoc)
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
 		@Override
 		public int compareTo(LabelVolume l) {
 			return (int) Math.signum(l.volume - volume);
 		}
 
+		/**
+		 * Gets the string.
+		 *
+		 * @return the string
+		 */
 		public String getString() {
 			return ("[" + label + ":" + volume + "]");
 		}
 	}
 
+	/**
+	 * Label componenets.
+	 *
+	 * @param image the image
+	 * @return the image data int
+	 */
 	public static ImageDataInt labelComponenets(ImageDataInt image) {
 		int rows = image.getRows();
 		int cols = image.getCols();

@@ -1,8 +1,10 @@
 /**
- * Java Image Science Toolkit (JIST) // Java Image Science Toolkit (JIST)
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
- * Image Analysis and Communications Laboratory &
- * Laboratory for Medical Image Computing &
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
  * The Johns Hopkins University
  *
  * This library is free software; you can redistribute it and/or modify it
@@ -11,6 +13,7 @@
  * your option) any later version.  The license is available for reading at:
  * http://www.gnu.org/copyleft/lgpl.html
  *
+ * @author Blake Lucas (blake@cs.jhu.edu)
  */
 package edu.jhu.ece.iacl.jist.io;
 
@@ -41,6 +44,8 @@ import edu.washington.biostr.sig.nifti.NiftiFile;
  * The Class CubicVolumeReaderWriter.
  */
 public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
+	
+	/** The extension filter. */
 	protected FileExtensionFilter extensionFilter;
 
 	/** The Constant readerWriter. */
@@ -62,6 +67,14 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		super(new FileExtensionFilter(new String[] { "nii", "hdr", "img" }));
 	}
 
+	/**
+	 * Buffer to byte matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @return the byte[][]
+	 */
 	public final byte[][] bufferToByteMatrix(byte[] buffer, int rows, int cols) {
 		byte mat[][] = new byte[rows][cols];
 		int index = 0;
@@ -73,6 +86,15 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to byte matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @return the byte[][][]
+	 */
 	public final byte[][][] bufferToByteMatrix(byte[] buffer, int rows,
 			int cols, int slices) {
 		byte mat[][][] = new byte[rows][cols][slices];
@@ -87,6 +109,16 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to byte matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param comps the comps
+	 * @return the byte[][][][]
+	 */
 	public final byte[][][][] bufferToByteMatrix(byte[] buffer, int rows,
 			int cols, int slices, int comps) {
 		byte mat[][][][] = new byte[rows][cols][slices][comps];
@@ -103,6 +135,15 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to float matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param bigEndian the big endian
+	 * @return the float[][]
+	 */
 	public final float[][] bufferToFloatMatrix(byte[] buffer, int rows,
 			int cols, boolean bigEndian) {
 		float mat[][] = new float[rows][cols];
@@ -116,6 +157,16 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to float matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param bigEndian the big endian
+	 * @return the float[][][]
+	 */
 	public final float[][][] bufferToFloatMatrix(byte[] buffer, int rows,
 			int cols, int slices, boolean bigEndian) {
 		float mat[][][] = new float[rows][cols][slices];
@@ -131,6 +182,17 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to float matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param comps the comps
+	 * @param bigEndian the big endian
+	 * @return the float[][][][]
+	 */
 	public final float[][][][] bufferToFloatMatrix(byte[] buffer, int rows,
 			int cols, int slices, int comps, boolean bigEndian) {
 		float mat[][][][] = new float[rows][cols][slices][comps];
@@ -150,6 +212,15 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to int matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param bigEndian the big endian
+	 * @return the int[][]
+	 */
 	public final int[][] bufferToIntMatrix(byte[] buffer, int rows, int cols,
 			boolean bigEndian) {
 		int mat[][] = new int[rows][cols];
@@ -164,6 +235,16 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to int matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param bigEndian the big endian
+	 * @return the int[][][]
+	 */
 	public final int[][][] bufferToIntMatrix(byte[] buffer, int rows, int cols,
 			int slices, boolean bigEndian) {
 		int mat[][][] = new int[rows][cols][slices];
@@ -179,6 +260,17 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to int matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param comps the comps
+	 * @param bigEndian the big endian
+	 * @return the int[][][][]
+	 */
 	public final int[][][][] bufferToIntMatrix(byte[] buffer, int rows,
 			int cols, int slices, int comps, boolean bigEndian) {
 		int mat[][][][] = new int[rows][cols][slices][comps];
@@ -196,6 +288,15 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to short matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param bigEndian the big endian
+	 * @return the int[][]
+	 */
 	public final int[][] bufferToShortMatrix(byte[] buffer, int rows, int cols,
 			boolean bigEndian) {
 		int mat[][] = new int[rows][cols];
@@ -209,6 +310,16 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to short matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param bigEndian the big endian
+	 * @return the int[][][]
+	 */
 	public final int[][][] bufferToShortMatrix(byte[] buffer, int rows,
 			int cols, int slices, boolean bigEndian) {
 		int mat[][][] = new int[rows][cols][slices];
@@ -224,6 +335,17 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Buffer to short matrix.
+	 *
+	 * @param buffer the buffer
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
+	 * @param comps the comps
+	 * @param bigEndian the big endian
+	 * @return the int[][][][]
+	 */
 	public final int[][][][] bufferToShortMatrix(byte[] buffer, int rows,
 			int cols, int slices, int comps, boolean bigEndian) {
 		int mat[][][][] = new int[rows][cols][slices][comps];
@@ -242,6 +364,14 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return mat;
 	}
 
+	/**
+	 * Gets the buffer float.
+	 *
+	 * @param buffer the buffer
+	 * @param index the index
+	 * @param bigEndian the big endian
+	 * @return the buffer float
+	 */
 	public final float getBufferFloat(byte[] buffer, int index,
 			boolean bigEndian) {
 		if (bigEndian) {
@@ -259,6 +389,14 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return Float.intBitsToFloat(tmpInt);
 	}
 
+	/**
+	 * Gets the buffer int.
+	 *
+	 * @param buffer the buffer
+	 * @param index the index
+	 * @param bigEndian the big endian
+	 * @return the buffer int
+	 */
 	public final int getBufferInt(byte[] buffer, int index, boolean bigEndian) {
 		if (bigEndian) {
 			return ((buffer[index] & 0xFF) << 24
@@ -271,6 +409,14 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 				| (buffer[(index + 1)] & 0xFF) << 8 | buffer[index] & 0xFF);
 	}
 
+	/**
+	 * Gets the buffer short.
+	 *
+	 * @param buffer the buffer
+	 * @param index the index
+	 * @param bigEndian the big endian
+	 * @return the buffer short
+	 */
 	public final short getBufferShort(byte[] buffer, int index,
 			boolean bigEndian) {
 		if (bigEndian) {
@@ -279,6 +425,9 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return (short) ((buffer[(index + 1)] & 0xFF) << 8 | buffer[index] & 0xFF);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.jhu.ece.iacl.jist.io.FileReaderWriter#getExtensionFilter()
+	 */
 	@Override
 	public FileExtensionFilter getExtensionFilter() {
 		return extensionFilter;
@@ -413,6 +562,13 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 
 	}
 
+	/**
+	 * To float buffer.
+	 *
+	 * @param img the img
+	 * @param bigEndian the big endian
+	 * @return the byte[]
+	 */
 	public final byte[] toFloatBuffer(ImageData img, boolean bigEndian) {
 		int rows = img.getRows();
 		int cols = img.getCols();
@@ -434,6 +590,13 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return data;
 	}
 
+	/**
+	 * To int buffer.
+	 *
+	 * @param img the img
+	 * @param bigEndian the big endian
+	 * @return the byte[]
+	 */
 	public final byte[] toIntBuffer(ImageData img, boolean bigEndian) {
 		int rows = img.getRows();
 		int cols = img.getCols();
@@ -455,6 +618,13 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return data;
 	}
 
+	/**
+	 * To byte buffer.
+	 *
+	 * @param img the img
+	 * @param bigEndian the big endian
+	 * @return the byte[]
+	 */
 	public final byte[] toByteBuffer(ImageData img, boolean bigEndian) {
 		int rows = img.getRows();
 		int cols = img.getCols();
@@ -474,6 +644,13 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return data;
 	}
 
+	/**
+	 * To short buffer.
+	 *
+	 * @param img the img
+	 * @param bigEndian the big endian
+	 * @return the byte[]
+	 */
 	public final byte[] toShortBuffer(ImageData img, boolean bigEndian) {
 		int rows = img.getRows();
 		int cols = img.getCols();
@@ -495,12 +672,28 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return data;
 	}
 
+	/**
+	 * Sets the buffer float.
+	 *
+	 * @param buffer the buffer
+	 * @param data the data
+	 * @param i the i
+	 * @param bigEndian the big endian
+	 */
 	public final void setBufferFloat(byte[] buffer, float data, int i,
 			boolean bigEndian) {
 		int tmpInt = Float.floatToIntBits(data);
 		setBufferInt(buffer, tmpInt, i, bigEndian);
 	}
 
+	/**
+	 * Sets the buffer int.
+	 *
+	 * @param buffer the buffer
+	 * @param data the data
+	 * @param i the i
+	 * @param bigEndian the big endian
+	 */
 	public final void setBufferInt(byte[] buffer, int data, int i,
 			boolean bigEndian) {
 		if (bigEndian) {
@@ -516,6 +709,14 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		}
 	}
 
+	/**
+	 * Sets the buffer long.
+	 *
+	 * @param buffer the buffer
+	 * @param data the data
+	 * @param i the i
+	 * @param bigEndian the big endian
+	 */
 	public final void setBufferLong(byte[] buffer, long data, int i,
 			boolean bigEndian) {
 		if (bigEndian) {
@@ -539,6 +740,14 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		}
 	}
 
+	/**
+	 * Sets the buffer short.
+	 *
+	 * @param buffer the buffer
+	 * @param data the data
+	 * @param i the i
+	 * @param bigEndian the big endian
+	 */
 	public final void setBufferShort(byte[] buffer, short data, int i,
 			boolean bigEndian) {
 		if (bigEndian) {
@@ -550,6 +759,9 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.jhu.ece.iacl.jist.io.FileReaderWriter#setExtensionFilter(edu.jhu.ece.iacl.jist.io.FileExtensionFilter)
+	 */
 	@Override
 	public void setExtensionFilter(FileExtensionFilter extensionFilter) {
 		this.extensionFilter = extensionFilter;
@@ -671,6 +883,11 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 		return f;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		File outputDir = new File(args[0]);
 		Point3i dims = new Point3i(128, 100, 87);

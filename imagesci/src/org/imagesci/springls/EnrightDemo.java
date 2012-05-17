@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -103,13 +105,11 @@ public class EnrightDemo {
 
 	/**
 	 * Creates the enright test.
-	 * 
-	 * @param rows
-	 *            the rows
-	 * @param cols
-	 *            the cols
-	 * @param slices
-	 *            the slices
+	 *
+	 * @param volRender the vol render
+	 * @param rows the rows
+	 * @param cols the cols
+	 * @param slices the slices
 	 * @return the springls active contour3 d
 	 */
 	public static final SpringlsActiveContour3D createEnrightTest(

@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -28,15 +30,27 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageData;
  * The Class Example0b_image3d.
  */
 public class Example0b_image3d extends AbstractExample {
+	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		(new Example0b_image3d()).launch(args);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return "Displays a 3D image in tri-planar view.";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.imagesci.demo.AbstractExample#getName()
+	 */
 	@Override
 	public String getName() {
 		return "View 3D Image";
@@ -44,9 +58,9 @@ public class Example0b_image3d extends AbstractExample {
 
 	/**
 	 * The main method.
-	 * 
-	 * @param args
-	 *            the arguments
+	 *
+	 * @param workingDirectory the working directory
+	 * @param args the arguments
 	 */
 	@Override
 	public void launch(File workingDirectory, String[] args) {

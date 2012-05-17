@@ -1,3 +1,20 @@
+/**
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
+ *
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
+ * The Johns Hopkins University
+ *
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.  The license is available for reading at:
+ * http://www.gnu.org/copyleft/lgpl.html
+ *
+ * @author Blake Lucas (blake@cs.jhu.edu)
+ */
 package org.imagesci.utility;
 
 import data.PlaceHolder;
@@ -10,8 +27,19 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SurfaceConnectedComponent.
+ */
 public class SurfaceConnectedComponent {
 
+	/**
+	 * Builds the neighbor vertex vertex table.
+	 *
+	 * @param mesh the mesh
+	 * @param dir the dir
+	 * @return the int[][]
+	 */
 	public static int[][] buildNeighborVertexVertexTable(EmbeddedSurface mesh,
 			Direction dir) {
 
@@ -81,6 +109,12 @@ public class SurfaceConnectedComponent {
 		return neighborTable;
 	}
 
+	/**
+	 * Label components.
+	 *
+	 * @param surf the surf
+	 * @return the int
+	 */
 	public static final int labelComponents(EmbeddedSurface surf) {
 		int[][] neighborVertexVertexTable = buildNeighborVertexVertexTable(
 				surf, EmbeddedSurface.Direction.CLOCKWISE);
@@ -129,16 +163,34 @@ public class SurfaceConnectedComponent {
 		return labelCount + 1;
 	}
 
+	/**
+	 * The Class VertexLabel.
+	 */
 	protected static class VertexLabel {
+		
+		/** The vid. */
 		public int vid;
+		
+		/** The label. */
 		public int label;
 
+		/**
+		 * Instantiates a new vertex label.
+		 *
+		 * @param vid the vid
+		 * @param label the label
+		 */
 		public VertexLabel(int vid, int label) {
 			this.vid = vid;
 			this.label = label;
 		}
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		try {
 			File f = new File(PlaceHolder.class.getResource("skeleton.vtk")

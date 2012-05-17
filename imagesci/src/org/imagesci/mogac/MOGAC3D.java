@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -233,14 +235,11 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Instantiates a new Multi-Object Geodesic Active Contour 3D
-	 * 
-	 * @param refImage
-	 *            the reference image
-	 * @param context
-	 *            the context
-	 * @param queue
-	 *            the queue
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
+	 *
+	 * @param refImage the reference image
+	 * @param context the context
+	 * @param queue the queue
 	 */
 	public MOGAC3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		this.image = refImage;
@@ -249,12 +248,10 @@ public class MOGAC3D extends AbstractCalculation {
 	}
 
 	/**
-	 * Instantiates a new Multi-Object Geodesic Active Contour 3D
-	 * 
-	 * @param refImage
-	 *            the reference image
-	 * @param type
-	 *            the type
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
+	 *
+	 * @param refImage the reference image
+	 * @param type the type
 	 */
 	public MOGAC3D(ImageData refImage, CLDevice.Type type) {
 		CLPlatform[] platforms = CLPlatform.listCLPlatforms();
@@ -932,9 +929,8 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Load the look-up table.
-	 * 
-	 * @param f
-	 *            the file
+	 *
+	 * @param fis the fis
 	 * @return true, if successful
 	 */
 	private boolean loadLUT(InputStream fis) {
