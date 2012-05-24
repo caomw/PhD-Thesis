@@ -17,7 +17,6 @@
  */
 package org.imagesci.demo;
 
-
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +52,7 @@ public class Example2j_macwe3d extends AbstractExample {
 	 */
 	@Override
 	public String getDescription() {
-		return "Mumford-Shah segmentation with multi-object active contours 2D.";
+		return "Mumford-Shah segmentation with multi-object active contours 3D.";
 	}
 
 	/* (non-Javadoc)
@@ -61,7 +60,7 @@ public class Example2j_macwe3d extends AbstractExample {
 	 */
 	@Override
 	public String getName() {
-		return "MACWE 2D";
+		return "MACWE 3D";
 	}
 
 	/* (non-Javadoc)
