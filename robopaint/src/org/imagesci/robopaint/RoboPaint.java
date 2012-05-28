@@ -1,6 +1,7 @@
 package org.imagesci.robopaint;
 
 import java.io.File;
+import java.util.Random;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -30,6 +31,17 @@ public class RoboPaint {
 	protected final Shell shell = new Shell(display);
 
 	public static void main(String[] args) {
+		Random randn = new Random(23214821);
+		for (int i = 0; i < 10; i++) {
+			ObjectDescription obj = new ObjectDescription("Object " + i, i);
+			obj.setColor(randn.nextInt(256), randn.nextInt(256),
+					randn.nextInt(256));
+			obj.setTransparency(randn.nextFloat());
+			obj.setVisible((i % 2) == 0);
+			GeometryViewDescription.getInstance().getObjectDescriptions()
+					.add(obj);
+
+		}
 		RoboPaint robo = new RoboPaint();
 	}
 
