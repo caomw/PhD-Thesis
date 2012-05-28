@@ -8,6 +8,11 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected Color4f color = new Color4f();
 	protected int id = -1;
 
+	public ObjectDescription(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
