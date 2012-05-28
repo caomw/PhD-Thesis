@@ -2,6 +2,8 @@ package org.imagesci.robopaint;
 
 import java.io.File;
 
+import edu.jhu.ece.iacl.jist.structures.image.ImageData;
+
 public class ImageViewDescription {
 
 	protected int row = 0;
@@ -14,10 +16,26 @@ public class ImageViewDescription {
 	protected float transparency = 0;
 	protected float brightness = 0;
 	protected float contrast = 0;
-
+	protected ImageData image;
 	protected File file;
 
 	protected static final ImageViewDescription description = new ImageViewDescription();
+
+	public ImageData getImage() {
+		return image;
+	}
+
+	public int getImageRows() {
+		return image.getRows();
+	}
+
+	public int getImageCols() {
+		return image.getCols();
+	}
+
+	public int getImageSlices() {
+		return image.getSlices();
+	}
 
 	public static ImageViewDescription getInstance() {
 		return description;
