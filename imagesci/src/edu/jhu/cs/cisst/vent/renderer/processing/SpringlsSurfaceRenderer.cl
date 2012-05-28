@@ -1833,10 +1833,117 @@ __kernel void isoSurfGen(
 				vertexes[iCorner]=split.pt3d;
 			}		
 		}
-		//float4 springlNorm=normalize(cross(vertexes[1]-vertexes[0],vertexes[2]-vertexes[0]));
-
 		for(int i=0;i<3;i++){
 			float4 norm=normalize(getGradientValue(signedLevelSet,vertexes[i]));
+			normals[0]=norm.x;
+			normals[1]=norm.y;
+			normals[2]=norm.z;
+			normals+=3;
+		}				
+		vertexes+=3;		
+	}
+}
+__kernel void isoSurfGenSmooth(
+	global float4* vertexes,
+	global float* normals,
+	const global float* signedLevelSet,
+	const global int* activeList,
+	global int* offsets,
+	const global int* aiCubeEdgeFlags,
+	const global int* a2iTriangleConnectionTable,
+	int sign,
+	int activeListSize){
+	uint gid=get_global_id(0);
+	if(gid>=activeListSize)return;
+	uint id=activeList[gid];
+	int x,y,z;
+	getRowColSlice(id,&x,&y,&z);			
+	int iVertex = 0;
+	int4 afCubeValue[8];
+	int iFlagIndex = 0;
+	int4 v;
+	int offset=(gid>0)?offsets[gid-1]:0;
+	vertexes+=offset;
+	normals+=3*offset;
+	for (iVertex = 0; iVertex < 8; iVertex++) {
+		v = afCubeValue[iVertex] = (int4)(clampRow(x+ a2fVertexOffset[iVertex][0]), clampColumn(y+ a2fVertexOffset[iVertex][1]), clampSlice(z+ a2fVertexOffset[iVertex][2]),0);
+		// Find which vertices are inside of the surface and which are
+		// outside
+		if (sign*signedLevelSet[getSafeIndex(v.x, v.y, v.z)] <= 0)iFlagIndex |= 1 << iVertex;
+
+	}
+	// Find which edges are intersected by the surface
+	int iEdgeFlags = aiCubeEdgeFlags[iFlagIndex];
+
+	// If the cube is entirely inside or outside of the surface, then there
+	// will be no intersections
+	if (iEdgeFlags == 0) {
+		return;
+	}
+	EdgeSplit split;
+
+	float4 pt3d;
+	EdgeSplit asEdgeVertex[12];
+	// Find the point of intersection of the surface with each edge
+	// Then find the normal to the surface at those points
+	for (int iEdge = 0; iEdge < 12; iEdge++) {
+		// if there is an intersection on this edge
+
+		if ((iEdgeFlags & (1 << iEdge)) != 0) {
+			v = afCubeValue[a2iEdgeConnection[iEdge][0]];
+			
+			if (signedLevelSet[getIndex(v.x, v.y, v.z)] <= 0) {
+				split.e1 = afCubeValue[a2iEdgeConnection[iEdge][0]];
+				split.e2 = afCubeValue[a2iEdgeConnection[iEdge][1]];
+			} else {
+				split.e1 = afCubeValue[a2iEdgeConnection[iEdge][1]];
+				split.e2 = afCubeValue[a2iEdgeConnection[iEdge][0]];
+			}
+			float fOffset = fGetOffset(signedLevelSet,
+				afCubeValue[a2iEdgeConnection[iEdge][0]],
+				afCubeValue[a2iEdgeConnection[iEdge][1]]);
+				pt3d.x = (x + (a2fVertexOffset[a2iEdgeConnection[iEdge][0]][0] + fOffset
+								* a2fEdgeDirection[iEdge][0]));
+				pt3d.y = (y + (a2fVertexOffset[a2iEdgeConnection[iEdge][0]][1] + fOffset
+								* a2fEdgeDirection[iEdge][1]));
+				pt3d.z = (z + (a2fVertexOffset[a2iEdgeConnection[iEdge][0]][2] + fOffset
+								* a2fEdgeDirection[iEdge][2]));
+				pt3d.w=1;
+			split.pt3d = pt3d;
+			asEdgeVertex[iEdge] = split;
+		}
+	}
+	// Generate list of triangles
+
+	for (int iTriangle = 0; iTriangle < 5; iTriangle++) {
+		if (a2iTriangleConnectionTable[iFlagIndex*16+3 * iTriangle] < 0)break;
+		if(sign<0){
+			for (int iCorner = 0; iCorner < 3; iCorner++) {
+				iVertex = a2iTriangleConnectionTable[iFlagIndex*16+3 * iTriangle+ iCorner];
+				split = asEdgeVertex[iVertex];
+				vertexes[2-iCorner]=split.pt3d;
+			}
+		} else {
+			for (int iCorner = 0; iCorner < 3; iCorner++) {
+				iVertex = a2iTriangleConnectionTable[iFlagIndex*16+3 * iTriangle+ iCorner];
+				split = asEdgeVertex[iVertex];
+				vertexes[iCorner]=split.pt3d;
+			}		
+		}
+		const float OP=1;
+		const float ON=-1;
+		for(int i=0;i<3;i++){
+			float4 vt=vertexes[i];
+			float4 n1=getGradientValue(signedLevelSet,vt+(float4)(OP,OP,OP,0.0f));
+			float4 n2=getGradientValue(signedLevelSet,vt+(float4)(OP,OP,ON,0.0f));
+			float4 n3=getGradientValue(signedLevelSet,vt+(float4)(OP,ON,OP,0.0f));
+			float4 n4=getGradientValue(signedLevelSet,vt+(float4)(OP,ON,ON,0.0f));
+			float4 n5=getGradientValue(signedLevelSet,vt+(float4)(OP,OP,OP,0.0f));
+			float4 n6=getGradientValue(signedLevelSet,vt+(float4)(OP,OP,ON,0.0f));
+			float4 n7=getGradientValue(signedLevelSet,vt+(float4)(OP,ON,OP,0.0f));
+			float4 n8=getGradientValue(signedLevelSet,vt+(float4)(OP,ON,ON,0.0f));
+			
+			float4 norm=normalize(n1+n2+n3+n4+n5+n6+n7+n8);
 			normals[0]=norm.x;
 			normals[1]=norm.y;
 			normals[2]=norm.z;

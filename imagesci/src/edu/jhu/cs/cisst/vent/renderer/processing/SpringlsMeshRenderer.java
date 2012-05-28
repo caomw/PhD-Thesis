@@ -21,7 +21,6 @@ import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 import static com.jogamp.opencl.CLProgram.define;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.nio.ByteBuffer;
@@ -122,7 +121,7 @@ public class SpringlsMeshRenderer extends RendererProcessing3D implements
 	protected CLBuffer<FloatBuffer> isoSurfaceNormalBuffer;
 
 	/** The iso surf gen. */
-	CLKernel isoSurfCount, isoSurfGen;
+	CLKernel isoSurfCount, isoSurfGen, isoSurfGenSmooth;
 
 	/** The label buffer copy. */
 	protected CLBuffer<IntBuffer> labelBufferCopy;
@@ -196,7 +195,7 @@ public class SpringlsMeshRenderer extends RendererProcessing3D implements
 	/** The show iso surface param. */
 	protected ParamBoolean visibleParam, showVertexesParam, showNormalsParam,
 			showColorsParam, showParticlesParam, showTextParam,
-			showIsoSurfaceParam, wireframeParam;
+			showIsoSurfaceParam, wireframeParam, smoothNormalsParam;
 
 	/** The wireframe. */
 	protected boolean wireframe = true;
@@ -298,6 +297,7 @@ public class SpringlsMeshRenderer extends RendererProcessing3D implements
 			isoSurfCount = program
 					.createCLKernel(SpringlsCommon3D.ISO_SURF_COUNT);
 			isoSurfGen = program.createCLKernel(SpringlsCommon3D.ISO_SURF_GEN);
+			isoSurfGenSmooth = program.createCLKernel("isoSurfGenSmooth");
 			copyCapsulesToMesh = program.createCLKernel("copyCapsulesToMesh");
 			copyIsoSurfaceToMesh = program
 					.createCLKernel("copyIsoSurfaceToMesh");
@@ -374,6 +374,8 @@ public class SpringlsMeshRenderer extends RendererProcessing3D implements
 				wireframe = wireframeParam.getValue();
 			} else if (model == transparencyParam) {
 				transparency = transparencyParam.getFloat();
+				dirty = true;
+			} else if (model == smoothNormalsParam) {
 				dirty = true;
 			}
 		}
@@ -528,16 +530,28 @@ public class SpringlsMeshRenderer extends RendererProcessing3D implements
 				READ_WRITE, USE_BUFFER);
 		isoSurfaceNormalBuffer = context.createFloatBuffer(4 * vertexCount,
 				READ_WRITE, USE_BUFFER);
+		if (smoothNormalsParam.getValue()) {
+			isoSurfGenSmooth
+					.putArgs(isoSurfaceBuffer, isoSurfaceNormalBuffer,
+							signedLevelSetBuffer, activeListBufferCopy,
+							offsets, aiCubeEdgeFlagsBuffer,
+							a2iTriangleConnectionTableBuffer).putArg(1)
+					.putArg(activeListSize).rewind();
+			queue.put1DRangeKernel(isoSurfGenSmooth, 0, SpringlsCommon3D
+					.roundToWorkgroupPower(activeListSize, WORKGROUP_SIZE),
+					WORKGROUP_SIZE);
+		} else {
+			isoSurfGen
+					.putArgs(isoSurfaceBuffer, isoSurfaceNormalBuffer,
+							signedLevelSetBuffer, activeListBufferCopy,
+							offsets, aiCubeEdgeFlagsBuffer,
+							a2iTriangleConnectionTableBuffer).putArg(1)
+					.putArg(activeListSize).rewind();
 
-		isoSurfGen
-				.putArgs(isoSurfaceBuffer, isoSurfaceNormalBuffer,
-						signedLevelSetBuffer, activeListBufferCopy, offsets,
-						aiCubeEdgeFlagsBuffer, a2iTriangleConnectionTableBuffer)
-				.putArg(1).putArg(activeListSize).rewind();
-
-		queue.put1DRangeKernel(isoSurfGen, 0, SpringlsCommon3D
-				.roundToWorkgroupPower(activeListSize, WORKGROUP_SIZE),
-				WORKGROUP_SIZE);
+			queue.put1DRangeKernel(isoSurfGen, 0, SpringlsCommon3D
+					.roundToWorkgroupPower(activeListSize, WORKGROUP_SIZE),
+					WORKGROUP_SIZE);
+		}
 		queue.finish();
 		queue.putReadBuffer(isoSurfaceBuffer, true);
 		queue.putReadBuffer(isoSurfaceNormalBuffer, true);
@@ -579,6 +593,8 @@ public class SpringlsMeshRenderer extends RendererProcessing3D implements
 				showColors));
 		visualizationParameters.add(showTextParam = new ParamBoolean(
 				"Show Text", true));
+		visualizationParameters.add(smoothNormalsParam = new ParamBoolean(
+				"Smooth Normals", false));
 
 	}
 
