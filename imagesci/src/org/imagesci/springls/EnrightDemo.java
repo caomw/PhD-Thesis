@@ -17,7 +17,6 @@
  */
 package org.imagesci.springls;
 
-
 import java.awt.Dimension;
 
 import javax.vecmath.Point3d;
@@ -105,15 +104,37 @@ public class EnrightDemo {
 
 	/**
 	 * Creates the enright test.
-	 *
-	 * @param volRender the vol render
-	 * @param rows the rows
-	 * @param cols the cols
-	 * @param slices the slices
+	 * 
+	 * @param volRender
+	 *            the vol render
+	 * @param rows
+	 *            the rows
+	 * @param cols
+	 *            the cols
+	 * @param slices
+	 *            the slices
 	 * @return the springls active contour3 d
 	 */
 	public static final SpringlsActiveContour3D createEnrightTest(
 			boolean volRender, int rows, int cols, int slices) {
+		return createEnrightTest(volRender, rows, cols, slices, 500);
+	}
+
+	/**
+	 * Creates the enright test.
+	 * 
+	 * @param volRender
+	 *            the vol render
+	 * @param rows
+	 *            the rows
+	 * @param cols
+	 *            the cols
+	 * @param slices
+	 *            the slices
+	 * @return the springls active contour3 d
+	 */
+	public static final SpringlsActiveContour3D createEnrightTest(
+			boolean volRender, int rows, int cols, int slices, int timeSteps) {
 		PhantomSphere phantom = new PhantomSphere(new Point3i(rows / 2,
 				cols / 2, slices / 2));
 		phantom.setCenter(new Point3d(-0.3, -0.3, -0.3));
@@ -136,8 +157,8 @@ public class EnrightDemo {
 		if (volRender)
 			simulator.setReferenceImage(phantom.getImage());
 		simulator.setResamplingInterval(5);
-		simulator.setMaxIterations(500 * rows / 128);
-		simulator.setEnrightPeriod(500 * rows / 128);
+		simulator.setMaxIterations((timeSteps * rows) / 128);
+		simulator.setEnrightPeriod((timeSteps * rows) / 128);
 		simulator.setInitialDistanceFieldImage(initImage);
 		simulator.setInitialSurface(initSurface);
 		return simulator;
