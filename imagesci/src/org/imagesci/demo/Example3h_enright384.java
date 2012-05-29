@@ -61,7 +61,7 @@ public class Example3h_enright384 extends AbstractExample {
 	 */
 	@Override
 	public String getName() {
-		return "Enright Deformation Test at 256^3";
+		return "Enright Deformation Test at 384^3";
 	}
 
 	/*
@@ -118,7 +118,7 @@ public class Example3h_enright384 extends AbstractExample {
 				app.setShowToolBar(true);
 				app.addListener(visual);
 
-				app.setPreferredSize(new Dimension(1200,800));
+				app.setPreferredSize(new Dimension(1200, 800));
 				app.runAndWait();
 			} else {
 				simulator.solve();
