@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/imagesci"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
+	<classpathentry kind="lib" path="/imagesci/lib/core.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/Jama.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/nifti.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/opencsv-1.8.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/opengl2.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/vecmath.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/video.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/xom-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="/imagesci/lib/xstream-1.1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

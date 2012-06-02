@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class RoboPaint {
-	protected final Display display = new Display();
-	protected final Shell shell = new Shell(display);
+	protected final static Display display = new Display(); //Changed to static to be used as parent
+	protected final static Shell shell = new Shell(display); //View in GeometryViewDescription class.
 
 	public static void main(String[] args) {
 		Random randn = new Random(23214821);
