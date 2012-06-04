@@ -27,21 +27,22 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class RoboPaint {
-	protected final static Display display = new Display(); //Changed to static to be used as parent
-	protected final static Shell shell = new Shell(display); //View in GeometryViewDescription class.
+	protected final Display display = new Display(); //Changed to static to be used as parent
+	protected final Shell shell = new Shell(display); //View in GeometryViewDescription class.
 
 	public static void main(String[] args) {
-		Random randn = new Random(23214821);
-		for (int i = 0; i < 10; i++) {
-			ObjectDescription obj = new ObjectDescription("Object " + i, i);
-			obj.setColor(randn.nextInt(256), randn.nextInt(256),
-					randn.nextInt(256));
-			obj.setTransparency(randn.nextFloat());
-			obj.setVisible((i % 2) == 0);
-			GeometryViewDescription.getInstance().getObjectDescriptions()
-					.add(obj);
-
-		}
+		int i = 0;
+		
+		ObjectDescription isosurface = new ObjectDescription("Show Iso-surface", i++);
+		ObjectDescription label = new ObjectDescription("Label", i++);
+		ObjectDescription transparency = new ObjectDescription("Transparency", i++);
+		ObjectDescription visibility = new ObjectDescription("Visible", i++);
+		
+		GeometryViewDescription.getInstance().getObjectDescriptions().add(isosurface);
+		GeometryViewDescription.getInstance().getObjectDescriptions().add(label);
+		GeometryViewDescription.getInstance().getObjectDescriptions().add(transparency);
+		GeometryViewDescription.getInstance().getObjectDescriptions().add(visibility);
+		
 		RoboPaint robo = new RoboPaint();
 	}
 

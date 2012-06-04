@@ -25,22 +25,6 @@ public class GeometryViewDescription {
 
 	public GeometryViewDescription() {
 		objectDescriptions = new ArrayList<ObjectDescription>();
-		bar = new ExpandBar(RoboPaint.shell, SWT.V_SCROLL);
-		item = new ExpandItem(bar, SWT.NONE, 0);
-		Composite composite = new Composite(bar, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		composite.setLayout(layout);
-		
-		Text text;
-		Scale scale;
-		for (int i=0; i<objectDescriptions.size(); i++) {
-			
-			text = new Text(composite, SWT.NONE);
-			text.setText(objectDescriptions.get(i).getName());
-			scale = new Scale(composite, SWT.NONE);
-		}
-		
-		item.setText("Geometry");
 	}
 
 	public List<ObjectDescription> getObjectDescriptions() {
