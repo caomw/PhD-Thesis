@@ -72,7 +72,29 @@ public class RoboControlPane {
 		Button button = new Button(composite, SWT.CHECK);
 		button.setText("Show Iso-surface");
 		label = new Label(composite, SWT.NONE);
+		
 		// Place label and color drop-down menu here.
+		Combo combo = new Combo(composite, SWT.READ_ONLY);
+		combo.add("Label [#1]");
+		combo.add("Label [#2]");
+		label = new Label(composite, SWT.NONE);
+		label = new Label(composite, SWT.NONE);
+		label.setText("Name");
+		Text text = new Text(composite, SWT.BORDER);
+		text.setText("Label [#1] Label [#1] Label [#1]");
+		label = new Label(composite, SWT.NONE);
+		label.setText("Color");
+		
+		Composite composite2 = new Composite(composite, SWT.NONE);
+		layout = new GridLayout(2, false);
+		composite2.setLayout(layout);
+		Color color = new Color(parent.getDisplay(), new RGB(0, 255, 0));
+		label = new Label(composite2, SWT.BORDER);
+		label.setText("     ");
+		label.setBackground(color);
+		button = new Button(composite2, SWT.PUSH);
+		button.setText("Change color");
+		
 		label = new Label(composite, SWT.NONE);
 		label.setText("Transparency");
 		scale = new Scale(composite, SWT.NONE);
