@@ -377,20 +377,18 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 	 */
 	@Override
 	public void update(ParamModel model, ParamInputView view) {
-		if (model == enableAntiAliasParam) {
-			enableAntiAlias = enableAntiAliasParam.getValue();
-			setFastRendering(!enableAntiAlias);
-		} else if (model == enableShadowsParam) {
-			enableShadows = enableShadowsParam.getValue();
-		} else if (model instanceof ParamColor) {
-			frameUpdate(-1, -1);
-		} else if (model == enableSmoothingParam) {
-			frameUpdate(-1, -1);
-		} else if (model == colorParam) {
+		if (model == colorParam) {
 			Color c = colorParam.getValue();
 			color.x = c.getRed() / 255.0f;
 			color.y = c.getGreen() / 255.0f;
 			color.z = c.getBlue() / 255.0f;
+		} else if (model == enableAntiAliasParam) {
+			enableAntiAlias = enableAntiAliasParam.getValue();
+			setFastRendering(!enableAntiAlias);
+		} else if (model == enableShadowsParam) {
+			enableShadows = enableShadowsParam.getValue();
+		} else if (model == enableSmoothingParam) {
+			frameUpdate(-1, -1);
 		} else if (model == contrastParam) {
 			contrast = contrastParam.getFloat();
 		} else if (model == brightnessParam) {
@@ -435,7 +433,7 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 		color.x = c.getRed() / 255.0f;
 		color.y = c.getGreen() / 255.0f;
 		color.z = c.getBlue() / 255.0f;
-		
+
 		setFastRendering(!enableAntiAliasParam.getValue());
 		frameUpdate(0, 0);
 		refresh();
