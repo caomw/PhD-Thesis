@@ -24,7 +24,6 @@ import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 import static java.lang.Math.sqrt;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.nio.ByteBuffer;
@@ -110,13 +109,13 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 	protected ParamInteger colParam;
 	/** The compute fps. */
 	protected double computeFPS = -1;
-	
+
 	/** The config. */
 	protected RenderingConfig config;
-	
+
 	/** The config buffer. */
 	protected CLBuffer<ByteBuffer> configBuffer;
-	
+
 	/** The context. */
 	protected CLContext context;
 	/** The contrast. */
@@ -125,7 +124,7 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 	protected ParamFloat contrastParam;
 	/** The dirty. */
 	protected boolean dirty = false;
-	
+
 	/** The distance field buffer copy. */
 	protected CLBuffer<FloatBuffer> distanceFieldBufferCopy;
 
@@ -144,7 +143,7 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 
 	/** The enable shadows. */
 	protected boolean enableShadows = false;
-	
+
 	/** The copy level set image. */
 	protected CLKernel isoSurfRender, multiply, bilateralFilter,
 			copyLevelSetImage;
@@ -154,13 +153,13 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 
 	/** The model view. */
 	protected Matrix4f modelView;
-	
+
 	/** The model view inverse matrix buffer. */
 	protected CLBuffer<FloatBuffer> modelViewInverseMatrixBuffer;
-	
+
 	/** The model view matrix buffer. */
 	protected CLBuffer<FloatBuffer> modelViewMatrixBuffer;
-	
+
 	/** The pixel buffer. */
 	protected CLBuffer<FloatBuffer> pixelBuffer;
 
@@ -387,6 +386,11 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 			frameUpdate(-1, -1);
 		} else if (model == enableSmoothingParam) {
 			frameUpdate(-1, -1);
+		} else if (model == colorParam) {
+			Color c = colorParam.getValue();
+			color.x = c.getRed() / 255.0f;
+			color.y = c.getGreen() / 255.0f;
+			color.z = c.getBlue() / 255.0f;
 		} else if (model == contrastParam) {
 			contrast = contrastParam.getFloat();
 		} else if (model == brightnessParam) {
@@ -427,6 +431,10 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 		showXplane = showXplaneParam.getValue();
 		showYplane = showYplaneParam.getValue();
 		showZplane = showZplaneParam.getValue();
+		Color c = colorParam.getValue();
+		color.x = c.getRed() / 255.0f;
+		color.y = c.getGreen() / 255.0f;
+		color.z = c.getBlue() / 255.0f;
 		setFastRendering(!enableAntiAliasParam.getValue());
 		frameUpdate(0, 0);
 		refresh();
