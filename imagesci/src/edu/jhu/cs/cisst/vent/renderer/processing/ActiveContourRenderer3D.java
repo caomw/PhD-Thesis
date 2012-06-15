@@ -435,6 +435,7 @@ public class ActiveContourRenderer3D extends RendererProcessing3D implements
 		color.x = c.getRed() / 255.0f;
 		color.y = c.getGreen() / 255.0f;
 		color.z = c.getBlue() / 255.0f;
+		
 		setFastRendering(!enableAntiAliasParam.getValue());
 		frameUpdate(0, 0);
 		refresh();
