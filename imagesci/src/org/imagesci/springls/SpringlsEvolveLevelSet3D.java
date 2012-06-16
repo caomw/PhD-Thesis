@@ -573,12 +573,13 @@ public class SpringlsEvolveLevelSet3D {
 					SpringlsCommon3D.WORKGROUP_SIZE);
 		}
 
-		final CLKernel plugLevelSet = commons.kernelMap.get("plugLevelSet");
-		plugLevelSet.putArgs(activeListBuffer, newSignedLevelSetBuffer)
-				.putArg(activeListSize).rewind();
-		commons.queue.put1DRangeKernel(plugLevelSet, 0, global_size,
-				SpringlsCommon3D.WORKGROUP_SIZE);
-
+		if (commons.topologyRuleBuffer == null) {
+			final CLKernel plugLevelSet = commons.kernelMap.get("plugLevelSet");
+			plugLevelSet.putArgs(activeListBuffer, newSignedLevelSetBuffer)
+					.putArg(activeListSize).rewind();
+			commons.queue.put1DRangeKernel(plugLevelSet, 0, global_size,
+					SpringlsCommon3D.WORKGROUP_SIZE);
+		}
 		if (useAdaptiveActiveSet) {
 			copyBuffers
 					.putArgs(activeListBuffer, commons.signedLevelSetBuffer,
