@@ -13,7 +13,7 @@ public class RoboControlPane {
 
 		// Image item
 		Composite composite = new Composite(bar, SWT.NONE);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(3, false);
 		layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
 		layout.verticalSpacing = 10;
 		composite.setLayout(layout);
@@ -22,11 +22,17 @@ public class RoboControlPane {
 		label.setText("Filename.img");
 		label = new Label(composite, SWT.NONE);
 		label = new Label(composite, SWT.NONE);
+		
+		label = new Label(composite, SWT.NONE);
 		label.setText("Row");
 		Scale scale = new Scale(composite, SWT.NONE);
 		scale.setMinimum(0);
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
+		label = new Label(composite, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
+		
 		label = new Label(composite, SWT.NONE);
 		label.setText("Col");
 		scale = new Scale(composite, SWT.NONE);
@@ -34,11 +40,19 @@ public class RoboControlPane {
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
 		label = new Label(composite, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
+		
+		label = new Label(composite, SWT.NONE);
 		label.setText("Slice");
 		scale = new Scale(composite, SWT.NONE);
 		scale.setMinimum(0);
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
+		label = new Label(composite, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
+		
 		label = new Label(composite, SWT.NONE);
 		label.setText("Contrast");
 		scale = new Scale(composite, SWT.NONE);
@@ -46,17 +60,28 @@ public class RoboControlPane {
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
 		label = new Label(composite, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
+		
+		label = new Label(composite, SWT.NONE);
 		label.setText("Brightness");
 		scale = new Scale(composite, SWT.NONE);
 		scale.setMinimum(0);
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
 		label = new Label(composite, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
+		
+		label = new Label(composite, SWT.NONE);
 		label.setText("Transparency");
 		scale = new Scale(composite, SWT.NONE);
 		scale.setMinimum(0);
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
+		label = new Label(composite, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
 		
 		ExpandItem item0 = new ExpandItem(bar, SWT.NONE, 0);
 		item0.setText("Image");
@@ -69,22 +94,18 @@ public class RoboControlPane {
 		layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
 		layout.verticalSpacing = 10;
 		composite.setLayout(layout);
+		label = new Label(composite, SWT.NONE);
+		label.setText("Show Iso-surface");
 		Button button = new Button(composite, SWT.CHECK);
-		button.setText("Show Iso-surface");
-		label = new Label(composite, SWT.NONE);
 		
-		// Place label and color drop-down menu here.
-		Combo combo = new Combo(composite, SWT.READ_ONLY);
-		combo.add("Label [#1]");
-		combo.add("Label [#2]");
-		label = new Label(composite, SWT.NONE);
 		label = new Label(composite, SWT.NONE);
 		label.setText("Name");
-		Text text = new Text(composite, SWT.BORDER);
-		text.setText("Label [#1] Label [#1] Label [#1]");
+		Combo combo = new Combo(composite, SWT.NONE);
+		combo.add("Label [#1]");
+		combo.add("Label [#2]");
+		
 		label = new Label(composite, SWT.NONE);
 		label.setText("Color");
-		
 		Composite composite2 = new Composite(composite, SWT.NONE);
 		layout = new GridLayout(2, false);
 		composite2.setLayout(layout);
@@ -97,17 +118,27 @@ public class RoboControlPane {
 		
 		label = new Label(composite, SWT.NONE);
 		label.setText("Transparency");
-		scale = new Scale(composite, SWT.NONE);
+		composite2 = new Composite(composite, SWT.NONE);
+		layout = new GridLayout(2, false);
+		composite2.setLayout(layout);
+		scale = new Scale(composite2, SWT.NONE);
 		scale.setMinimum(0);
 		scale.setMaximum(100);
 		scale.setPageIncrement(10);
+		label = new Label(composite2, SWT.NONE);
+		label.setText(Integer.toString(scale.getSelection()));
+		label.setAlignment(SWT.RIGHT);
+		
+		label = new Label(composite, SWT.NONE);
+		label.setText("Visible");
 		button = new Button(composite, SWT.CHECK);
-		button.setText("Visible");
+		
 		ExpandItem item1 = new ExpandItem(bar, SWT.NONE, 1);
 		item1.setText("Geometry");
 		item1.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item1.setControl(composite);
 		
+		// Paint item
 		composite = new Composite(bar, SWT.NONE);
 		layout = new GridLayout();
 		layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
@@ -118,6 +149,7 @@ public class RoboControlPane {
 		item2.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item2.setControl(composite);
 		
+		// Auto-segment item
 		composite = new Composite(bar, SWT.NONE);
 		layout = new GridLayout();
 		layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
@@ -128,6 +160,7 @@ public class RoboControlPane {
 		item3.setHeight(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item3.setControl(composite);
 		
+		// Sculpt item
 		composite = new Composite(bar, SWT.NONE);
 		layout = new GridLayout();
 		layout.marginLeft = layout.marginTop = layout.marginRight = layout.marginBottom = 10;
