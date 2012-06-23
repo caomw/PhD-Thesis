@@ -1,6 +1,11 @@
 package org.imagesci.robopaint;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.imagesci.robopaint.GeometryViewDescription.GeometryViewListener;
+import org.imagesci.robopaint.GeometryViewDescription.ParameterName;
 
 import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 
@@ -47,6 +52,7 @@ public class ImageViewDescription {
 
 	public void setRow(int row) {
 		this.row = row;
+		fireUpdate(ParameterName.CHANGE_ROW);
 	}
 
 	public int getCol() {
@@ -55,6 +61,8 @@ public class ImageViewDescription {
 
 	public void setCol(int col) {
 		this.col = col;
+		fireUpdate(ParameterName.CHANGE_COL);
+
 	}
 
 	public int getSlice() {
@@ -63,6 +71,7 @@ public class ImageViewDescription {
 
 	public void setSlice(int slice) {
 		this.slice = slice;
+		fireUpdate(ParameterName.CHANGE_SLICE);
 	}
 
 	public boolean isShowRow() {
@@ -120,5 +129,14 @@ public class ImageViewDescription {
 	public void setFile(File file) {
 		this.file = file;
 	}
-
+	public enum ParameterName{CHANGE_ROW,CHANGE_COL,CHANGE_SLICE};
+	public static interface ImageViewListener{
+		public void updateParameter(ImageViewDescription g,ParameterName p);
+	}
+	protected List<ImageViewListener> listeners=new LinkedList<ImageViewListener>();
+	public void fireUpdate(ParameterName param){
+		for(ImageViewListener g:listeners){
+			g.updateParameter(this,param);
+		}
+	}
 }

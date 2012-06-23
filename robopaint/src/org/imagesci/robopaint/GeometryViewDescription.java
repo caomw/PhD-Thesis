@@ -51,5 +51,6 @@ public class GeometryViewDescription {
 
 	public void setShowIsoSurface(boolean showIsoSurface) {
 		this.showIsoSurface = showIsoSurface;
+		fireUpdate(ParameterName.SHOW_ISO_SURFACE);
 	}
 }
