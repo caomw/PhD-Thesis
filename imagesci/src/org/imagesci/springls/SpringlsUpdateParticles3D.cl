@@ -1,5 +1,7 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
@@ -11,9 +13,9 @@
  * your option) any later version.  The license is available for reading at:
  * http://www.gnu.org/copyleft/lgpl.html
  *
- * @author Blake Lucas
+ * @author Blake Lucas (blake@cs.jhu.edu)
  */
- #define STATIC_SPRINGL (-1E8f)
+#define STATIC_SPRINGL (-1E8f)
 typedef struct{
 	float4 particle;
     float4 vertexes[3];
