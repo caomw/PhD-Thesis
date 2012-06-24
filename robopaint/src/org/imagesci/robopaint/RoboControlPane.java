@@ -251,6 +251,7 @@ public class RoboControlPane {
 				}
 				
 				colorDisplayLabel.setBackground(new Color(display, newColor));
+				// Set new color for object.
 			}
 		});
 		
