@@ -5,12 +5,15 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.*;
 
 public class RoboControlPane {
 	public RoboControlPane(Composite parent) {
 		ExpandBar bar = new ExpandBar(parent, SWT.V_SCROLL);
-		Display display = parent.getDisplay();
+		final Display display = parent.getDisplay();
+		final Shell shell = parent.getShell();
 
 		// Image item
 		Composite imageComposite = new Composite(bar, SWT.NONE);
@@ -161,41 +164,118 @@ public class RoboControlPane {
 		Label isoLabel = new Label(geoComposite, SWT.NONE);
 		isoLabel.setText("Show Iso-surface");
 		Button isoButton = new Button(geoComposite, SWT.CHECK);
+		isoButton.setSelection(true);
+		isoButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event event) {
+				
+				if (GeometryViewDescription.getInstance().isShowIsoSurface()) {
+					
+					GeometryViewDescription.getInstance().setShowIsoSurface(false);
+				} else {
+					
+					GeometryViewDescription.getInstance().setShowIsoSurface(true);
+				}
+			}
+		});
 		
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
 		geoVisiblityLabel.setText("Visible");
 		Button visibilityButton = new Button(geoComposite, SWT.CHECK);
+		visibilityButton.setSelection(true);
+		visibilityButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event event) {
+				
+				if (GeometryViewDescription.getInstance().isVisible()) {
+					
+					GeometryViewDescription.getInstance().setVisible(false);
+				} else {
+					
+					GeometryViewDescription.getInstance().setVisible(true);
+				}
+			}
+		});
 		
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
-		Combo nameCombo = new Combo(geoComposite, SWT.NONE);
+		final Combo nameCombo = new Combo(geoComposite, SWT.NONE);
 		nameCombo.add("Label [#1]");
 		nameCombo.add("Label [#2]");
+		nameCombo.select(0);
+		nameCombo.addKeyListener(new KeyListener() {
+			
+			int currentIndex = nameCombo.getSelectionIndex();
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					currentText = nameCombo.getText();
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					nameCombo.remove(currentIndex);
+					nameCombo.add(currentText, currentIndex);
+					// Set new name for object.
+				}
+			}
+		});
 		
 		Label colorLabel = new Label(geoComposite, SWT.NONE);
 		colorLabel.setText("Color");
 		Composite colorDialogComposite = new Composite(geoComposite, SWT.NONE);
 		GridLayout colorDialogLayout = new GridLayout(2, false);
 		colorDialogComposite.setLayout(colorDialogLayout);
-		Color color = new Color(parent.getDisplay(), new RGB(0, 255, 0));
-		Label colorDisplayLabel = new Label(colorDialogComposite, SWT.BORDER);
+		Color color = new Color(display, new RGB(0, 255, 0));
+		final Label colorDisplayLabel = new Label(colorDialogComposite, SWT.BORDER);
 		colorDisplayLabel.setText("     ");
 		colorDisplayLabel.setBackground(color);
 		Button colorButton = new Button(colorDialogComposite, SWT.PUSH);
 		colorButton.setText("Change color");
+		colorButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event event) {
+				
+				ColorDialog colorDialog = new ColorDialog(shell);
+				colorDialog.setText("Change color...");
+				colorDialog.setRGB(new RGB(0, 255, 0));
+				RGB newColor = colorDialog.open();
+				if (newColor == null) {
+					
+					return;
+				}
+				
+				colorDisplayLabel.setBackground(new Color(display, newColor));
+			}
+		});
 		
 		Label geoTransparencyLabel = new Label(geoComposite, SWT.NONE);
 		geoTransparencyLabel.setText("Transparency");
 		Composite geoTransparencyComposite = new Composite(geoComposite, SWT.NONE);
-		GridLayout geoTransparencyLayout = new GridLayout(2, false);
+		GridLayout geoTransparencyLayout = new GridLayout(2, true);
 		geoTransparencyComposite.setLayout(geoTransparencyLayout);
-		Scale geoTransparencyScale = new Scale(geoTransparencyComposite, SWT.NONE);
+		final Scale geoTransparencyScale = new Scale(geoTransparencyComposite, SWT.NONE);
 		geoTransparencyScale.setMinimum(0);
 		geoTransparencyScale.setMaximum(100);
 		geoTransparencyScale.setPageIncrement(10);
-		Label geoTransparencyScaleLabel = new Label(geoTransparencyComposite, SWT.NONE);
+		final Label geoTransparencyScaleLabel = new Label(geoTransparencyComposite, SWT.NONE);
 		geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
 		geoTransparencyScaleLabel.setAlignment(SWT.RIGHT);
+		geoTransparencyScale.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event event) {
+				
+				int geoTransparencyValue = geoTransparencyScale.getSelection();
+				// GeometryViewDescription.getInstance().setTransparency(geoTransparencyValue);
+				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyValue));
+				geoTransparencyScaleLabel.pack();
+			}
+		});
 		
 		ExpandItem item1 = new ExpandItem(bar, SWT.NONE, 1);
 		item1.setText("Geometry");
