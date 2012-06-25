@@ -407,7 +407,7 @@ public class SpringlsEvolveLevelSet3D {
 						Math.ceil(commons.rows * commons.cols * commons.slices
 								* 0.1)));
 
-		System.err.println("Rebuilding Narro-Band with [" + activeListSize
+		System.err.println("Rebuilding Narrow-Band with [" + activeListSize
 				+ "," + activeListArraySize + ","
 				+ (commons.rows * commons.cols * commons.slices * 0.1) + "] "
 				+ (100 * activeListSize / activeListArraySize)

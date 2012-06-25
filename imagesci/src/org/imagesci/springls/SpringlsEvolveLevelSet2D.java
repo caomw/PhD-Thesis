@@ -353,7 +353,7 @@ public class SpringlsEvolveLevelSet2D {
 				Math.max(activeListSize * 1.25f,
 						Math.ceil(commons.rows * commons.cols * 0.1)));
 
-		System.err.println("Rebuilding Narro-Band with [" + activeListSize
+		System.err.println("Rebuilding Narrow-Band with [" + activeListSize
 				+ "," + activeListArraySize + ","
 				+ (commons.rows * commons.cols * 0.1) + "] "
 				+ (100 * activeListSize / activeListArraySize)
