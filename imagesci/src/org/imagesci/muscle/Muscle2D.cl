@@ -1,6 +1,10 @@
 /**
- * ImageSci Toolkit
+ *       Java Image Science Toolkit
+ *                  --- 
+ *     Multi-Object Image Segmentation
  *
+ * Copyright(C) 2012 Blake Lucas (img.science@gmail.com)
+ * 
  * Center for Computer-Integrated Surgical Systems and Technology &
  * Johns Hopkins Applied Physics Laboratory &
  * The Johns Hopkins University
@@ -11,7 +15,7 @@
  * your option) any later version.  The license is available for reading at:
  * http://www.gnu.org/copyleft/lgpl.html
  *
- * @author Blake Lucas
+ * @author Blake Lucas (img.science@gmail.com)
  */
 typedef struct{
 	float2 particle;
