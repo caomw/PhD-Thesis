@@ -1,0 +1,354 @@
+<h1> Java Image Science Toolkit (JIST)</h1>
+ <center>
+ <p><b><i>Developed by</i></b>
+ <h3>
+ Medical-image Analysis and Statistical Interpretation Lab, Vanderbilt University, Nashville, TN
+<br> Image Analysis and Communications Laboratory, The Johns Hopkins University, Baltimore, MD
+ <br>Laboratory for Medical Image Computing, The Johns Hopkins University School of Medicine, Baltimore, MD
+ </h3>
+ </center>
+ 
+ <p> This software has been developed at the above institutions with the support of <...>. 
+ The following individuals (listed alphabetically) have made valuable contributions to this project.
+ <ul>
+ <li> Aaron Carass
+ <li> Bennett Landman, bennett.landman@vanderbilt.edu
+ <li> Blake Lucas
+ <li> John Bogovic
+  </ul>
+
+<p><i>N.B. If you contribute to this project, please add your institution, funding source/sponsor/employer, and name to the above lists.</i>
+    
+<br><b>All copyrights for contents of the JIST repository are held by the
+principle investigators of IACL, MedIC, and MASI research labs 2005-2010. Copyright
+for the contents of the plugin repository are held by the original
+contributor, as noted in the files. When copyright is not explicitly noted
+for a file in the plugin repository, copyrights are held by the principle
+investigators of IACL, MedIC, and MASI research labs.</b> 
+
+ <h2>JIST License</h2>
+ <pre>
+ *
+ * Unless specifically noted to the contrary, software located in this 
+ * repository is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or (at
+ * your option) any later version.  The human-readable license is available at:
+ * <a href=http://creativecommons.org/licenses/LGPL/2.1/>http://creativecommons.org/licenses/LGPL/2.1/</a>
+ *
+ * The full text of the license is here: <a href=JIST-LGPL.txt>JIST LGPL License</a>.
+ *
+ </pre>
+ 
+ <h2>This effort was made possible by the following open source software projects</h2>
+ 
+ <br><h3>Libraries with source included on the compilation tree<h3>
+ <table width=800 border=1>
+ <tr>
+ <th width=150>
+ Package
+ </th>
+ <th>
+ Description
+ </th>
+ <th width=100>
+ License
+ </th>
+ <th width=50>
+ Homepage
+ </th>
+ </tr>
+ 
+ <!----------------------------------->
+  <tr>
+ <td>
+ CAMINO (diffusion MRI toolkit)
+ </td>
+ <td>
+ Camino is a free, open source diffusion magnetic resonance imaging (MRI) image reconstruction toolkit written in Java. It includes all major diffusion reconstruction techniques such as diffusion tensor imaging (DTI), q-ball and PAS-MRI, as well as white matter tractography algorithms.
+ </td>
+ <td>
+ <a href=camino-artistic.txt>Artistic License 2.0</a>
+ </td>
+ <td>
+ <a href=http://www.cs.ucl.ac.uk/research/medic/camino/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+   <tr>
+ <td>
+QuickHull3D: A Robust 3D Convex Hull Algorithm in Java
+ </td>
+ <td>
+This is a 3D implementation of QuickHull for Java, based on the original paper by Barber, Dobkin, and Huhdanpaa and the C implementation known as qhull. The algorithm has O(n log(n)) complexity, works with double precision numbers, is fairly robust with respect to degenerate situations, and allows the merging of co-planar faces. </td>
+ <td>
+ <a href=quickhull-free.txt><i>Open Source</i></a>
+ </td>
+ <td>
+ <a href=http://www.cs.ubc.ca/~lloyd/java/quickhull3d.html>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+   <tr>
+ <td>
+ Ptolemy Project
+ </td>
+ <td>
+ Ptolemy II is a software framework developed as part of the Ptolemy project. It is a Java-based component assembly framework with a graphical user interface called Vergil. Vergil itself is a component assembly defined in Ptolemy II. </td>
+ <td>
+ <a href=ptolemy-uc.txt>UC Berkeley copyright</a>
+ </td>
+ <td>
+ <a href=http://ptolemy.eecs.berkeley.edu/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+   <tr>
+ <td>
+ �lfred XML parser from Microstar
+ </td>
+ <td>
+ According to Microstar, AElfred is "a small, fast, DTD-aware Java-based XML parser, especially suitable for use in Java applets. We've designed AElfred for Java programmers who want to add XML support to their applets and applications without doubling their size: AElfred consists of only two core class files, with a total size of about 26K, and requires very little memory to run. There is also a complete SAX (Simple API for XML) driver available in this distribution for interoperability."
+ </td>
+ <td>
+ <a href=microstar.txt><i>Open Source</i></a>
+ </td>
+ <td>
+ <a href=http://saxon.sourceforge.net/aelfred.html>homepage</a> (original defunct)
+ </td>
+ </tr>
+ </table>
+ 
+ <br><h3>Libraries linked via JAR files (with source included in the lib-src folder)<h3>
+ <table  width=800 border=1>
+ <tr>
+ <th width=150>
+ Package
+ </th>
+ <th>
+ Description
+ </th>
+ <th width=100>
+ License
+ </th>
+ <th width=50>
+ Homepage
+ </th>
+ </tr>
+  <!----------------------------------->
+ <!----------------------------------->
+   <tr>
+ <td>
+OpenCSV
+ </td>
+ <td>
+ An Open Source Java csv library under commercial-friendly license... committed to changing the world, one comma at a time...
+ </td>
+ <td>
+ <a href=opencsv-apache.txt>Apache License 2.0</a>
+ </td>
+ <td>
+ <a href=http://opencsv.sourceforge.net/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+   <tr>
+ <td>
+ XOM
+ </td>
+ <td>
+ XOM� is a new XML object model. It is an open source (LGPL), tree-based API for processing XML with Java that strives for correctness, simplicity, and performance, in that order.
+  </td>
+ <td>
+ <a href=XOM-license.txt>GNU LGPL</a>
+ </td>
+ <td>
+ <a href=http://www.xom.nu/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+   <tr>
+ <td>
+XPP
+ </td>
+ <td>
+ Xml Pull Parser (in short XPP) is a streaming pull XML parser and should be used when there is a need to process quickly and efficiently all input elements (for example in SOAP processors). Pull parsing is just one level up from tokenizing XML (and that is actually how XPP2 default implementation is done). This means that XPP is representing the simplest way of processing XML that you can get (working with tokenizer would be even lower level but is not simple and most of applications would be much more complex to extract useful information from XML tokens ...).
+ </td>
+ <td>
+ <a href=XPP3-license.txt>Indiana University Extreme! Lab Software License</a>
+ </td>
+ <td>
+ <a href=http://www.extreme.indiana.edu/xgws/xsoap/xpp/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+  <tr>
+ <td>
+XStream
+ </td>
+ <td>
+ XStream is a simple library to serialize objects to XML and back again.
+  </td>
+ <td>
+ <a href=xstream-bsd.txt>BSD</a>
+ </td>
+ <td>
+ <a href=http://xstream.codehaus.org/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+  <tr>
+ <td>
+JGraph
+ </td>
+ <td>
+ JGraph is a member of the fastest growing breed of software products: professional open source software. JGraph is able to combine the best of each open source software and traditional software development to form a uniquely powerful offering.
+  </td>
+ <td>
+ <a href=jgraph-lgpl.txt>GNU LGPL</a>
+ </td>
+ <td>
+ <a href=http://www.jgraph.com/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+  <tr>
+ <td>
+JSci
+ </td>
+ <td>
+ This is a free set of JavaTM packages. The aim is to encapsulate scientific methods/principles in the most natural way possible. As such they should greatly aid the development of scientific based software. 
+  </td>
+ <td>
+ <a href=jsci-lgpl.txt>GNU LGPL</a>
+ </td>
+ <td>
+ <a href=http://jsci.sourceforge.net/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+  <tr>
+ <td>
+MTJ (matrix-toolkits-java)
+ </td>
+ <td>
+ MTJ is designed to be used as a library for developing numerical applications, both for small and large scale computations. The library is based on BLAS and LAPACK for its dense and structured sparse computations, and on the Templates project for unstructured sparse operations.
+ </td>
+ <td>
+ <a href=mtj-lgpl.txt>GNU LGPL</a>
+ </td>
+ <td>
+ <a href=http://code.google.com/p/matrix-toolkits-java/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+ <tr>
+ <td>
+ Opale library 
+ </td>
+ <td>
+ OPALE is a scientific library under LGPL. Its main goal is to develop mathematical tools for any scientist.
+ </td>
+ <td>
+ <a href=opale-lesser.txt>GNU LGPL</a>
+ </td>
+ <td>
+ <a href=http://www.nongnu.org/opale/en/opale/faq.html>homepage</a>
+ </td>
+ </tr>
+  <!----------------------------------->
+ <tr>
+ <td>
+ Apache Commons CLI 1.2
+ </td>
+ <td>
+ There are three stages to command line processing. They are the definition, parsing and interrogation stages.
+ </td>
+ <td>
+ <a href=apache-cli-LICENSE.txt>Apache License 2.0</a>
+ </td>
+ <td>
+ <a href=http://commons.apache.org/cli/introduction.html>homepage</a>
+ </td>
+ </tr>
+  <!----------------------------------->
+ <tr>
+ <td>
+ Ganymed SSH-2 for Java
+ </td>
+ <td>
+ This is used in client-server communication.
+ </td>
+ <td>
+ <a href=ganymed-ssh2-build210.txt>BSD</a>
+ </td>
+ <td>
+ <a href=http://www.ganymed.ethz.ch/ssh2/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+ <tr>
+ <td>
+Apache Axis2
+ </td>
+ <td>
+ Apache Axis2™ is a Web Services / SOAP / WSDL engine used to facilitate client-server communication.
+ </td>
+ <td>
+ <a href=axis2-LICENSE.txt>Apache License 2.0</a>
+ </td>
+ <td>
+ <a href=http://axis.apache.org/axis2/java/core/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+ 
+ </table>
+ 
+ <br><h3>Referenced libraries without source code on the compilation tree:<h3>
+ <table width=800 border=1>
+ <tr>
+ <th width=150>
+ Package
+ </th>
+ <th>
+ Description
+ </th>
+ <th width=100>
+ License
+ </th>
+ <th width=50>
+ Homepage
+ </th>
+ </tr>
+ <!----------------------------------->
+  <tr>
+ <td>
+MIPAV
+ </td>
+ <td>
+ The MIPAV (Medical Image Processing, Analysis, and Visualization) application enables quantitative analysis and visualization of medical images of numerous modalities such as PET, MRI, CT, or microscopy. Using MIPAV's standard user-interface and analysis tools, researchers at remote sites (via the internet) can easily share research data and analyses, thereby enhancing their ability to research, diagnose, monitor, and treat medical disorders.
+ </td>
+ <td>
+ <a href=mipav-license.txt>No-redistribution</a>
+ </td>
+ <td>
+ <a href=http://mipav.cit.nih.gov/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+  <tr>
+ <td>
+Sun Grid Engine DRMMA Bindings
+ </td>
+ <td>
+You can automate Sun Grid Engine functions by writing scripts that run Sun Grid Engine commands and parse the results. However, for more consistent and efficient results, you can use the C or Java language and the Distributed Resource Management Application API.  </td>
+ <td>
+ <a href=drmma-sissl.txt>Sun Industry Standards Source License</a>
+ </td>
+ <td>
+ <a href=http://gridengine.sunsource.net/>homepage</a>
+ </td>
+ </tr>
+ <!----------------------------------->
+ </table>
