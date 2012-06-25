@@ -1,11 +1,9 @@
 /**
- * Java Image Science Toolkit (JIST)
+ * JIST Extensions for Computer-Integrated Surgery
  *
- * Image Analysis and Communications Laboratory &
- * Laboratory for Medical Image Computing &
+ * Center for Computer-Integrated Surgical Systems and Technology &
+ * Johns Hopkins Applied Physics Laboratory &
  * The Johns Hopkins University
- * 
- * http://www.nitrc.org/projects/jist/
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
@@ -13,6 +11,7 @@
  * your option) any later version.  The license is available for reading at:
  * http://www.gnu.org/copyleft/lgpl.html
  *
+ * @author Blake Lucas
  */
 package edu.jhu.cs.cisst.vent.resources;
 
