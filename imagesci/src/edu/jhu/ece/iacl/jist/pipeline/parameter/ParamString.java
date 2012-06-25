@@ -1,13 +1,11 @@
 /**
- *       Java Image Science Toolkit
- *                  --- 
- *     Multi-Object Image Segmentation
+ * Java Image Science Toolkit (JIST)
  *
- * Copyright(C) 2012 Blake Lucas (img.science@gmail.com)
- * 
- * Center for Computer-Integrated Surgical Systems and Technology &
- * Johns Hopkins Applied Physics Laboratory &
+ * Image Analysis and Communications Laboratory &
+ * Laboratory for Medical Image Computing &
  * The Johns Hopkins University
+ * 
+ * http://www.nitrc.org/projects/jist/
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +13,6 @@
  * your option) any later version.  The license is available for reading at:
  * http://www.gnu.org/copyleft/lgpl.html
  *
- * @author Blake Lucas (img.science@gmail.com)
  */
 package edu.jhu.ece.iacl.jist.pipeline.parameter;
 
