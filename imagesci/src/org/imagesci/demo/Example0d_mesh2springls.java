@@ -31,6 +31,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 
+import org.imagesci.gac.DistanceField3D;
 import org.imagesci.springls.ActiveContour3D;
 import org.imagesci.springls.MeshToSpringls;
 import org.imagesci.springls.SpringlsActiveContour3D;
@@ -84,12 +85,14 @@ public class Example0d_mesh2springls extends AbstractExample {
 			EmbeddedSurface mesh = SurfaceReaderWriter.getInstance().read(f);
 			MeshToSpringls mtos = new MeshToSpringls(256, 192, 128);
 			ImageDataFloat levelSet = mtos.solve(mesh);
-
+			//DistanceField3D df=new DistanceField3D();
+			//levelSet=df.solve(levelSet, 15);
 			SpringlsActiveContour3D simulator = new SpringlsActiveContour3D();
 			simulator.setTask(ActiveContour3D.Task.ACTIVE_CONTOUR);
 			simulator.setReferenceImage(levelSet);
 			simulator.setInitialDistanceFieldImage(levelSet);
 			simulator.setInitialSurface(mesh);
+
 			try {
 				simulator.init();
 				VisualizationSpringlsActiveContour3D vis = new VisualizationSpringlsActiveContourVolume3D(
