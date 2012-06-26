@@ -3,7 +3,7 @@
  *                  --- 
  *     Multi-Object Image Segmentation
  *
- * Copyright(C) 2012 Blake Lucas (img.science@gmail.com)
+ * Copyright(C) 2012, Blake Lucas (img.science@gmail.com)
  * All rights reserved.
  * 
  * Center for Computer-Integrated Surgical Systems and Technology &
