@@ -7,7 +7,7 @@ public class PaintViewDescription {
 	protected boolean isBrush3D = true;
 	protected static final PaintViewDescription description = new PaintViewDescription();
 
-	public PaintViewDescription getInstance() {
+	public static PaintViewDescription getInstance() {
 		return description;
 	}
 
@@ -29,6 +29,16 @@ public class PaintViewDescription {
 
 	public float getTransparency() {
 		return transparency;
+	}
+	
+	public boolean isBrush3D() {
+		
+		return isBrush3D;
+	}
+	
+	public void setBrush3D(boolean isBrush3D) {
+		
+		this.isBrush3D = isBrush3D;
 	}
 
 	public void setTransparency(float transparency) {

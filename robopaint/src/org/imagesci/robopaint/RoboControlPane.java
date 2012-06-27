@@ -1,5 +1,7 @@
 package org.imagesci.robopaint;
 
+import javax.vecmath.Color4f;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.*;
@@ -32,7 +34,7 @@ public class RoboControlPane {
 		final Scale rowScale = new Scale(imageComposite, SWT.NONE);
 		rowScale.setMinimum(0);
 		rowScale.setMaximum(100);
-		rowScale.setIncrement(1);
+		rowScale.setIncrement(10);
 		rowScale.setPageIncrement(10);
 		final Label rowScaleLabel = new Label(imageComposite, SWT.READ_ONLY);
 		rowScaleLabel.setText(Integer.toString(rowScale.getSelection()));
@@ -54,6 +56,7 @@ public class RoboControlPane {
 		final Scale colScale = new Scale(imageComposite, SWT.NONE);
 		colScale.setMinimum(0);
 		colScale.setMaximum(100);
+		colScale.setIncrement(10);
 		colScale.setPageIncrement(10);
 		final Label colScaleLabel = new Label(imageComposite, SWT.NONE);
 		colScaleLabel.setText(Integer.toString(colScale.getSelection()));
@@ -74,6 +77,7 @@ public class RoboControlPane {
 		final Scale sliceScale = new Scale(imageComposite, SWT.NONE);
 		sliceScale.setMinimum(0);
 		sliceScale.setMaximum(100);
+		sliceScale.setIncrement(10);
 		sliceScale.setPageIncrement(10);
 		final Label sliceScaleLabel = new Label(imageComposite, SWT.NONE);
 		sliceScaleLabel.setText(Integer.toString(sliceScale.getSelection()));
@@ -94,6 +98,7 @@ public class RoboControlPane {
 		final Scale contrastScale = new Scale(imageComposite, SWT.NONE);
 		contrastScale.setMinimum(0);
 		contrastScale.setMaximum(100);
+		contrastScale.setIncrement(10);
 		contrastScale.setPageIncrement(10);
 		final Label contrastScaleLabel = new Label(imageComposite, SWT.NONE);
 		contrastScaleLabel.setText(Integer.toString(contrastScale.getSelection()));
@@ -114,6 +119,7 @@ public class RoboControlPane {
 		final Scale brightnessScale = new Scale(imageComposite, SWT.NONE);
 		brightnessScale.setMinimum(0);
 		brightnessScale.setMaximum(100);
+		brightnessScale.setIncrement(10);
 		brightnessScale.setPageIncrement(10);
 		final Label brightnessScaleLabel = new Label(imageComposite, SWT.NONE);
 		brightnessScaleLabel.setText(Integer.toString(brightnessScale.getSelection()));
@@ -134,6 +140,7 @@ public class RoboControlPane {
 		final Scale transparencyScale = new Scale(imageComposite, SWT.NONE);
 		transparencyScale.setMinimum(0);
 		transparencyScale.setMaximum(100);
+		transparencyScale.setIncrement(10);
 		transparencyScale.setPageIncrement(10);
 		final Label transparencyScaleLabel = new Label(imageComposite, SWT.NONE);
 		transparencyScaleLabel.setText(Integer.toString(transparencyScale.getSelection()));
@@ -187,13 +194,13 @@ public class RoboControlPane {
 			
 			public void handleEvent(Event event) {
 				
-				if (GeometryViewDescription.getInstance().isVisible()) {
+				/*if (GeometryViewDescription.getInstance().isVisible()) {
 					
 					GeometryViewDescription.getInstance().setVisible(false);
 				} else {
 					
 					GeometryViewDescription.getInstance().setVisible(true);
-				}
+				}*/
 			}
 		});
 		
@@ -221,8 +228,15 @@ public class RoboControlPane {
 				if (e.keyCode == SWT.CR) {
 					nameCombo.remove(currentIndex);
 					nameCombo.add(currentText, currentIndex);
-					// Set new name for object.
+					// update name
 				}
+			}
+		});
+		nameCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				// update displayed 4 traits.
 			}
 		});
 		
@@ -251,18 +265,20 @@ public class RoboControlPane {
 				}
 				
 				colorDisplayLabel.setBackground(new Color(display, newColor));
-				// Set new color for object.
+				
+				// update color.
 			}
 		});
 		
 		Label geoTransparencyLabel = new Label(geoComposite, SWT.NONE);
 		geoTransparencyLabel.setText("Transparency");
-		Composite geoTransparencyComposite = new Composite(geoComposite, SWT.NONE);
+		final Composite geoTransparencyComposite = new Composite(geoComposite, SWT.NONE);
 		GridLayout geoTransparencyLayout = new GridLayout(2, true);
 		geoTransparencyComposite.setLayout(geoTransparencyLayout);
 		final Scale geoTransparencyScale = new Scale(geoTransparencyComposite, SWT.NONE);
 		geoTransparencyScale.setMinimum(0);
 		geoTransparencyScale.setMaximum(100);
+		geoTransparencyScale.setIncrement(10);
 		geoTransparencyScale.setPageIncrement(10);
 		final Label geoTransparencyScaleLabel = new Label(geoTransparencyComposite, SWT.NONE);
 		geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
@@ -272,9 +288,10 @@ public class RoboControlPane {
 			public void handleEvent(Event event) {
 				
 				int geoTransparencyValue = geoTransparencyScale.getSelection();
-				// GeometryViewDescription.getInstance().setTransparency(geoTransparencyValue);
+				// update transparency.
 				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyValue));
 				geoTransparencyScaleLabel.pack();
+				geoTransparencyComposite.pack();
 			}
 		});
 		
@@ -285,10 +302,117 @@ public class RoboControlPane {
 		
 		// Paint item
 		Composite paintComposite = new Composite(bar, SWT.NONE);
-		GridLayout paintLayout = new GridLayout();
+		GridLayout paintLayout = new GridLayout(2, false);
 		paintLayout.marginLeft = paintLayout.marginTop = paintLayout.marginRight = paintLayout.marginBottom = 10;
 		paintLayout.verticalSpacing = 10;
 		paintComposite.setLayout(paintLayout);
+		
+		Label currentObjectLabel = new Label(paintComposite, SWT.NONE);
+		currentObjectLabel.setText("Current object");
+		currentObjectLabel.pack();
+		final Combo paintNameCombo = new Combo(paintComposite, SWT.READ_ONLY);
+		String labelArray[] = nameCombo.getItems();
+		for (int i=0; i < labelArray.length; i++) {
+			
+			paintNameCombo.add(labelArray[i]);
+		}
+		paintNameCombo.select(0);
+		nameCombo.addKeyListener(new KeyListener() {
+			
+			int currentIndex = nameCombo.getSelectionIndex();
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					currentText = nameCombo.getText();
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					paintNameCombo.remove(currentIndex);
+					paintNameCombo.add(currentText, currentIndex);
+				}
+			}
+		});
+		paintNameCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				// set current object.
+			}
+		});
+		paintNameCombo.pack();
+		
+		Label brushSizeLabel = new Label(paintComposite, SWT.NONE);
+		brushSizeLabel.setText("Brush size");
+		final Composite brushSizeComposite = new Composite(paintComposite, SWT.NONE);
+		GridLayout brushSizeLayout = new GridLayout(2, false);
+		brushSizeComposite.setLayout(brushSizeLayout);
+		final Scale brushSizeScale = new Scale(brushSizeComposite, SWT.NONE);
+		brushSizeScale.setMinimum(0);
+		brushSizeScale.setMaximum(50);
+		brushSizeScale.setPageIncrement(5);
+		brushSizeScale.setIncrement(5);
+		final Label brushSizeScaleLabel = new Label(brushSizeComposite, SWT.NONE);
+		brushSizeScaleLabel.setText(Integer.toString(brushSizeScale.getSelection()));
+		brushSizeScaleLabel.setAlignment(SWT.RIGHT);
+		brushSizeScale.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				brushSizeScaleLabel.setText(Integer.toString(brushSizeScale.getSelection()));
+				PaintViewDescription.getInstance().setPaintBrushSize(brushSizeScale.getSelection());
+				brushSizeScaleLabel.pack();
+				brushSizeComposite.pack();
+			}
+		});
+		
+		Label paintMaskLabel = new Label(paintComposite, SWT.NONE);
+		paintMaskLabel.setText("Paint Transparency");
+		final Composite paintMaskComposite = new Composite(paintComposite, SWT.NONE);
+		GridLayout paintMaskLayout = new GridLayout(2, false);
+		paintMaskComposite.setLayout(paintMaskLayout);
+		final Scale paintMaskScale = new Scale(paintMaskComposite, SWT.NONE);
+		paintMaskScale.setMinimum(0);
+		paintMaskScale.setMaximum(100);
+		paintMaskScale.setIncrement(10);
+		paintMaskScale.setPageIncrement(10);
+		final Label paintMaskScaleLabel = new Label(paintMaskComposite, SWT.NONE);
+		paintMaskScaleLabel.setText(Integer.toString(paintMaskScale.getSelection()));
+		paintMaskScale.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				paintMaskScaleLabel.setText(Integer.toString(paintMaskScale.getSelection()));
+				PaintViewDescription.getInstance().setTransparency(paintMaskScale.getSelection());
+				paintMaskScaleLabel.pack();
+				paintMaskComposite.pack();
+			}
+		});
+		
+		Label brush3DLabel = new Label(paintComposite, SWT.NONE);
+		brush3DLabel.setText("3D Brush");
+		Button brush3DButton = new Button(paintComposite, SWT.CHECK);
+		brush3DButton.setSelection(true);
+		brush3DButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				if(PaintViewDescription.getInstance().isBrush3D()) {
+					
+					PaintViewDescription.getInstance().setBrush3D(false);
+				}
+				
+				else {
+					
+					PaintViewDescription.getInstance().setBrush3D(true);
+				}
+			}
+		});
 		
 		ExpandItem item2 = new ExpandItem(bar, SWT.NONE, 2);
 		item2.setText("Paint");
