@@ -1,6 +1,7 @@
 package org.imagesci.robopaint;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Random;
 
 import org.eclipse.swt.SWT;
@@ -33,16 +34,14 @@ public class RoboPaint {
 	public static void main(String[] args) {
 		int i = 0;
 		
-		ObjectDescription isosurface = new ObjectDescription("Show Iso-surface", i++);
-		ObjectDescription label = new ObjectDescription("Label", i++);
-		ObjectDescription transparency = new ObjectDescription("Transparency", i++);
-		ObjectDescription visibility = new ObjectDescription("Visible", i++);
+		ObjectDescription label1 = new ObjectDescription("Label 1", i++);
+		ObjectDescription label2 = new ObjectDescription("Label 2", i++);
 		
-		GeometryViewDescription.getInstance().getObjectDescriptions().add(isosurface);
-		GeometryViewDescription.getInstance().getObjectDescriptions().add(label);
-		GeometryViewDescription.getInstance().getObjectDescriptions().add(transparency);
-		GeometryViewDescription.getInstance().getObjectDescriptions().add(visibility);
+		GeometryViewDescription.getInstance().getObjectDescriptions().add(label1);
+		GeometryViewDescription.getInstance().getObjectDescriptions().add(label2);
 		
+	
+		int n=GeometryViewDescription.getInstance().getObjectDescriptions().indexOf(label1);
 		RoboPaint robo = new RoboPaint();
 	}
 

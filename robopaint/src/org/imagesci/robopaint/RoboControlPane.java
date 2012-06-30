@@ -188,21 +188,8 @@ public class RoboControlPane {
 		
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
 		geoVisiblityLabel.setText("Visible");
-		Button visibilityButton = new Button(geoComposite, SWT.CHECK);
-		visibilityButton.setSelection(true);
-		visibilityButton.addListener(SWT.Selection, new Listener() {
-			
-			public void handleEvent(Event event) {
-				
-				/*if (GeometryViewDescription.getInstance().isVisible()) {
-					
-					GeometryViewDescription.getInstance().setVisible(false);
-				} else {
-					
-					GeometryViewDescription.getInstance().setVisible(true);
-				}*/
-			}
-		});
+		final Button visibilityButton = new Button(geoComposite, SWT.CHECK);
+		visibilityButton.setSelection(true); // *See nameCombo section for listener to update visible property.
 		
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
@@ -210,6 +197,8 @@ public class RoboControlPane {
 		nameCombo.add("Label [#1]");
 		nameCombo.add("Label [#2]");
 		nameCombo.select(0);
+		// Set current object.
+		PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(0));
 		nameCombo.addKeyListener(new KeyListener() {
 			
 			int currentIndex = nameCombo.getSelectionIndex();
@@ -228,15 +217,8 @@ public class RoboControlPane {
 				if (e.keyCode == SWT.CR) {
 					nameCombo.remove(currentIndex);
 					nameCombo.add(currentText, currentIndex);
-					// update name
+					PaintViewDescription.getInstance().getCurrentObject().setName(currentText);
 				}
-			}
-		});
-		nameCombo.addListener(SWT.Selection, new Listener() {
-			
-			public void handleEvent(Event e) {
-				
-				// update displayed 4 traits.
 			}
 		});
 		
@@ -245,10 +227,12 @@ public class RoboControlPane {
 		Composite colorDialogComposite = new Composite(geoComposite, SWT.NONE);
 		GridLayout colorDialogLayout = new GridLayout(2, false);
 		colorDialogComposite.setLayout(colorDialogLayout);
-		Color color = new Color(display, new RGB(0, 255, 0));
 		final Label colorDisplayLabel = new Label(colorDialogComposite, SWT.BORDER);
 		colorDisplayLabel.setText("     ");
-		colorDisplayLabel.setBackground(color);
+		Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
+		RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
+		Color passColor = new Color(display, passRGB);
+		colorDisplayLabel.setBackground(passColor);
 		Button colorButton = new Button(colorDialogComposite, SWT.PUSH);
 		colorButton.setText("Change color");
 		colorButton.addListener(SWT.Selection, new Listener() {
@@ -257,7 +241,6 @@ public class RoboControlPane {
 				
 				ColorDialog colorDialog = new ColorDialog(shell);
 				colorDialog.setText("Change color...");
-				colorDialog.setRGB(new RGB(0, 255, 0));
 				RGB newColor = colorDialog.open();
 				if (newColor == null) {
 					
@@ -265,8 +248,8 @@ public class RoboControlPane {
 				}
 				
 				colorDisplayLabel.setBackground(new Color(display, newColor));
-				
-				// update color.
+				Color4f passColor = new Color4f(newColor.red, newColor.blue, newColor.green, 0);
+				PaintViewDescription.getInstance().getCurrentObject().setColor(passColor);
 			}
 		});
 		
@@ -288,10 +271,24 @@ public class RoboControlPane {
 			public void handleEvent(Event event) {
 				
 				int geoTransparencyValue = geoTransparencyScale.getSelection();
-				// update transparency.
+				PaintViewDescription.getInstance().getCurrentObject().setTransparency(geoTransparencyValue);
 				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyValue));
 				geoTransparencyScaleLabel.pack();
 				geoTransparencyComposite.pack();
+			}
+		});
+		
+		visibilityButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event event) {
+				
+				if (GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).isVisible()) {
+					
+					GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).setVisible(false);
+				} else {
+					
+					GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).setVisible(true);
+				}
 			}
 		});
 		
@@ -338,13 +335,37 @@ public class RoboControlPane {
 				}
 			}
 		});
+		nameCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()));
+				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
+				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
+				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
+				Color passColor = new Color(display, passRGB);
+				colorDisplayLabel.setBackground(passColor);
+				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
+				paintNameCombo.select(nameCombo.getSelectionIndex());
+				
+			}
+		});
 		paintNameCombo.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
-				// set current object.
+				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(paintNameCombo.getSelectionIndex()));
+				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
+				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
+				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y); // PROBLEM.
+				Color passColor = new Color(display, passRGB);
+				colorDisplayLabel.setBackground(passColor);
+				transparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				nameCombo.select(paintNameCombo.getSelectionIndex());
 			}
 		});
+
 		paintNameCombo.pack();
 		
 		Label brushSizeLabel = new Label(paintComposite, SWT.NONE);

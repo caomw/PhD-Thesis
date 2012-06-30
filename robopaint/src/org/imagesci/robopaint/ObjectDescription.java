@@ -7,10 +7,31 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected boolean visible = true;
 	protected Color4f color = new Color4f();
 	protected int id = -1;
+	public enum Status {
+		STATIC, ACTIVE, PASSIVE
+	};
+
+	protected Status status = Status.ACTIVE;
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 	public ObjectDescription(String name, int id) {
 		this.name = name;
 		this.id = id;
+	}
+
+	public boolean equals(Object obj) {
+		if (obj instanceof ObjectDescription) {
+			return (((ObjectDescription) obj).id == id);
+		} else {
+			return false;
+		}
 	}
 
 	public String getName() {
