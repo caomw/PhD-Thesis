@@ -189,7 +189,8 @@ public class RoboControlPane {
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
 		geoVisiblityLabel.setText("Visible");
 		final Button visibilityButton = new Button(geoComposite, SWT.CHECK);
-		visibilityButton.setSelection(true); // *See nameCombo section for listener to update visible property.
+		visibilityButton.setSelection(true);
+		// *nameCombo section for visibilityButton listener to update visible property of current object.
 		
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
@@ -197,30 +198,25 @@ public class RoboControlPane {
 		nameCombo.add("Label [#1]");
 		nameCombo.add("Label [#2]");
 		nameCombo.select(0);
-		// Set current object.
 		PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(0));
-		nameCombo.addKeyListener(new KeyListener() {
+		// *visibilityButton listener to update visible property of current object.
+		visibilityButton.addListener(SWT.Selection, new Listener() {
 			
-			int currentIndex = nameCombo.getSelectionIndex();
-			String currentText;
-			
-			public void keyPressed(KeyEvent e) {
+			public void handleEvent(Event event) {
 				
-				if (e.keyCode == SWT.CR) {
+				if (GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).isVisible()) {
 					
-					currentText = nameCombo.getText();
-				}
-			}
-			
-			public void keyReleased(KeyEvent e) {
-				
-				if (e.keyCode == SWT.CR) {
-					nameCombo.remove(currentIndex);
-					nameCombo.add(currentText, currentIndex);
-					PaintViewDescription.getInstance().getCurrentObject().setName(currentText);
+					GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).setVisible(false);
+				} else {
+					
+					GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).setVisible(true);
 				}
 			}
 		});
+		// **paintNameCombo section for nameCombo listener to update nameCombo and paintNameCombo names
+		//		for current object.
+		// ***paintNameCombo section for nameCombo listener to update current object and properties
+		//		displayed when nameCombo selection changes.
 		
 		Label colorLabel = new Label(geoComposite, SWT.NONE);
 		colorLabel.setText("Color");
@@ -278,20 +274,6 @@ public class RoboControlPane {
 			}
 		});
 		
-		visibilityButton.addListener(SWT.Selection, new Listener() {
-			
-			public void handleEvent(Event event) {
-				
-				if (GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).isVisible()) {
-					
-					GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).setVisible(false);
-				} else {
-					
-					GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()).setVisible(true);
-				}
-			}
-		});
-		
 		ExpandItem item1 = new ExpandItem(bar, SWT.NONE, 1);
 		item1.setText("Geometry");
 		item1.setHeight(geoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
@@ -314,6 +296,7 @@ public class RoboControlPane {
 			paintNameCombo.add(labelArray[i]);
 		}
 		paintNameCombo.select(0);
+		// **nameCombo listener to update nameCombo and paintNameCombo names for current object.
 		nameCombo.addKeyListener(new KeyListener() {
 			
 			int currentIndex = nameCombo.getSelectionIndex();
@@ -330,11 +313,17 @@ public class RoboControlPane {
 			public void keyReleased(KeyEvent e) {
 				
 				if (e.keyCode == SWT.CR) {
+					nameCombo.remove(currentIndex);
+					nameCombo.add(currentText, currentIndex);
 					paintNameCombo.remove(currentIndex);
 					paintNameCombo.add(currentText, currentIndex);
+					paintNameCombo.select(currentIndex);
+					PaintViewDescription.getInstance().getCurrentObject().setName(currentText);
 				}
 			}
 		});
+		// ***nameCombo listener to update current object and properties displayed when nameCombo 
+		//		selection changes.
 		nameCombo.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
@@ -358,14 +347,14 @@ public class RoboControlPane {
 				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(paintNameCombo.getSelectionIndex()));
 				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
 				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
-				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y); // PROBLEM.
+				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
 				Color passColor = new Color(display, passRGB);
 				colorDisplayLabel.setBackground(passColor);
-				transparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
 				nameCombo.select(paintNameCombo.getSelectionIndex());
 			}
 		});
-
 		paintNameCombo.pack();
 		
 		Label brushSizeLabel = new Label(paintComposite, SWT.NONE);

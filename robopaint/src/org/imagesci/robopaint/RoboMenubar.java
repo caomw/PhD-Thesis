@@ -1,6 +1,8 @@
 package org.imagesci.robopaint;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -12,23 +14,27 @@ public class RoboMenubar {
 	public RoboMenubar(Shell parent) {
 		Menu mbar = new Menu(parent, SWT.BAR);
 
-		MenuItem fileItem = new MenuItem(mbar, SWT.CASCADE);
-		fileItem.setText("&File");
-		Menu submenu = new Menu(parent, SWT.DROP_DOWN);
-		fileItem.setMenu(submenu);
+		MenuItem fileMenu = new MenuItem(mbar, SWT.CASCADE);
+		fileMenu.setText("&File");
+		Menu fileSubMenu = new Menu(parent, SWT.DROP_DOWN);
+		fileMenu.setMenu(fileSubMenu);
 		
-		MenuItem openItem = new MenuItem(submenu, SWT.PUSH);
+		MenuItem openItem = new MenuItem(fileSubMenu, SWT.PUSH);
 		openItem.setText("&Open\tCtrl+O");
 		openItem.setAccelerator(SWT.MOD1 + 'O');
-		openItem.addListener(SWT.Selection, new Listener() {
+		openItem.addSelectionListener(new SelectionListener() {
 			
-			public void handleEvent(Event e) {
+			public void widgetSelected(SelectionEvent event) {
 				
-				System.out.println("OPEN!");
+				
+			}
+			
+			public void widgetDefaultSelected(SelectionEvent event) {
+				
 			}
 		});
 		
-		MenuItem saveItem = new MenuItem(submenu, SWT.PUSH);
+		MenuItem saveItem = new MenuItem(fileSubMenu, SWT.PUSH);
 		saveItem.setText("&Save\tCtrl+S");
 		saveItem.setAccelerator(SWT.MOD1 + 'S');
 		saveItem.addListener(SWT.Selection, new Listener() {
@@ -39,7 +45,7 @@ public class RoboMenubar {
 			}
 		});
 		
-		MenuItem saveAsItem = new MenuItem(submenu, SWT.PUSH);
+		MenuItem saveAsItem = new MenuItem(fileSubMenu, SWT.PUSH);
 		saveAsItem.setText("&Save As\tCtrl+SHIFT+S");
 		saveAsItem.setAccelerator(SWT.MOD1 + SWT.MOD2 +'S');
 		saveAsItem.addListener(SWT.Selection, new Listener() {
