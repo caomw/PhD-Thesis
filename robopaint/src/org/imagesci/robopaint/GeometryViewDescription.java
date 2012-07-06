@@ -15,11 +15,11 @@ import org.eclipse.swt.widgets.Text;
 
 public class GeometryViewDescription {
 	protected List<ObjectDescription> objectDescriptions;
-	protected boolean showIsoSurface = true;
+	protected boolean hideAll = true;
 	protected static final GeometryViewDescription description = new GeometryViewDescription();
 	protected ExpandBar bar;
 	protected ExpandItem item;
-	public enum ParameterName{SHOW_ISO_SURFACE};
+	public enum ParameterName{HIDE_ALL};
 	public static interface GeometryViewListener{
 		public void updateParameter(GeometryViewDescription g,ParameterName p);
 	}
@@ -45,12 +45,12 @@ public class GeometryViewDescription {
 		this.objectDescriptions = objectDescriptions;
 	}
 
-	public boolean isShowIsoSurface() {
-		return showIsoSurface;
+	public boolean isHideAll() {
+		return hideAll;
 	}
 
-	public void setShowIsoSurface(boolean showIsoSurface) {
-		this.showIsoSurface = showIsoSurface;
-		fireUpdate(ParameterName.SHOW_ISO_SURFACE);
+	public void setHideAll(boolean hideAll) {
+		this.hideAll = hideAll;
+		fireUpdate(ParameterName.HIDE_ALL);
 	}
 }

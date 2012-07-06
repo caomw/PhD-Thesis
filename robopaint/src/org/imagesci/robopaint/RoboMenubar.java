@@ -1,5 +1,7 @@
 package org.imagesci.robopaint;
 
+import javax.swing.ImageIcon;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,13 +13,14 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.imagesci.robopaint.icons.PlaceHolder;
 
 public class RoboMenubar {
 	public RoboMenubar(Shell parent) {
 		
 		final Shell shell = parent.getShell();
 		Menu mbar = new Menu(parent, SWT.BAR);
-
+		// new ImageIcon(PlaceHolder.class.getResource("./image.png"));
 		MenuItem fileMenu = new MenuItem(mbar, SWT.CASCADE);
 		fileMenu.setText("&File");
 		Menu fileSubMenu = new Menu(parent, SWT.DROP_DOWN);
@@ -47,13 +50,13 @@ public class RoboMenubar {
 		});
 		
 		MenuItem saveAsItem = new MenuItem(fileSubMenu, SWT.PUSH);
-		saveAsItem.setText("&Save As\tCtrl+SHIFT+S");
+		saveAsItem.setText("&Save As\tCtrl+Shift+S");
 		saveAsItem.setAccelerator(SWT.MOD1 + SWT.MOD2 +'S');
 		saveAsItem.addSelectionListener(new SelectionAdapter() {
 			
 			public void widgetSelected(SelectionEvent event) {
 				
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
+				FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 				fileDialog.setText("Save As");
 				fileDialog.setFilterPath("C:/");
 				String[] filterExtensions = {"*.img", "*.hdr", "*.nii"};

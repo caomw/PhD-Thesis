@@ -7,6 +7,10 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected boolean visible = true;
 	protected Color4f color = new Color4f();
 	protected int id = -1;
+	protected float pressureWeight=0;
+	protected float targetIntensity=0;
+	protected float advectionWeight=0;
+	protected float curvatureWeight=0;
 	public enum Status {
 		STATIC, ACTIVE, PASSIVE
 	};
@@ -80,6 +84,46 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 		return color.w;
 	}
 
+	public void setPressureWeight(float pressureWeight) {
+		
+		this.pressureWeight = pressureWeight;
+	}
+	
+	public float getPressureWeight() {
+		
+		return pressureWeight;
+	}
+	
+	public void setTargetIntensity(float targetIntensity) {
+		
+		this.targetIntensity = targetIntensity;
+	}
+	
+	public float getTargetIntensity() {
+		
+		return targetIntensity;
+	}
+	
+	public void setAdvectionWeight(float advectionWeight) {
+		
+		this.advectionWeight = advectionWeight;
+	}
+	
+	public float getAdvectionWeight() {
+		
+		return advectionWeight;
+	}
+	
+	public void setCurvatureWeight(float curvatureWeight) {
+		
+		this.curvatureWeight = curvatureWeight;
+	}
+	
+	public float getCurvatureWeight() {
+		
+		return curvatureWeight;
+	}
+	
 	@Override
 	public int compareTo(ObjectDescription obj) {
 		return (int) Math.signum(this.id - obj.id);

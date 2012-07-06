@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.*;
+import org.imagesci.robopaint.ObjectDescription.Status;
 
 public class RoboControlPane {
 	public RoboControlPane(Composite parent) {
@@ -176,12 +177,12 @@ public class RoboControlPane {
 			
 			public void handleEvent(Event event) {
 				
-				if (GeometryViewDescription.getInstance().isShowIsoSurface()) {
+				if (GeometryViewDescription.getInstance().isHideAll()) {
 					
-					GeometryViewDescription.getInstance().setShowIsoSurface(false);
+					GeometryViewDescription.getInstance().setHideAll(false);
 				} else {
 					
-					GeometryViewDescription.getInstance().setShowIsoSurface(true);
+					GeometryViewDescription.getInstance().setHideAll(true);
 				}
 			}
 		});
@@ -195,8 +196,8 @@ public class RoboControlPane {
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
 		final Combo nameCombo = new Combo(geoComposite, SWT.NONE);
-		nameCombo.add("Label [#1]");
-		nameCombo.add("Label [#2]");
+		nameCombo.add(GeometryViewDescription.getInstance().getObjectDescriptions().get(0).getName());
+		nameCombo.add(GeometryViewDescription.getInstance().getObjectDescriptions().get(1).getName());
 		nameCombo.select(0);
 		PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(0));
 		// *visibilityButton listener to update visible property of current object.
@@ -213,9 +214,9 @@ public class RoboControlPane {
 				}
 			}
 		});
-		// **paintNameCombo section for nameCombo listener to update nameCombo and paintNameCombo names
+		// **end for nameCombo listener to update nameCombo and paintNameCombo names
 		//		for current object.
-		// ***paintNameCombo section for nameCombo listener to update current object and properties
+		// ***end for nameCombo listener to update current object and properties
 		//		displayed when nameCombo selection changes.
 		
 		Label colorLabel = new Label(geoComposite, SWT.NONE);
@@ -296,65 +297,8 @@ public class RoboControlPane {
 			paintNameCombo.add(labelArray[i]);
 		}
 		paintNameCombo.select(0);
-		// **nameCombo listener to update nameCombo and paintNameCombo names for current object.
-		nameCombo.addKeyListener(new KeyListener() {
-			
-			int currentIndex = nameCombo.getSelectionIndex();
-			String currentText;
-			
-			public void keyPressed(KeyEvent e) {
-				
-				if (e.keyCode == SWT.CR) {
-					
-					currentText = nameCombo.getText();
-				}
-			}
-			
-			public void keyReleased(KeyEvent e) {
-				
-				if (e.keyCode == SWT.CR) {
-					nameCombo.remove(currentIndex);
-					nameCombo.add(currentText, currentIndex);
-					paintNameCombo.remove(currentIndex);
-					paintNameCombo.add(currentText, currentIndex);
-					paintNameCombo.select(currentIndex);
-					PaintViewDescription.getInstance().getCurrentObject().setName(currentText);
-				}
-			}
-		});
-		// ***nameCombo listener to update current object and properties displayed when nameCombo 
-		//		selection changes.
-		nameCombo.addListener(SWT.Selection, new Listener() {
-			
-			public void handleEvent(Event e) {
-				
-				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()));
-				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
-				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
-				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
-				Color passColor = new Color(display, passRGB);
-				colorDisplayLabel.setBackground(passColor);
-				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
-				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
-				paintNameCombo.select(nameCombo.getSelectionIndex());
-				
-			}
-		});
-		paintNameCombo.addListener(SWT.Selection, new Listener() {
-			
-			public void handleEvent(Event e) {
-				
-				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(paintNameCombo.getSelectionIndex()));
-				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
-				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
-				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
-				Color passColor = new Color(display, passRGB);
-				colorDisplayLabel.setBackground(passColor);
-				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
-				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
-				nameCombo.select(paintNameCombo.getSelectionIndex());
-			}
-		});
+		// ****end for paintNameCombo listener to update current object and properties displayed when 
+		// 		paintNameCombo selection changes.
 		paintNameCombo.pack();
 		
 		Label brushSizeLabel = new Label(paintComposite, SWT.NONE);
@@ -431,13 +375,199 @@ public class RoboControlPane {
 		
 		// Auto-segment item
 		Composite segComposite = new Composite(bar, SWT.NONE);
-		GridLayout segLayout = new GridLayout();
+		GridLayout segLayout = new GridLayout(2, false);
 		segLayout.marginLeft = segLayout.marginTop = segLayout.marginRight = segLayout.marginBottom = 10;
 		segLayout.verticalSpacing = 10;
 		segComposite.setLayout(segLayout);
 		
+		Label playLabel = new Label(segComposite, SWT.NONE);
+		playLabel.setText("PLAY/STOP");
+		Button playButton = new Button(segComposite, SWT.TOGGLE);
+		playButton.setText("     ");
+		
+		final Combo statusNameCombo = new Combo(segComposite, SWT.READ_ONLY);
+		String statusLabelArray[] = nameCombo.getItems();
+		for (int i=0; i < statusLabelArray.length; i++) {
+			
+			statusNameCombo.add(statusLabelArray[i]);
+		}
+		statusNameCombo.select(0);
+		// *****end for statusNameCombo listener to update current object and properties displayed 
+		//		when statusNameCombo selection changes.
+		final Combo statusCombo = new Combo(segComposite, SWT.READ_ONLY);
+		statusCombo.add("Active");
+		statusCombo.add("Passive");
+		statusCombo.add("Static");
+		statusCombo.select(0);
+		statusCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				int index = statusCombo.getSelectionIndex();
+				
+				if (index == 0) {
+					
+					PaintViewDescription.getInstance().currentObject.setStatus(Status.ACTIVE);
+				}
+				
+				else if (index == 1) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setStatus(Status.PASSIVE);
+				}
+				
+				else if (index == 2) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setStatus(Status.STATIC);
+				}
+			}
+		});
+		
+		Label pressureLabel = new Label(segComposite, SWT.NONE);
+		pressureLabel.setText("Pressure weight");
+		final Text pressureText = new Text(segComposite, SWT.BORDER);
+		pressureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getPressureWeight()));
+		pressureText.addKeyListener(new KeyListener() {
+			
+			float newValue;
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					 currentText = pressureText.getText();
+					
+					try {
+						
+						newValue = Float.parseFloat(currentText);
+					}
+					
+					catch(NumberFormatException err) {
+						
+						return;
+					}
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setPressureWeight(newValue);
+				}
+			}
+		});
+		
+		Label intensityLabel = new Label(segComposite, SWT.NONE);
+		intensityLabel.setText("Target intensity");
+		final Text intensityText = new Text(segComposite, SWT.BORDER);
+		intensityText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getTargetIntensity()));
+		intensityText.addKeyListener(new KeyListener() {
+			
+			float newValue;
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					currentText = intensityText.getText();
+					
+					try {
+						
+						newValue = Float.parseFloat(currentText);
+					}
+					
+					catch(NumberFormatException err) {
+						
+						return;
+					}
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setTargetIntensity(newValue);
+				}
+			}
+		});
+		
+		Label advectionLabel = new Label(segComposite, SWT.NONE);
+		advectionLabel.setText("Advection weight");
+		final Text advectionText = new Text(segComposite, SWT.BORDER);
+		advectionText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getAdvectionWeight()));
+		advectionText.addKeyListener(new KeyListener() {
+			
+			float newValue;
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				currentText = advectionText.getText();
+				
+				if (e.keyCode == SWT.CR) {
+					
+					try {
+						
+						newValue = Float.parseFloat(currentText);
+					}
+					
+					catch(NumberFormatException err) {
+						
+						return;
+					}
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setAdvectionWeight(newValue);
+				}
+			}
+		});
+		
+		Label curvatureLabel = new Label(segComposite, SWT.NONE);
+		curvatureLabel.setText("Curvature weight");
+		final Text curvatureText = new Text(segComposite, SWT.BORDER);
+		curvatureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getCurvatureWeight()));
+		curvatureText.addKeyListener(new KeyListener() {
+			
+			float newValue;
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				currentText = curvatureText.getText();
+				
+				if (e.keyCode == SWT.CR) {
+					
+					try {
+						
+						newValue = Float.parseFloat(currentText);
+					}
+					
+					catch(NumberFormatException err) {
+						
+						return;
+					}
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setCurvatureWeight(newValue);
+				}
+			}
+		});
+		
 		ExpandItem item3 = new ExpandItem(bar, SWT.NONE, 3);
-		item3.setText("Sculpt");
+		item3.setText("Auto-segment");
 		item3.setHeight(segComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item3.setControl(segComposite);
 		
@@ -448,9 +578,142 @@ public class RoboControlPane {
 		sculptLayout.verticalSpacing = 10;
 		sculptComposite.setLayout(sculptLayout);
 		
-		ExpandItem item4 = new ExpandItem(bar, SWT.NONE, 3);
-		item4.setText("Auto-segment");
+		ExpandItem item4 = new ExpandItem(bar, SWT.NONE, 4);
+		item4.setText("Sculpt");
 		item4.setHeight(sculptComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item4.setControl(sculptComposite);
+		
+		// Listeners
+		// **nameCombo listener to update nameCombo and paintNameCombo names for current object.
+		nameCombo.addKeyListener(new KeyListener() {
+			
+			int currentIndex = nameCombo.getSelectionIndex();
+			String currentText;
+			
+			public void keyPressed(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					
+					currentText = nameCombo.getText();
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				
+				if (e.keyCode == SWT.CR) {
+					nameCombo.remove(currentIndex);
+					nameCombo.add(currentText, currentIndex);
+					paintNameCombo.remove(currentIndex);
+					paintNameCombo.add(currentText, currentIndex);
+					paintNameCombo.select(currentIndex);
+					statusNameCombo.remove(currentIndex);
+					statusNameCombo.add(currentText, currentIndex);
+					statusNameCombo.select(currentIndex);
+					PaintViewDescription.getInstance().getCurrentObject().setName(currentText);
+				}
+			}
+		});
+		// ***nameCombo listener to update current object and properties displayed when nameCombo 
+		//		selection changes.
+		nameCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(nameCombo.getSelectionIndex()));
+				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
+				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
+				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
+				Color passColor = new Color(display, passRGB);
+				colorDisplayLabel.setBackground(passColor);
+				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
+				if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.ACTIVE) {
+					
+					statusCombo.select(0);
+				}
+				else if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.PASSIVE) {
+					
+					statusCombo.select(1);
+				}
+				else if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.STATIC) {
+					
+					statusCombo.select(2);
+				}
+				pressureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getPressureWeight()));
+				intensityText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getTargetIntensity()));
+				advectionText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getAdvectionWeight()));
+				curvatureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getCurvatureWeight()));
+				paintNameCombo.select(nameCombo.getSelectionIndex());
+				statusNameCombo.select(nameCombo.getSelectionIndex());
+			}
+		});
+		// ****paintNameCombo listener to update current object and properties displayed when 
+		//		paintNameCombo selection changes.
+		paintNameCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(paintNameCombo.getSelectionIndex()));
+				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
+				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
+				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
+				Color passColor = new Color(display, passRGB);
+				colorDisplayLabel.setBackground(passColor);
+				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
+				if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.ACTIVE) {
+					
+					statusCombo.select(0);
+				}
+				else if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.PASSIVE) {
+					
+					statusCombo.select(1);
+				}
+				else if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.STATIC) {
+					
+					statusCombo.select(2);
+				}
+				pressureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getPressureWeight()));
+				intensityText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getTargetIntensity()));
+				advectionText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getAdvectionWeight()));
+				curvatureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getCurvatureWeight()));
+				nameCombo.select(paintNameCombo.getSelectionIndex());
+				statusNameCombo.select(paintNameCombo.getSelectionIndex());
+			}
+		});
+		// *****statusNameCombo listener to update current object and properties displayed when 
+		//		statusNameCombo selection changes.
+		statusNameCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				PaintViewDescription.getInstance().setCurrentObject(GeometryViewDescription.getInstance().getObjectDescriptions().get(statusNameCombo.getSelectionIndex()));
+				visibilityButton.setSelection(PaintViewDescription.getInstance().getCurrentObject().isVisible());
+				Color4f passColor4f = PaintViewDescription.getInstance().getCurrentObject().getColor();
+				RGB passRGB = new RGB((int) passColor4f.x, (int) passColor4f.z, (int) passColor4f.y);
+				Color passColor = new Color(display, passRGB);
+				colorDisplayLabel.setBackground(passColor);
+				geoTransparencyScale.setSelection((int) PaintViewDescription.getInstance().getCurrentObject().getTransparency());
+				geoTransparencyScaleLabel.setText(Integer.toString(geoTransparencyScale.getSelection()));
+				if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.ACTIVE) {
+					
+					statusCombo.select(0);
+				}
+				else if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.PASSIVE) {
+					
+					statusCombo.select(1);
+				}
+				else if (PaintViewDescription.getInstance().getCurrentObject().getStatus() == Status.STATIC) {
+					
+					statusCombo.select(2);
+				}
+				pressureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getPressureWeight()));
+				intensityText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getTargetIntensity()));
+				advectionText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getAdvectionWeight()));
+				curvatureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getCurvatureWeight()));
+				nameCombo.select(statusNameCombo.getSelectionIndex());
+				paintNameCombo.select(statusNameCombo.getSelectionIndex());
+			}
+		});
 	}
 }
