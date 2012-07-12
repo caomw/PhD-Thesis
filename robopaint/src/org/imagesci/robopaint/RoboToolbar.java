@@ -12,14 +12,21 @@ import org.eclipse.swt.widgets.Shell;
 public class RoboToolbar {
 	public RoboToolbar(Shell parent) {
 		CoolBar bar = new CoolBar(parent, SWT.BORDER);
-		for (int i = 0; i < 2; i++) {
-			CoolItem citem = new CoolItem(bar, SWT.NONE);
-			Button button = new Button(bar, SWT.PUSH);
-			button.setText("Button " + i);
-			Point size = button.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-			citem.setControl(button);
-			citem.setPreferredSize(citem.computeSize(size.x, size.y));
-		}
+		
+		CoolItem openItem = new CoolItem(bar, SWT.NONE);
+		Button openButton = new Button(bar, SWT.PUSH);
+		openButton.setText("Open");
+		Point openSize = openButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		openItem.setControl(openButton);
+		openItem.setPreferredSize(openItem.computeSize(openSize.x, openSize.y));
+		
+		CoolItem saveItem = new CoolItem(bar, SWT.NONE);
+		Button saveButton = new Button(bar, SWT.PUSH);
+		saveButton.setText("Save");
+		Point saveSize = saveButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		saveItem.setControl(saveButton);
+		saveItem.setPreferredSize(saveItem.computeSize(saveSize.x, saveSize.y));
+		
 		Rectangle clientArea = parent.getClientArea();
 		bar.setLocation(clientArea.x, clientArea.y);
 		bar.setLayoutData(new BorderLayout.BorderData(BorderLayout.NORTH));

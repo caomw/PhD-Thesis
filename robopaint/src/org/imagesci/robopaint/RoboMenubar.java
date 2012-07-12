@@ -72,6 +72,10 @@ public class RoboMenubar {
 		quitItem.setAccelerator(SWT.MOD1 + 'Q');
 		quitItem.addSelectionListener(new SelectionAdapter() {
 			
+			public void widgetSelected(SelectionEvent event) {
+				
+				System.exit(1);
+			}
 		});
 		
 		parent.setMenuBar(mbar);
