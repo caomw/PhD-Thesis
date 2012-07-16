@@ -11,6 +11,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.*;
 import org.imagesci.robopaint.ObjectDescription.Status;
+import org.imagesci.robopaint.icons.PlaceHolder;
 
 public class RoboControlPane {
 	public RoboControlPane(Composite parent) {
@@ -379,11 +380,30 @@ public class RoboControlPane {
 		segLayout.marginLeft = segLayout.marginTop = segLayout.marginRight = segLayout.marginBottom = 10;
 		segLayout.verticalSpacing = 10;
 		segComposite.setLayout(segLayout);
+		final Image playImage = new Image(display, PlaceHolder.class.getResourceAsStream("./toolbarButtonGraphics/media/Play24.gif"));
+		final Image stopImage = new Image(display, PlaceHolder.class.getResourceAsStream("./toolbarButtonGraphics/media/Stop24.gif"));
 		
 		Label playLabel = new Label(segComposite, SWT.NONE);
 		playLabel.setText("PLAY/STOP");
-		Button playButton = new Button(segComposite, SWT.TOGGLE);
-		playButton.setText("     ");
+		final Button playButton = new Button(segComposite, SWT.PUSH);
+		playButton.setImage(playImage);
+		playButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				if (PaintViewDescription.getInstance().getCurrentObject().getPlaying()) {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setPlaying(false);
+					playButton.setImage(playImage);
+				}
+				
+				else {
+					
+					PaintViewDescription.getInstance().getCurrentObject().setPlaying(true);
+					playButton.setImage(stopImage);
+				}
+			}
+		});
 		
 		final Combo statusNameCombo = new Combo(segComposite, SWT.READ_ONLY);
 		String statusLabelArray[] = nameCombo.getItems();

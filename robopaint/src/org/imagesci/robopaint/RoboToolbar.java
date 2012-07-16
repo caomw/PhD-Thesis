@@ -3,6 +3,7 @@ package org.imagesci.robopaint;
 import javax.swing.ImageIcon;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,6 +11,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.imagesci.robopaint.icons.PlaceHolder;
 /**
@@ -24,9 +26,13 @@ public class RoboToolbar {
 	 */
 	public RoboToolbar(Shell parent) {
 		
-		// ImageIcon openIcon =  new ImageIcon(PlaceHolder.class.getResource("./toolbarButtonGraphics/general/Open24.gif"));
-		// ImageIcon saveIcon = new ImageIcon(PlaceHolder.class.getResource("./toolbarButtongraphics/genearal/Save24.gif"));
+		Display display = parent.getDisplay();
 
+		Image openImage = new Image(display, PlaceHolder.class.getResourceAsStream("./toolbarButtonGraphics/general/Open24.gif"));
+		Image saveImage = new Image(display, PlaceHolder.class.getResourceAsStream("./toolbarButtonGraphics/general/Save24.gif"));
+		Image playImage = new Image(display, PlaceHolder.class.getResourceAsStream("./toolbarButtonGraphics/media/Play24.gif"));
+		Image stopImage = new Image(display, PlaceHolder.class.getResourceAsStream("./toolbarButtonGraphics/media/Stop24.gif"));
+		
 		CoolBar bar = new CoolBar(parent, SWT.BORDER);
 		
 		CoolItem fileItems = new CoolItem(bar, SWT.NONE);
@@ -34,9 +40,9 @@ public class RoboToolbar {
 		GridLayout fileLayout = new GridLayout(2, true);
 		fileComposite.setLayout(fileLayout);
 		Button openButton = new Button(fileComposite, SWT.PUSH);
-		openButton.setText("     ");
+		openButton.setImage(openImage);
 		Button saveButton = new Button(fileComposite, SWT.PUSH);
-		saveButton.setText("     ");
+		saveButton.setImage(saveImage);
 		Point fileSize = fileComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		fileItems.setControl(fileComposite);
 		fileItems.setPreferredSize(fileItems.computeSize(fileSize.x, fileSize.y));
@@ -46,9 +52,9 @@ public class RoboToolbar {
 		GridLayout segLayout = new GridLayout(2, true);
 		segComposite.setLayout(segLayout);
 		Button playButton = new Button(segComposite, SWT.PUSH);
-		playButton.setText("     ");
+		playButton.setImage(playImage);
 		Button stopButton = new Button(segComposite, SWT.PUSH);
-		stopButton.setText("     ");
+		stopButton.setImage(stopImage);
 		Point segSize = segComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		segItems.setControl(segComposite);
 		segItems.setPreferredSize(segItems.computeSize(segSize.x, segSize.y));

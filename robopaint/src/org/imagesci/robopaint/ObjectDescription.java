@@ -7,6 +7,7 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected boolean visible = false;
 	protected Color4f color = new Color4f();
 	protected int id = -1;
+	protected boolean isPlaying = false;
 	protected float pressureWeight=0;
 	protected float targetIntensity=0;
 	protected float advectionWeight=0;
@@ -122,6 +123,16 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	public float getCurvatureWeight() {
 		
 		return curvatureWeight;
+	}
+	
+	public boolean getPlaying() {
+		
+		return isPlaying;
+	}
+	
+	public void setPlaying(boolean isPlaying) {
+		
+		this.isPlaying = isPlaying;
 	}
 	
 	@Override
