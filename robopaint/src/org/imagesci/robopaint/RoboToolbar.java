@@ -1,5 +1,7 @@
 package org.imagesci.robopaint;
 
+import javax.swing.ImageIcon;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -9,10 +11,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Shell;
-
+import org.imagesci.robopaint.icons.PlaceHolder;
+/**
+ * The RoboToolbar constructs a GUI layout for toolbar functionality.
+ * @author TYung
+ *
+ */
 public class RoboToolbar {
+	/**
+	 * 
+	 * @param parent parent shell object
+	 */
 	public RoboToolbar(Shell parent) {
-		CoolBar bar = new CoolBar(parent, SWT.BORDER);		
+		
+		// ImageIcon openIcon =  new ImageIcon(PlaceHolder.class.getResource("./toolbarButtonGraphics/general/Open24.gif"));
+		// ImageIcon saveIcon = new ImageIcon(PlaceHolder.class.getResource("./toolbarButtongraphics/genearal/Save24.gif"));
+
+		CoolBar bar = new CoolBar(parent, SWT.BORDER);
 		
 		CoolItem fileItems = new CoolItem(bar, SWT.NONE);
 		Composite fileComposite = new Composite(bar, SWT.NONE);
@@ -39,30 +54,6 @@ public class RoboToolbar {
 		segItems.setPreferredSize(segItems.computeSize(segSize.x, segSize.y));
 		
 		CoolItem blankItem = new CoolItem(bar, SWT.NONE);
-		
-		/*CoolItem openItem = new CoolItem(bar, SWT.NONE);
-		Button openButton = new Button(bar, SWT.PUSH);
-		openButton.setText("Open");
-		Point openSize = openButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		openItem.setControl(openButton);
-		openItem.setPreferredSize(openItem.computeSize(openSize.x, openSize.y));
-		
-		CoolItem saveItem = new CoolItem(bar, SWT.NONE);
-		Button saveButton = new Button(bar, SWT.PUSH);
-		saveButton.setText("Save");
-		Point saveSize = saveButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		saveItem.setControl(saveButton);
-		saveItem.setPreferredSize(saveItem.computeSize(saveSize.x, saveSize.y));
-		
-		CoolItem playItem = new CoolItem(bar, SWT.NONE);
-		Button playButton = new Button(bar, SWT.NONE);
-		playButton.setText("Play");
-		Point playSize = playButton.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		playItem.setControl(playButton);
-		playItem.setPreferredSize(playItem.computeSize(playSize.x, playSize.y));
-		
-		CoolItem blankItem = new CoolItem(bar, SWT.NONE);
-		*/
 		
 		Rectangle clientArea = parent.getClientArea();
 		bar.setLocation(clientArea.x, clientArea.y);

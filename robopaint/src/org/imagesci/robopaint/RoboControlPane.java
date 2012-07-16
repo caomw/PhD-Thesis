@@ -188,9 +188,9 @@ public class RoboControlPane {
 		});
 		
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
-		geoVisiblityLabel.setText("Visible");
+		geoVisiblityLabel.setText("Hide all");
 		final Button visibilityButton = new Button(geoComposite, SWT.CHECK);
-		visibilityButton.setSelection(true);
+		visibilityButton.setSelection(false);
 		// *nameCombo section for visibilityButton listener to update visible property of current object.
 		
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
@@ -577,6 +577,171 @@ public class RoboControlPane {
 		sculptLayout.marginLeft = sculptLayout.marginTop = sculptLayout.marginRight = sculptLayout.marginBottom = 10;
 		sculptLayout.verticalSpacing = 10;
 		sculptComposite.setLayout(sculptLayout);
+		
+		final Composite actionComposite = new Composite(sculptComposite, SWT.NONE);
+		GridLayout actionLayout = new GridLayout(3, false);
+		actionComposite.setLayout(actionLayout);
+		Listener buttonListener = new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				Control buttonControl[] = actionComposite.getChildren();
+				for (int i=0; i < buttonControl.length; i++) {
+					
+					Control buttonChild = buttonControl[i];
+					if(e.widget != buttonChild) {
+						
+						((Button) buttonChild).setSelection(false);
+					}
+				}
+				((Button)e.widget).setSelection(true);
+			}
+		};
+		Button creaseButton = new Button(actionComposite, SWT.TOGGLE);
+		creaseButton.setText("     ");
+		creaseButton.addListener(SWT.Selection, buttonListener);
+		creaseButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setCrease(true);
+			}
+		});
+		Button rotateButton = new Button(actionComposite, SWT.TOGGLE);
+		rotateButton.setText("     ");
+		rotateButton.addListener(SWT.Selection, buttonListener);
+		rotateButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setRotate(true);
+			}
+		});
+		Button scaleButton = new Button(actionComposite, SWT.TOGGLE);
+		scaleButton.setText("     ");
+		scaleButton.addListener(SWT.Selection, buttonListener);
+		scaleButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setScale(true);
+			}
+		});
+		Button drawButton = new Button(actionComposite, SWT.TOGGLE);
+		drawButton.setText("     ");
+		drawButton.setSelection(true);
+		drawButton.addListener(SWT.Selection, buttonListener);
+		drawButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setDraw(true);
+			}
+		});
+		Button flattenButton = new Button(actionComposite, SWT.TOGGLE);
+		flattenButton.setText("     ");
+		flattenButton.addListener(SWT.Selection, buttonListener);
+		flattenButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setFlatten(true);
+			}
+		});
+		Button grabButton = new Button(actionComposite, SWT.TOGGLE);
+		grabButton.setText("     ");
+		grabButton.addListener(SWT.Selection, buttonListener);
+		grabButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setGrab(true);
+			}
+		});
+		Button inflateButton = new Button(actionComposite, SWT.TOGGLE);
+		inflateButton.setText("     ");
+		inflateButton.addListener(SWT.Selection, buttonListener);
+		inflateButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setInflate(true);
+			}
+		});
+		Button pinchButton = new Button(actionComposite, SWT.TOGGLE);
+		pinchButton.setText("     ");
+		pinchButton.addListener(SWT.Selection, buttonListener);
+		pinchButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setPinch(true);
+			}
+		});
+		Button smoothButton = new Button(actionComposite, SWT.TOGGLE);
+		smoothButton.setText("     ");
+		smoothButton.addListener(SWT.Selection, buttonListener);
+		smoothButton.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				SculptViewDescription.getInstance().setAllFalse();
+				SculptViewDescription.getInstance().setSmooth(true);
+			}
+		});
+		actionComposite.pack();
+		
+		Composite propertiesComposite = new Composite(sculptComposite, SWT.NONE);
+		GridLayout propertiesLayout = new GridLayout(3, false);
+		propertiesComposite.setLayout(propertiesLayout);
+		Label sizeLabel = new Label(propertiesComposite, SWT.NONE);
+		sizeLabel.setText("Size");
+		final Scale sizeScale = new Scale(propertiesComposite, SWT.NONE);
+		sizeScale.setMinimum(0);
+		sizeScale.setMaximum(50);
+		sizeScale.setIncrement(5);
+		sizeScale.setPageIncrement(10);
+		final Label sizeScaleLabel = new Label(propertiesComposite, SWT.NONE);
+		sizeScaleLabel.setText(Integer.toString(sizeScale.getSelection()));
+		sizeScale.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				int sizeValue = sizeScale.getSelection();
+				SculptViewDescription.getInstance().setSculptStrength(sizeValue);
+				sizeScaleLabel.setText(Integer.toString(sizeValue));
+				sizeScaleLabel.pack();
+			}
+		});
+		Label strengthLabel = new Label(propertiesComposite, SWT.NONE);
+		strengthLabel.setText("Strength");
+		final Scale strengthScale = new Scale(propertiesComposite, SWT.NONE);
+		strengthScale.setMinimum(0);
+		strengthScale.setMaximum(100);
+		strengthScale.setIncrement(10);
+		strengthScale.setPageIncrement(10);
+		final Label strengthScaleLabel = new Label(propertiesComposite, SWT.NONE);
+		strengthScaleLabel.setText(Integer.toString(strengthScale.getSelection()));
+		strengthScale.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				int strengthValue = strengthScale.getSelection();
+				SculptViewDescription.getInstance().setSculptStrength(strengthValue);
+				strengthScaleLabel.setText(Integer.toString(strengthValue));
+				strengthScaleLabel.pack();
+			}
+		});
+		propertiesComposite.pack();
+		sculptComposite.pack();
 		
 		ExpandItem item4 = new ExpandItem(bar, SWT.NONE, 4);
 		item4.setText("Sculpt");

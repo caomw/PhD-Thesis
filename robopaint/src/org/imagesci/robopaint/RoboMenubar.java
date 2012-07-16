@@ -20,7 +20,6 @@ public class RoboMenubar {
 		
 		final Shell shell = parent.getShell();
 		Menu mbar = new Menu(parent, SWT.BAR);
-		// new ImageIcon(PlaceHolder.class.getResource("./image.png"));
 		MenuItem fileMenu = new MenuItem(mbar, SWT.CASCADE);
 		fileMenu.setText("&File");
 		Menu fileSubMenu = new Menu(parent, SWT.DROP_DOWN);

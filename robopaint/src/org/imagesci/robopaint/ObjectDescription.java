@@ -4,7 +4,7 @@ import javax.vecmath.Color4f;
 
 public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected String name = "";
-	protected boolean visible = true;
+	protected boolean visible = false;
 	protected Color4f color = new Color4f();
 	protected int id = -1;
 	protected float pressureWeight=0;
