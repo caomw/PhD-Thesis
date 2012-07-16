@@ -614,43 +614,77 @@ public class RoboControlPane {
 						((Button) buttonChild).setSelection(false);
 					}
 				}
-				((Button)e.widget).setSelection(true);
+				if (((Button)e.widget).getSelection()) {
+					
+					((Button)e.widget).setSelection(true);
+				}
+				else {
+					
+					((Button)e.widget).setSelection(false);
+				}
 			}
 		};
-		Button creaseButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button creaseButton = new Button(actionComposite, SWT.TOGGLE);
 		creaseButton.setText("     ");
 		creaseButton.addListener(SWT.Selection, buttonListener);
 		creaseButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = creaseButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setCrease(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setCrease(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setCrease(false);
+				}
 			}
 		});
-		Button rotateButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button rotateButton = new Button(actionComposite, SWT.TOGGLE);
 		rotateButton.setText("     ");
 		rotateButton.addListener(SWT.Selection, buttonListener);
 		rotateButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = rotateButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setRotate(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setRotate(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setRotate(false);
+				}
 			}
 		});
-		Button scaleButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button scaleButton = new Button(actionComposite, SWT.TOGGLE);
 		scaleButton.setText("     ");
 		scaleButton.addListener(SWT.Selection, buttonListener);
 		scaleButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = scaleButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setScale(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setScale(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setScale(false);
+				}
 			}
 		});
-		Button drawButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button drawButton = new Button(actionComposite, SWT.TOGGLE);
 		drawButton.setText("     ");
 		drawButton.setSelection(true);
 		drawButton.addListener(SWT.Selection, buttonListener);
@@ -658,63 +692,117 @@ public class RoboControlPane {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = drawButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setDraw(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setDraw(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setDraw(false);
+				}
 			}
 		});
-		Button flattenButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button flattenButton = new Button(actionComposite, SWT.TOGGLE);
 		flattenButton.setText("     ");
 		flattenButton.addListener(SWT.Selection, buttonListener);
 		flattenButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = flattenButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setFlatten(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setFlatten(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setFlatten(false);
+				}
 			}
 		});
-		Button grabButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button grabButton = new Button(actionComposite, SWT.TOGGLE);
 		grabButton.setText("     ");
 		grabButton.addListener(SWT.Selection, buttonListener);
 		grabButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = grabButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setGrab(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setGrab(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setGrab(false);
+				}
 			}
 		});
-		Button inflateButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button inflateButton = new Button(actionComposite, SWT.TOGGLE);
 		inflateButton.setText("     ");
 		inflateButton.addListener(SWT.Selection, buttonListener);
 		inflateButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = inflateButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setInflate(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setInflate(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setInflate(false);
+				}
 			}
 		});
-		Button pinchButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button pinchButton = new Button(actionComposite, SWT.TOGGLE);
 		pinchButton.setText("     ");
 		pinchButton.addListener(SWT.Selection, buttonListener);
 		pinchButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = pinchButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setPinch(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setPinch(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setPinch(false);
+				}
 			}
 		});
-		Button smoothButton = new Button(actionComposite, SWT.TOGGLE);
+		final Button smoothButton = new Button(actionComposite, SWT.TOGGLE);
 		smoothButton.setText("     ");
 		smoothButton.addListener(SWT.Selection, buttonListener);
 		smoothButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
 				
+				boolean isSelected = smoothButton.getSelection();
 				SculptViewDescription.getInstance().setAllFalse();
-				SculptViewDescription.getInstance().setSmooth(true);
+				if (isSelected) {
+					
+					SculptViewDescription.getInstance().setSmooth(true);
+				}
+				
+				else {
+					
+					SculptViewDescription.getInstance().setSmooth(false);
+				}
 			}
 		});
 		actionComposite.pack();
