@@ -13,6 +13,13 @@ import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * @author TYung
+ *
+ * The GeometryViewDescription class provides an object with which to store the parameters for
+ * viewing the segmentation of the original images.
+ * 
+ */
 public class GeometryViewDescription {
 	protected List<ObjectDescription> objectDescriptions;
 	protected boolean hideAll = true;

@@ -9,6 +9,17 @@ import org.imagesci.robopaint.GeometryViewDescription.ParameterName;
 
 import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 
+/**
+ * @author TYung
+ *
+ * The ImageViewDescription class provides an object with which to store the parameters for
+ * viewing the original images.
+ * description is a global ImageViewDescription instance containing the settings for displaying
+ * the row, column and slice, as well as settings for the values of the transparency,
+ * brightness, and contrast of the original images.
+ * The global instance description stores parameters for the entire segmentation project, not
+ * only for a single object/label.
+ */
 public class ImageViewDescription {
 
 	protected int row = 0;
@@ -26,6 +37,10 @@ public class ImageViewDescription {
 
 	protected static final ImageViewDescription description = new ImageViewDescription();
 
+	/**
+	 * Returns the image data for the original image.
+	 * @return the image data.
+	 */
 	public ImageData getImage() {
 		return image;
 	}
