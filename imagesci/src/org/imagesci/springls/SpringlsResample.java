@@ -24,9 +24,8 @@
  *
  * @author Blake Lucas (img.science@gmail.com)
  */
-package org.imagesci.muscle;
+package org.imagesci.springls;
 
-import org.imagesci.springls.SpringlsActiveContour3D;
 
 // TODO: Auto-generated Javadoc
 /**
