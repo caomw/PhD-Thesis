@@ -1644,7 +1644,66 @@ kernel void buildDistanceField(
 		}
 	}
 }
-
+kernel void buildBoundaryLabels(
+	global Springl3D *capsules,
+	global int* labels,
+	global int* bitMask,
+	int numLabels,
+	uint N){
+	uint id=get_global_id(0);
+	if(id>=N)return;
+	float4 lowerPoint = (float4)(1E10f, 1E10f, 1E10f,0);
+	float4 upperPoint = (float4)(-1E10f, -1E10f, -1E10f,0);
+	Springl3D cap=capsules[id];
+	//#pragma unroll
+	//Find axis aligned bounding box
+	for (uint i=0;i<3;i++) {
+		float4 v=cap.vertexes[i];
+		v.w=0;
+		lowerPoint=min(v,lowerPoint);
+		upperPoint=max(v,upperPoint);
+	}
+	
+	__const float4 ZERO=(float4)(0,0,0,0);
+	__const float4 IMAGE_MAX=(float4)(ROWS-1,COLS-1,SLICES-1,0);
+	//Compute lower index
+	lowerPoint*=SCALE_UP;
+	float4 lower=max(ZERO,floor(lowerPoint));
+	
+	int lowerRow=(int)lower.x;
+	int lowerCol=(int)lower.y;
+	int lowerSlice=(int)lower.z;
+	
+	//Compute upper index
+	upperPoint*=SCALE_UP;
+	float4 upper=min(IMAGE_MAX,ceil(upperPoint)+1);
+	int upperRow=(int)upper.x;
+	int upperCol=(int)upper.y;
+	int upperSlice=(int)upper.z;
+	float4 dim=upper-lower;
+	uint count=0;		
+	float4 ret;
+	float4 pt;
+	int currentLabel=labels[id];
+	if(currentLabel<=0)return;
+	for (int k = lowerSlice; k < upperSlice; k++) {
+		for (int j = lowerCol; j < upperCol; j++) {
+			for (int i = lowerRow; i < upperRow; i++) {
+				pt = (float4)(
+							i * SCALE_DOWN,
+							j * SCALE_DOWN,
+							k * SCALE_DOWN,0);
+				float d2 = distanceSquared(pt,&cap,&ret);
+				//To minimize the size of the map, compute which voxels are near the target triangle and store them in a bit mask
+				if(d2<=4*(MAX_VEXT)*(MAX_VEXT)){
+					int bitIndex=numLabels*getIndex(i,j,k)+(currentLabel-1);
+					int bit=(1 << (bitIndex % 32));
+					atomic_or(&bitMask[bitIndex>>5], bit);
+				}
+			}
+		}
+	}
+}
 inline float getSimpleBlockValue(global float* levelSet,int i,int j,int k){
 	if(k<0){
 		return 1E10;
@@ -1778,4 +1837,76 @@ global float* unsignedLevelSet,uint band){
 		v111+=1.0f;	
 		unsignedLevelSet[getIndex(i,j,k)]=v111;
 	} 
+}
+inline void getBlockRowColSlice(uint index,int* i, int* j, int* k,uint blockSize) {
+	(*k)=clamp((int)((blockSize*blockSize*index)/(ROWS*COLS)),0,(int)(SLICES/blockSize-1));
+	int ij=index-((*k)*ROWS * COLS)/(blockSize*blockSize);
+	(*j)=clamp((int)((blockSize*ij)/ROWS),0,(int)(COLS/blockSize-1));
+	(*i)=clamp((int)(ij-((*j)*ROWS)/blockSize),0,(int)(ROWS/blockSize-1));
+}
+
+inline int getBitValue(global int* levelSet,int passes,int i,int j,int k,int l){
+	if(i<0||i>=ROWS){
+		return -1;
+	} else {
+		return levelSet[passes*getSafeIndex(i,j,k)+l];
+	}
+}
+
+inline int getBitBlockValue(global int* levelSet,int passes,int i,int j,int k,int l,int blockSize){
+	int bit=0;
+	for(int kk=0;kk<blockSize;kk++){		
+		for(int jj=0;jj<blockSize;jj++){
+			for(int ii=0;ii<blockSize;ii++){
+				bit|=levelSet[passes*getSafeIndex(i+ii,j+jj,k+kk)+l];
+			}
+		}
+	}
+	return bit;
+}
+
+inline void setBlockValueBit(global int* levelSet,int passes,int i,int j,int k,int l,int blockSize,int value){
+	for(int kk=0;kk<blockSize;kk++){		
+		for(int jj=0;jj<blockSize;jj++){
+			for(int ii=0;ii<blockSize;ii++){
+				levelSet[passes*getSafeIndex(i+ii,j+jj,k+kk)+l]|=value;
+			}
+		}
+	}
+}
+inline int hasNeighborBit(global int* levelSet,int passes,int i,int j,int k,int l,int blk){
+	int v011 =getBitValue(levelSet,passes,i - blk, j, k,l);
+	int v121 =getBitValue(levelSet,passes,i, j + blk, k,l);
+	int v101 =getBitValue(levelSet,passes,i, j - blk, k,l);
+	int v211 =getBitValue(levelSet,passes,i + blk, j, k,l);
+	int v110 =getBitValue(levelSet,passes,i, j, k - blk,l);
+	int v112 =getBitValue(levelSet,passes,i, j, k + blk,l);
+	return (v011|v121|v101|v211|v110|v112);
+}
+kernel void combineBitLabelImages(global int* imageLabels,global int* bitMask,global int* order,int orderLength,int numLabels,int padLabelSize){
+	uint id=get_global_id(0);
+	if(id>=ROWS*COLS*SLICES)return;
+	imageLabels[id]=0;
+	for(int n=orderLength-1;n>=0;n--){
+		int l=order[n];
+		int bitIndex=(padLabelSize*id+(l-1));
+		if((bitMask[bitIndex>>5]&(1<<(bitIndex%32)))==0){
+			imageLabels[id]=l;
+			break;
+		}
+	}		
+}
+kernel void erodeBitMask(global int* edgeBits,global int* bitsIn,global int* bitsOut,int passes,uint blockSize){
+	uint id=get_global_id(0);
+	int i,j,k;
+	getBlockRowColSlice(id,&i,&j,&k,blockSize);
+	i*=blockSize;
+	j*=blockSize;
+	k*=blockSize;
+	
+	for(int l=0;l<passes;l++){
+		int nbrs=hasNeighborBit(bitsIn,passes,i,j,k,l,blockSize);
+		int val=getBitBlockValue(edgeBits,passes,i,j,k,l,blockSize);
+		setBlockValueBit(bitsOut,passes,i,j,k,l,blockSize,nbrs&(~val));
+	}
 }

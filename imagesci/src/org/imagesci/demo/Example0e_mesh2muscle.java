@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.imagesci.mogac.WEMOGAC3D;
+import org.imagesci.muscle.FastMeshToMUSCLE;
 import org.imagesci.muscle.MeshToMUSCLE;
 import org.imagesci.utility.SurfaceConnectedComponent;
 
@@ -83,7 +84,7 @@ public class Example0e_mesh2muscle extends AbstractExample {
 			File f = new File(workingDirectory, "skeleton.vtk");
 			EmbeddedSurface mesh = SurfaceReaderWriter.getInstance().read(f);
 			int labelCount = SurfaceConnectedComponent.labelComponents(mesh);
-			MeshToMUSCLE mtos = new MeshToMUSCLE(256, 256, 64);
+			FastMeshToMUSCLE mtos = new FastMeshToMUSCLE(256, 256, 64);
 
 			int order[] = new int[labelCount];
 			for (int i = 0; i < labelCount; i++) {
