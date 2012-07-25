@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 public class RoboPaint {
-	protected final Display display = new Display(); //Changed to static to be used as parent
-	protected final Shell shell = new Shell(display); //View in GeometryViewDescription class.
+	protected final Display display = new Display();
+	protected final Shell shell = new Shell(display);
 
 	public static void main(String[] args) {
 		int i = 0;
@@ -39,7 +39,27 @@ public class RoboPaint {
 		
 		GeometryViewDescription.getInstance().getObjectDescriptions().add(label1);
 		GeometryViewDescription.getInstance().getObjectDescriptions().add(label2);
+		System.out.println(GeometryViewDescription.getInstance().getObjectDescriptions());
 		
+		SculptDescription creaseTool = new SculptDescription("Crease");
+		SculptDescription rotateTool = new SculptDescription("Rotate");
+		SculptDescription scaleTool = new SculptDescription("Scale");
+		SculptDescription drawTool = new SculptDescription("Draw");
+		SculptDescription flattenTool = new SculptDescription("Flatten");
+		SculptDescription grabTool = new SculptDescription("Grab");
+		SculptDescription inflateTool = new SculptDescription("Inflate");
+		SculptDescription pinchTool = new SculptDescription("Pinch");
+		SculptDescription smoothTool = new SculptDescription("Smooth");
+		
+		SculptViewDescription.getInstance().getSculptDescriptions().add(creaseTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(rotateTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(scaleTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(drawTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(flattenTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(grabTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(inflateTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(pinchTool);
+		SculptViewDescription.getInstance().getSculptDescriptions().add(smoothTool);
 	
 		int n=GeometryViewDescription.getInstance().getObjectDescriptions().indexOf(label1);
 		RoboPaint robo = new RoboPaint();

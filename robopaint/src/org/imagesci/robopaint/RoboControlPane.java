@@ -171,9 +171,9 @@ public class RoboControlPane {
 		geoComposite.setLayout(geoLayout);
 		
 		Label isoLabel = new Label(geoComposite, SWT.NONE);
-		isoLabel.setText("Show Iso-surface");
+		isoLabel.setText("Hide all");
 		Button isoButton = new Button(geoComposite, SWT.CHECK);
-		isoButton.setSelection(true);
+		isoButton.setSelection(false);
 		isoButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event event) {
@@ -189,9 +189,9 @@ public class RoboControlPane {
 		});
 		
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
-		geoVisiblityLabel.setText("Hide all");
+		geoVisiblityLabel.setText("Visible");
 		final Button visibilityButton = new Button(geoComposite, SWT.CHECK);
-		visibilityButton.setSelection(false);
+		visibilityButton.setSelection(true);
 		// *nameCombo section for visibilityButton listener to update visible property of current object.
 		
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
@@ -352,7 +352,7 @@ public class RoboControlPane {
 		Label brush3DLabel = new Label(paintComposite, SWT.NONE);
 		brush3DLabel.setText("3D Brush");
 		Button brush3DButton = new Button(paintComposite, SWT.CHECK);
-		brush3DButton.setSelection(true);
+		brush3DButton.setSelection(false);
 		brush3DButton.addListener(SWT.Selection, new Listener() {
 			
 			public void handleEvent(Event e) {
@@ -598,6 +598,9 @@ public class RoboControlPane {
 		sculptLayout.verticalSpacing = 10;
 		sculptComposite.setLayout(sculptLayout);
 		
+		Label sculptLabel = new Label(sculptComposite, SWT.NONE);
+		sculptLabel.setText("Sculpting tool: ");
+		
 		final Combo sculptCombo = new Combo(sculptComposite, SWT.READ_ONLY);
 		sculptCombo.add("Crease");
 		sculptCombo.add("Draw");
@@ -609,50 +612,9 @@ public class RoboControlPane {
 		sculptCombo.add("Scale");
 		sculptCombo.add("Smooth");
 		sculptCombo.select(0);
-		sculptCombo.addListener(SWT.Selection, new Listener() {
-			
-			public void handleEvent(Event e) {
-				
-				SculptViewDescription.getInstance().setAllFalse();
-				int idx = sculptCombo.getSelectionIndex();
-				
-				switch(idx) {
-				
-				case 0:
-					SculptViewDescription.getInstance().setCrease(true);
-					break;
-				case 1:
-					SculptViewDescription.getInstance().setDraw(true);
-					break;
-				case 2:
-					SculptViewDescription.getInstance().setFlatten(true);
-					break;
-				case 3:
-					SculptViewDescription.getInstance().setGrab(true);
-					break;
-				case 4:
-					SculptViewDescription.getInstance().setInflate(true);
-					break;
-				case 5:
-					SculptViewDescription.getInstance().setPinch(true);
-					break;
-				case 6:
-					SculptViewDescription.getInstance().setRotate(true);
-					break;
-				case 7:
-					SculptViewDescription.getInstance().setScale(true);
-					break;
-				case 8:
-					SculptViewDescription.getInstance().setSmooth(true);
-					break;
-				default:
-						break;
-				}
-			}
-		});
+		SculptViewDescription.getInstance().setCurrentSculpt(SculptViewDescription.getInstance().getSculptDescriptions().get(0));
 		
 		Label blankLabel3 = new Label(sculptComposite, SWT.NONE);
-		Label blankLabel4 = new Label(sculptComposite, SWT.NONE);
 
 		Label sizeLabel = new Label(sculptComposite, SWT.NONE);
 		sizeLabel.setText("Size");
@@ -668,7 +630,7 @@ public class RoboControlPane {
 			public void handleEvent(Event e) {
 				
 				int sizeValue = sizeScale.getSelection();
-				SculptViewDescription.getInstance().setSculptStrength(sizeValue);
+				SculptViewDescription.getInstance().getCurrentSculpt().setSize(sizeValue);
 				sizeScaleLabel.setText(Integer.toString(sizeValue));
 				sizeScaleLabel.pack();
 			}
@@ -687,7 +649,7 @@ public class RoboControlPane {
 			public void handleEvent(Event e) {
 				
 				int strengthValue = strengthScale.getSelection();
-				SculptViewDescription.getInstance().setSculptStrength(strengthValue);
+				SculptViewDescription.getInstance().getCurrentSculpt().setStrength(strengthValue);
 				strengthScaleLabel.setText(Integer.toString(strengthValue));
 				strengthScaleLabel.pack();
 			}
@@ -829,6 +791,20 @@ public class RoboControlPane {
 				curvatureText.setText(Float.toString(PaintViewDescription.getInstance().getCurrentObject().getCurvatureWeight()));
 				nameCombo.select(statusNameCombo.getSelectionIndex());
 				paintNameCombo.select(statusNameCombo.getSelectionIndex());
+			}
+		});
+		
+		sculptCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				int idx = sculptCombo.getSelectionIndex();
+				
+				SculptViewDescription.getInstance().setCurrentSculpt(SculptViewDescription.getInstance().getSculptDescriptions().get(idx));
+				sizeScale.setSelection(SculptViewDescription.getInstance().getCurrentSculpt().getSize());
+				sizeScaleLabel.setText(Integer.toString(SculptViewDescription.getInstance().getCurrentSculpt().getSize()));
+				strengthScale.setSelection(SculptViewDescription.getInstance().getCurrentSculpt().getStrength());
+				strengthScaleLabel.setText(Integer.toString(SculptViewDescription.getInstance().getCurrentSculpt().getStrength()));
 			}
 		});
 	}

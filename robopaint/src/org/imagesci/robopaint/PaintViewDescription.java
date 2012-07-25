@@ -15,7 +15,7 @@ public class PaintViewDescription {
 	protected ObjectDescription currentObject;
 	protected int paintBrushSize = 10;
 	protected float transparency = 0.5f;
-	protected boolean isBrush3D = true;
+	protected boolean isBrush3D = false;
 	protected static final PaintViewDescription description = new PaintViewDescription();
 
 	/**
