@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 public class RoboPaint {
 	protected final Display display = new Display();
-	protected final Shell shell = new Shell(display);
+	protected final Shell shell = new Shell(display,SWT.DIALOG_TRIM );
 
 	public static void main(String[] args) {
 		int i = 0;
@@ -75,7 +75,7 @@ public class RoboPaint {
 		form.setLayoutData(new BorderLayout.BorderData(BorderLayout.CENTER));
 		form.setLayout(new FillLayout());
 		Composite controlComp = new Composite(form, SWT.BORDER);
-		Composite renderComp = new Composite(form, SWT.BORDER);
+		Composite renderComp = new Composite(form, SWT.BORDER|SWT.EMBEDDED | SWT.NO_BACKGROUND);
 		renderComp.setLayout(new FillLayout());
 		controlComp.setLayout(new FillLayout());
 		form.setWeights(new int[] { 25, 75 });
@@ -85,6 +85,7 @@ public class RoboPaint {
 
 		shell.setSize(1024, 768);
 		shell.open();
+		renderPane.launch();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
