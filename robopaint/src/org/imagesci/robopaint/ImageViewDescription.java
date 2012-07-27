@@ -10,7 +10,6 @@ import org.imagesci.robopaint.GeometryViewDescription.ParameterName;
 import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 
 /**
- * @author TYung
  *
  * The ImageViewDescription class provides an object with which to store the parameters for
  * viewing the original images.
@@ -19,6 +18,8 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageData;
  * brightness, and contrast of the original images.
  * The global instance description stores parameters for the entire segmentation project, not
  * only for a single object/label.
+ * 
+ * @author TYung
  */
 public class ImageViewDescription {
 

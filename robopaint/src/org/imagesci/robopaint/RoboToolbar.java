@@ -19,9 +19,11 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.imagesci.robopaint.RoboPaint.Tools;
 import org.imagesci.robopaint.icons.PlaceHolder;
 /**
- * The RoboToolbar constructs a GUI layout for toolbar functionality.
+ * The RoboToolbar constructs a GUI layout for the toolbar functionality.
+ * 
  * @author TYung
  *
  */
@@ -91,11 +93,31 @@ public class RoboToolbar {
 		segItems.setPreferredSize(segItems.computeSize(segSize.x, segSize.y));
 		
 		CoolItem toolItems = new CoolItem(bar, SWT.NONE);
-		Combo toolCombo = new Combo(bar, SWT.READ_ONLY);
+		final Combo toolCombo = new Combo(bar, SWT.READ_ONLY);
 		toolCombo.add("Paint");
 		toolCombo.add("Auto-segment");
 		toolCombo.add("Sculpt");
 		toolCombo.select(0);
+		toolCombo.addListener(SWT.Selection, new Listener() {
+			
+			public void handleEvent(Event e) {
+				
+				int idx = toolCombo.getSelectionIndex();
+				
+				switch(idx) {
+				
+				case 0:
+					RoboPaint.setTool(Tools.PAINT);
+					break;
+				case 1:
+					RoboPaint.setTool(Tools.AUTOSEG);
+					break;
+				case 2:
+					RoboPaint.setTool(Tools.SCULPT);
+					break;
+				}
+			}
+		});
 		Point toolSize = toolCombo.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		toolItems.setControl(toolCombo);
 		toolItems.setPreferredSize(toolItems.computeSize(toolSize.x, toolSize.y));

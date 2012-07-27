@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * @author TYung
  *
  * The GeometryViewDescription class provides an object with which to store the parameters for
  * viewing the segmentation of the original images.
@@ -22,6 +21,8 @@ import org.eclipse.swt.widgets.Text;
  * or hiding all objects/labels.
  * The global instance description stores parameters for the entire segmentation project, not
  * only for a single object/label.
+ * 
+ * @author TYung
  */
 public class GeometryViewDescription {
 	protected List<ObjectDescription> objectDescriptions;

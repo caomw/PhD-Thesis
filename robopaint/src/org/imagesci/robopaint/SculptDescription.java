@@ -1,10 +1,11 @@
 package org.imagesci.robopaint;
 
 /**
- * @author TYung
  *
  * The SculptDescription class provides an object with which to store the parameters for
  * individual Sculpting tools.
+ * 
+ * @author TYung
  */
 public class SculptDescription {
 

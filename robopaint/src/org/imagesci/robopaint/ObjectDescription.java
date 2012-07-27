@@ -3,11 +3,11 @@ package org.imagesci.robopaint;
 import javax.vecmath.Color4f;
 
 /**
- * @author TYung
  *
  * The ObjectDescription class provides an object with which to store the parameters for
  * individual objects/labels being used in the segmentation.
  * An ObjectDescription instance must be created for each individual object/label.
+ * @author TYung
  */
 public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected String name = "";

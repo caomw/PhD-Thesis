@@ -52,23 +52,29 @@ public class RoboRenderPane {
 		frame = SWT_AWT.new_Frame(parent);
 		// main(null);
 		Rectangle bounds = parent.getBounds();
-		visual = createVisual(800, 600);
+		try {
+		visual = createVisual(480,320);
 		ParamCollection visualizationParameters = visual.create();
 		visual.updateVisualizationParameters();
 		ParamInputView inputView = visualizationParameters.getInputView();
 		visual.updateVisualizationParameters();
 		inputView.addObserver(visual);
 		inputView.update();
-
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void launch() {
+		if(visual!=null){
 		Panel p = new Panel(new BorderLayout());
 		p.add(visual.getComponent(), BorderLayout.CENTER);
 		frame.add(p);
 		frame.pack();
 		frame.setVisible(true);
 		((VisualizationProcessing) visual).init();
+		}
 	}
 
 	private static VisualizationProcessing createVisual(int width, int height) {

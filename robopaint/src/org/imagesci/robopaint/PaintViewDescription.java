@@ -1,7 +1,6 @@
 package org.imagesci.robopaint;
 
 /**
- * @author TYung
  *
  * The PaintViewDescription class provides an object with which to store the parameters for
  * the Paint tool.
@@ -10,6 +9,8 @@ package org.imagesci.robopaint;
  * description also holds the current, active object/label being used.
  * The global instance description stores parameters for the entire segmentation project, not
  * only for a single object/label.
+ * 
+ * @author TYung
  */
 public class PaintViewDescription {
 	protected ObjectDescription currentObject;

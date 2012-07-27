@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author TYung
  * 
  * The SculptViewDescription class provides an object with which to store the parameters for 
  * the Sculpting tool.
@@ -13,6 +12,8 @@ import java.util.List;
  * yield false and are inactive.
  * The global instance description stores parameters for the entire segmentation project, not
  * only for a single object/label.
+ * 
+ * @author TYung
  */
 public class SculptViewDescription {
 

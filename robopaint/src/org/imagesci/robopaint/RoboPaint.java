@@ -30,6 +30,22 @@ import org.eclipse.swt.widgets.ToolItem;
 public class RoboPaint {
 	protected final Display display = new Display();
 	protected final Shell shell = new Shell(display,SWT.DIALOG_TRIM );
+	
+	public static enum Tools {
+		
+		PAINT, AUTOSEG, SCULPT
+	};
+	protected static Tools tool = Tools.PAINT;
+	
+	public static Tools getTool() {
+		
+		return tool;
+	}
+	
+	public static void setTool(Tools newTool) {
+		
+		tool = newTool;
+	}
 
 	public static void main(String[] args) {
 		int i = 0;
@@ -39,7 +55,6 @@ public class RoboPaint {
 		
 		GeometryViewDescription.getInstance().getObjectDescriptions().add(label1);
 		GeometryViewDescription.getInstance().getObjectDescriptions().add(label2);
-		System.out.println(GeometryViewDescription.getInstance().getObjectDescriptions());
 		
 		SculptDescription creaseTool = new SculptDescription("Crease");
 		SculptDescription rotateTool = new SculptDescription("Rotate");
@@ -83,7 +98,8 @@ public class RoboPaint {
 		RoboRenderPane renderPane = new RoboRenderPane(renderComp);
 		RoboMenubar menu = new RoboMenubar(shell);
 
-		shell.setSize(1024, 768);
+		// shell.setSize(1600,1000);
+		shell.setMaximized(true);
 		shell.open();
 		renderPane.launch();
 		while (!shell.isDisposed()) {
