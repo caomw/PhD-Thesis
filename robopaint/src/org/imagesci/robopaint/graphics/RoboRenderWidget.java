@@ -1,42 +1,54 @@
 package org.imagesci.robopaint.graphics;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLContext;
-import javax.media.opengl.glu.GLU;
+import java.util.ArrayList;
 
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.opengl.GLCanvas;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
+import javax.vecmath.Point3f;
+
 import org.imagesci.mogac.MOGAC3D;
 
-import processing.opengl2.PGraphicsOpenGL2;
-
+import edu.jhu.cs.cisst.vent.renderer.processing.RendererProcessing3D;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationMOGAC3D;
+import edu.jhu.ece.iacl.jist.pipeline.parameter.ParamCollection;
 
-public class RoboRenderWidget extends VisualizationMOGAC3D implements Listener {
+public class RoboRenderWidget extends VisualizationMOGAC3D {
+
 	public RoboRenderWidget(int width, int height, MOGAC3D activeContour) {
 		super(width, height, activeContour);
 		// TODO Auto-generated constructor stub
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.jhu.cs.cisst.vent.VisualizationProcessing#create()
+	 */
 	@Override
-	public void handleEvent(Event event) {
-		/*
-		Rectangle bounds = canvas.getBounds();
-		float fAspect = (float) bounds.width / (float) bounds.height;
-		canvas.setCurrent();
-		context.makeCurrent();
-		GL2 gl = (GL2) context.getGL();
-		gl.glViewport(0, 0, bounds.width, bounds.height);
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-		GLU glu = new GLU();
-		glu.gluPerspective(45.0f, fAspect, 0.5f, 400.0f);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		context.release();
-		*/
+	public ParamCollection create() {
+		renderers = new ArrayList<RendererProcessing3D>();
+
+		renderers.add(renderer = new RoboRenderer(this, activeContour,
+				preferredWidth / 2, preferredHeight / 2, activeContour
+						.getResamplingRate()));
+		renderer.init();
+		init();
+		visualizationParameters = new ParamCollection(name);
+		createVisualizationParameters(visualizationParameters);
+		return visualizationParameters;
 	}
 
+	public MOGAC3D getActiveContour() {
+		return activeContour;
+	}
+
+	public void updateImageSegmentation() {
+		((RoboRenderer) renderer).updateImageSegmentation();
+	}
+
+	public void updateReferenceImage() {
+		center = new Point3f(activeContour.rows * 0.5f,
+				activeContour.cols * 0.5f, activeContour.slices * 0.5f);
+		centerParam.setValue(center);
+		activeContour.init();
+		((RoboRenderer) renderer).updateReferenceImage();
+	}
 }
