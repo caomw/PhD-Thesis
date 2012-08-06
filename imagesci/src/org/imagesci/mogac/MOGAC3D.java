@@ -62,6 +62,7 @@ import com.jogamp.opencl.CLProgram;
 
 import edu.jhu.cs.cisst.vent.VisualizationApplication;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationMOGAC3D;
+import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
 import edu.jhu.ece.iacl.jist.pipeline.AbstractCalculation;
 import edu.jhu.ece.iacl.jist.structures.image.ImageData;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
@@ -245,10 +246,13 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
-	 *
-	 * @param refImage the reference image
-	 * @param context the context
-	 * @param queue the queue
+	 * 
+	 * @param refImage
+	 *            the reference image
+	 * @param context
+	 *            the context
+	 * @param queue
+	 *            the queue
 	 */
 	public MOGAC3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		this.image = refImage;
@@ -258,14 +262,20 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
-	 *
-	 * @param refImage the reference image
-	 * @param type the type
+	 * 
+	 * @param refImage
+	 *            the reference image
+	 * @param type
+	 *            the type
 	 */
 	public MOGAC3D(ImageData refImage, CLDevice.Type type) {
+		this(type);
+		this.image = refImage;
+	}
+
+	public MOGAC3D(CLDevice.Type type) {
 		CLPlatform[] platforms = CLPlatform.listCLPlatforms();
 		CLDevice device = null;
-		this.image = refImage;
 		for (CLPlatform p : platforms) {
 			device = p.getMaxFlopsDevice(type);
 			if (device != null) {
@@ -558,7 +568,6 @@ public class MOGAC3D extends AbstractCalculation {
 				* 7, READ_WRITE, USE_BUFFER);
 		queue.putWriteBuffer(labelMaskBuffer, true).putWriteBuffer(
 				forceIndexesBuffer, true);
-
 		this.distFieldImage = unsignedImage;
 		this.labelImage = labelImage;
 		if (image != null) {
@@ -588,6 +597,7 @@ public class MOGAC3D extends AbstractCalculation {
 			distanceFieldBuffer = context.createFloatBuffer(rows * cols
 					* slices, USE_BUFFER, READ_WRITE);
 		}
+
 		labelsToLevelSet.putArgs(imageLabelBuffer, oldImageLabelBuffer,
 				distanceFieldBuffer, oldDistanceFieldBuffer).rewind();
 		queue.put1DRangeKernel(labelsToLevelSet, 0, roundToWorkgroupPower(rows
@@ -938,8 +948,9 @@ public class MOGAC3D extends AbstractCalculation {
 
 	/**
 	 * Load the look-up table.
-	 *
-	 * @param fis the fis
+	 * 
+	 * @param fis
+	 *            the fis
 	 * @return true, if successful
 	 */
 	private boolean loadLUT(InputStream fis) {
@@ -1058,7 +1069,6 @@ public class MOGAC3D extends AbstractCalculation {
 				visual.dispose();
 				System.exit(0);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
@@ -1110,6 +1120,9 @@ public class MOGAC3D extends AbstractCalculation {
 			context.release();
 			context = null;
 		}
+		image = null;
+		labelImage = null;
+
 	}
 
 	/**
@@ -1138,7 +1151,6 @@ public class MOGAC3D extends AbstractCalculation {
 	 * @return the elapsed time
 	 */
 	public double getElapsedTime() {
-		// TODO Auto-generated method stub
 		return elapsedTime * 1E-9;
 	}
 
@@ -1166,7 +1178,7 @@ public class MOGAC3D extends AbstractCalculation {
 	 * @return the number of colors
 	 */
 	public int getNumColors() {
-		return labelMasks[labelMasks.length - 1] + 1;
+		return (labelMasks == null) ? 0 : labelMasks[labelMasks.length - 1] + 1;
 	}
 
 	/**
@@ -1319,5 +1331,261 @@ public class MOGAC3D extends AbstractCalculation {
 	public void setVectorField(ImageDataFloat vecFieldImage, float weight) {
 		this.vecFieldImage = vecFieldImage;
 		this.vecFieldWeight = weight;
+	}
+
+	public void setReferenceImage(ImageData image) {
+		this.image = image;
+		this.rows = image.getRows();
+		this.cols = image.getCols();
+		this.slices = image.getSlices();
+
+	}
+
+	public void setLabelImage(ImageDataInt labelImage) {
+		setImageSegmentation(labelImage, null);
+	}
+
+	public void setDistanceFieldImage(ImageDataFloat unsignedImage) {
+		if (distanceFieldBuffer != null)
+			distanceFieldBuffer.release();
+		if (oldDistanceFieldBuffer != null)
+			oldDistanceFieldBuffer.release();
+		distanceFieldBuffer = context.createFloatBuffer(rows * cols * slices,
+				READ_WRITE, USE_BUFFER);
+
+		FloatBuffer unsignedLevelSet = distanceFieldBuffer.getBuffer();
+		FloatBuffer oldUnsignedLevelSet = oldDistanceFieldBuffer.getBuffer();
+		this.distField = unsignedImage.toArray3d();
+		for (int k = 0; k < slices; k++) {
+			for (int j = 0; j < cols; j++) {
+				for (int i = 0; i < rows; i++) {
+					float val = distField[i][j][k];
+					if (i == 0 || j == 0 || k == 0 || i == rows - 1
+							|| j == cols - 1 || k == slices - 1) {
+						val = Math.max(val, 3);
+					}
+					unsignedLevelSet.put(val);
+					oldUnsignedLevelSet.put(val);
+				}
+			}
+		}
+		unsignedLevelSet.rewind();
+		oldUnsignedLevelSet.rewind();
+		queue.putWriteBuffer(distanceFieldBuffer, true).putWriteBuffer(
+				oldDistanceFieldBuffer, true);
+		this.distFieldImage = unsignedImage;
+		if (image != null) {
+			distFieldImage.setName(image.getName() + "_distfield");
+		} else {
+			distFieldImage.setName("distfield");
+		}
+	}
+
+	public void setImageSegmentation(ImageDataInt labelImage,
+			ImageDataFloat unsignedImage) {
+		this.rows = image.getRows();
+		this.cols = image.getCols();
+		this.slices = image.getSlices();
+		this.labelImage = labelImage;
+		int mask = 0x00000001;
+		int l = 0;
+		this.labels = labelImage.toArray3d();
+		if (containsOverlaps) {
+			TreeSet<Integer> labelHash = new TreeSet<Integer>();
+			int totalMask = 0;
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						l = labels[i][j][k];
+						totalMask |= l;
+						labelHash.add(l);
+					}
+				}
+			}
+			numObjects = 0;
+			while (totalMask != 0) {
+				if ((totalMask & 0x01) != 0) {
+					numObjects++;
+				}
+				totalMask >>= 1;
+			}
+			numLabels = labelHash.size();
+			l = 0;
+			labelMasks = new int[numLabels];
+			for (Integer val : labelHash) {
+				labelMasks[l++] = val;
+			}
+			forceIndexes = new int[numLabels];
+			for (int i = 0; i < numLabels; i++) {
+				mask = labelMasks[i];
+				forceIndexes[i] = -1;
+				for (int b = 0; b < numObjects; b++) {
+					if ((0x01 << b) == mask) {
+						forceIndexes[i] = b;
+						break;
+					}
+				}
+			}
+		} else {
+			TreeSet<Integer> labelHash = new TreeSet<Integer>();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						l = labels[i][j][k];
+						labelHash.add(l);
+					}
+				}
+			}
+			numLabels = labelHash.size();
+			numObjects = numLabels - 1;
+			l = 0;
+
+			labelMasks = new int[numLabels];
+			for (Integer val : labelHash) {
+				labelMasks[l++] = val;
+			}
+			forceIndexes = new int[numLabels];
+			for (int i = 0; i < numLabels; i++) {
+				forceIndexes[i] = i - 1;
+			}
+		}
+		if (imageLabelBuffer != null)
+			imageLabelBuffer.release();
+		if (oldImageLabelBuffer != null)
+			oldImageLabelBuffer.release();
+		imageLabelBuffer = context.createIntBuffer(rows * cols * slices,
+				READ_WRITE, USE_BUFFER);
+		oldImageLabelBuffer = context.createIntBuffer(rows * cols * slices,
+				READ_WRITE, USE_BUFFER);
+		IntBuffer label = imageLabelBuffer.getBuffer();
+		IntBuffer oldLabel = oldImageLabelBuffer.getBuffer();
+		for (int k = 0; k < slices; k++) {
+			for (int j = 0; j < cols; j++) {
+				for (int i = 0; i < rows; i++) {
+					int lab = labels[i][j][k];
+					if (i == 0 || j == 0 || k == 0 || i == rows - 1
+							|| j == cols - 1 || k == slices - 1) {
+						lab = 0;
+					}
+					label.put(lab);
+					oldLabel.put(lab);
+				}
+			}
+		}
+		label.rewind();
+		oldLabel.rewind();
+		queue.putWriteBuffer(imageLabelBuffer, true).putWriteBuffer(
+				oldImageLabelBuffer, true);
+		if (distanceFieldBuffer != null)
+			distanceFieldBuffer.release();
+		if (oldDistanceFieldBuffer != null)
+			oldDistanceFieldBuffer.release();
+		oldDistanceFieldBuffer = context.createFloatBuffer(
+				rows * cols * slices, READ_WRITE, USE_BUFFER);
+		if (unsignedImage == null) {
+			convertLabelsToLevelSet();
+			unsignedImage = new ImageDataFloat(rows, cols, slices);
+			unsignedImage.setName(image.getName() + "_distfield");
+			queue.putReadBuffer(distanceFieldBuffer, true);
+			FloatBuffer buff = distanceFieldBuffer.getBuffer();
+			FloatBuffer oldUnsignedLevelSet = oldDistanceFieldBuffer
+					.getBuffer();
+			this.distField = unsignedImage.toArray3d();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						float val = distField[i][j][k];
+						if (i == 0 || j == 0 || k == 0 || i == rows - 1
+								|| j == cols - 1 || k == slices - 1) {
+							val = Math.max(val, 3);
+							distField[i][j][k] = Math.max(buff.get(), 0);
+						} else {
+							distField[i][j][k] = buff.get();
+						}
+						oldUnsignedLevelSet.put(val);
+					}
+				}
+			}
+			oldUnsignedLevelSet.rewind();
+			queue.putWriteBuffer(oldDistanceFieldBuffer, true);
+			buff.rewind();
+		} else {
+			distanceFieldBuffer = context.createFloatBuffer(rows * cols
+					* slices, READ_WRITE, USE_BUFFER);
+
+			FloatBuffer unsignedLevelSet = distanceFieldBuffer.getBuffer();
+			FloatBuffer oldUnsignedLevelSet = oldDistanceFieldBuffer
+					.getBuffer();
+			this.distField = unsignedImage.toArray3d();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						float val = distField[i][j][k];
+						if (i == 0 || j == 0 || k == 0 || i == rows - 1
+								|| j == cols - 1 || k == slices - 1) {
+							val = Math.max(val, 3);
+						}
+						unsignedLevelSet.put(val);
+						oldUnsignedLevelSet.put(val);
+					}
+				}
+			}
+			unsignedLevelSet.rewind();
+			oldUnsignedLevelSet.rewind();
+			queue.putWriteBuffer(distanceFieldBuffer, true).putWriteBuffer(
+					oldDistanceFieldBuffer, true);
+		}
+		if (labelMaskBuffer != null)
+			labelMaskBuffer.release();
+		if (forceIndexesBuffer != null)
+			forceIndexesBuffer.release();
+		if (deltaLevelSetBuffer != null)
+			deltaLevelSetBuffer.release();
+		if (idBuffer != null)
+			idBuffer.release();
+
+		labelMaskBuffer = context.createIntBuffer(labelMasks.length, READ_ONLY,
+				USE_BUFFER);
+		labelMaskBuffer.getBuffer().put(labelMasks).rewind();
+		forceIndexesBuffer = context.createIntBuffer(forceIndexes.length,
+				READ_ONLY, USE_BUFFER);
+		forceIndexesBuffer.getBuffer().put(forceIndexes).rewind();
+
+		idBuffer = context.createIntBuffer(rows * cols * slices * 7,
+				READ_WRITE, USE_BUFFER);
+		deltaLevelSetBuffer = context.createFloatBuffer(rows * cols * slices
+				* 7, READ_WRITE, USE_BUFFER);
+		queue.putWriteBuffer(labelMaskBuffer, true).putWriteBuffer(
+				forceIndexesBuffer, true);
+		System.out.println("SET LABEL IMAGE " + getNumColors());
+		this.distFieldImage = unsignedImage;
+		this.labelImage = labelImage;
+
+		if (image != null) {
+			this.labelImage.setName(image.getName() + "_labels");
+			distFieldImage.setName(image.getName() + "_distfield");
+		} else {
+			this.labelImage.setName("labels");
+			distFieldImage.setName("distfield");
+		}
+	}
+
+	public void init() {
+		CLProgram program;
+		try {
+			program = context.createProgram(
+					getClass().getResourceAsStream("MogacEvolveLevelSet3D.cl"))
+					.build(define("ROWS", rows), define("COLS", cols),
+							define("CONTAINS_OVERLAPS", containsOverlaps),
+							define("CLAMP_SPEED", clampSpeed ? 1 : 0),
+							define("SLICES", slices),
+							define("NUM_LABELS", numLabels));
+
+			kernelMap = program.createCLKernels();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

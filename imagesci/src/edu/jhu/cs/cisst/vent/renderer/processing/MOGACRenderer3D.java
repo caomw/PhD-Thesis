@@ -22,7 +22,6 @@ import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 import static java.lang.Math.sqrt;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.nio.ByteBuffer;
@@ -122,7 +121,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 
 	/** The contrast. */
 	protected float contrast = 1;
-
+	protected float transparency = 0.5f;
 	/** The contrast param. */
 	protected ParamFloat contrastParam;
 
@@ -188,7 +187,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	protected CLCommandQueue queue;
 
 	/** The ref image buffer. */
-	protected CLImage3d<FloatBuffer> refImageBuffer;
+	protected CLImage3d<FloatBuffer> refImageBuffer = null;
 
 	/** The refresh rate. */
 	protected int refreshRate = 1;
@@ -262,6 +261,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 
 	/** The volume tmp color buffer. */
 	protected CLBuffer<FloatBuffer> volumeTmpColorBuffer;
+	protected int rasterWidth, rasterHeight;
 
 	/**
 	 * Instantiates a new springls raycast renderer.
@@ -282,10 +282,63 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 		this.applet = applet;
 		this.simulator = simulator;
 		this.refreshRate = refreshRate;
+		this.rasterWidth = rasterWidth;
+		this.rasterHeight = rasterHeight;
 		this.bbox = new BoundingBox(new Point3d(0, 0, 0), new Point3d(
 				0.5 * simulator.rows, 0.5 * simulator.cols,
 				0.5 * simulator.slices));
 		timer = new Timer();
+
+	}
+
+	/**
+	 * Update.
+	 * 
+	 * @param model
+	 *            the model
+	 * @param view
+	 *            the view
+	 * @see edu.jhu.ece.iacl.jist.pipeline.view.input.ParamViewObserver#update(edu.jhu.ece.iacl.jist.pipeline.parameter.ParamModel,
+	 *      edu.jhu.ece.iacl.jist.pipeline.view.input.ParamInputView)
+	 */
+	@Override
+	public void update(ParamModel model, ParamInputView view) {
+		if (model == enableAntiAliasParam) {
+			enableAntiAlias = enableAntiAliasParam.getValue();
+			setFastRendering(!enableAntiAlias);
+		} else if (model == enableShadowsParam) {
+			enableShadows = enableShadowsParam.getValue();
+		} else if (model instanceof ParamColor) {
+			updateColors();
+		} else if (model == enableSmoothingParam) {
+			frameUpdate(-1, -1);
+		} else if (model == contrastParam) {
+			contrast = contrastParam.getFloat();
+		} else if (model == brightnessParam) {
+			brightness = brightnessParam.getFloat();
+		} else if (model == showXplaneParam) {
+			showXplane = showXplaneParam.getValue();
+		} else if (model == showYplaneParam) {
+			showYplane = showYplaneParam.getValue();
+		} else if (model == showZplaneParam) {
+			showZplane = showZplaneParam.getValue();
+		} else if (model == showIsoSurfParam) {
+			showIsoSurf = showIsoSurfParam.getValue();
+		} else if (model == transparencyParam) {
+			transparency = transparencyParam.getFloat();
+		} else if (model == rowParam) {
+			row = rowParam.getInt() - 1;
+		} else if (model == colParam) {
+			col = colParam.getInt() - 1;
+		} else if (model == sliceParam) {
+			slice = sliceParam.getInt() - 1;
+		} else if (model instanceof ParamBoolean) {
+			updateColors(true);
+		}
+		refresh();
+	}
+
+	public void init() {
 		try {
 			if (simulator.queue.getDevice().getType() == CLDevice.Type.GPU) {
 				context = simulator.context;
@@ -411,51 +464,6 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	}
 
 	/**
-	 * Update.
-	 * 
-	 * @param model
-	 *            the model
-	 * @param view
-	 *            the view
-	 * @see edu.jhu.ece.iacl.jist.pipeline.view.input.ParamViewObserver#update(edu.jhu.ece.iacl.jist.pipeline.parameter.ParamModel,
-	 *      edu.jhu.ece.iacl.jist.pipeline.view.input.ParamInputView)
-	 */
-	@Override
-	public void update(ParamModel model, ParamInputView view) {
-		if (model == enableAntiAliasParam) {
-			enableAntiAlias = enableAntiAliasParam.getValue();
-			setFastRendering(!enableAntiAlias);
-		} else if (model == enableShadowsParam) {
-			enableShadows = enableShadowsParam.getValue();
-		} else if (model instanceof ParamColor) {
-			updateColors();
-		} else if (model == enableSmoothingParam) {
-			frameUpdate(-1, -1);
-		} else if (model == contrastParam) {
-			contrast = contrastParam.getFloat();
-		} else if (model == brightnessParam) {
-			brightness = brightnessParam.getFloat();
-		} else if (model == showXplaneParam) {
-			showXplane = showXplaneParam.getValue();
-		} else if (model == showYplaneParam) {
-			showYplane = showYplaneParam.getValue();
-		} else if (model == showZplaneParam) {
-			showZplane = showZplaneParam.getValue();
-		} else if (model == showIsoSurfParam) {
-			showIsoSurf = showIsoSurfParam.getValue();
-		} else if (model == rowParam) {
-			row = rowParam.getInt() - 1;
-		} else if (model == colParam) {
-			col = colParam.getInt() - 1;
-		} else if (model == sliceParam) {
-			slice = sliceParam.getInt() - 1;
-		} else if (model instanceof ParamBoolean) {
-			updateColors(true);
-		}
-		refresh();
-	}
-
-	/**
 	 * Creates the visualization parameters.
 	 * 
 	 * @param visualizationParameters
@@ -486,7 +494,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 		visualizationParameters.add(brightnessParam = new ParamFloat(
 				"Brightness", -5, 5, brightness));
 		visualizationParameters.add(transparencyParam = new ParamFloat(
-				"Iso-Contour Transparency", 0, 1, 0.5f));
+				"Iso-Contour Transparency", 0, 1, transparency));
 		transparencyParam.setInputView(new ParamDoubleSliderInputView(
 				transparencyParam, 4, false));
 		brightnessParam.setInputView(new ParamDoubleSliderInputView(
@@ -548,7 +556,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	/**
 	 * Update colors.
 	 */
-	private void updateColors() {
+	protected void updateColors() {
 		updateColors(false);
 	}
 
@@ -570,6 +578,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 		showXplane = showXplaneParam.getValue();
 		showYplane = showYplaneParam.getValue();
 		showZplane = showZplaneParam.getValue();
+		transparency = transparencyParam.getFloat();
 		updateColors(true);
 		setFastRendering(!enableAntiAliasParam.getValue());
 		frameUpdate(0, 0);
@@ -582,7 +591,9 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	 * @param flip
 	 *            the flip
 	 */
-	private void updateColors(boolean flip) {
+	protected void updateColors(boolean flip) {
+		if (gpuColorLUT == null || contourColorsParam == null)
+			return;
 		FloatBuffer buff = gpuColorLUT.getBuffer();
 		int[] masks = simulator.getLabelMasks();
 		int index = 1;
@@ -763,7 +774,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	/**
 	 * Update camera.
 	 */
-	private synchronized void updateCamera() {
+	protected synchronized void updateCamera() {
 		Camera camera = config.getCamera();
 		Vec dir = camera.getDir();
 		Vec target = camera.getTarget();
@@ -908,6 +919,9 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	 */
 	public void compute(boolean antiAlias) {
 		synchronized (this) {
+			if (isoSurfRender == null || distanceFieldTexture == null)
+				return;
+
 			int globalThreads = config.getWidth() * config.getHeight();
 			if (globalThreads % WORKGROUP_SIZE != 0) {
 				globalThreads = (globalThreads / WORKGROUP_SIZE + 1)
@@ -963,7 +977,7 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 	 *            the sample y
 	 * @return the cL kernel
 	 */
-	private CLKernel render(int fastRender, float sampleX, float sampleY) {
+	protected CLKernel render(int fastRender, float sampleX, float sampleY) {
 
 		if (refImageBuffer == null) {
 			isoSurfRender
@@ -995,8 +1009,8 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 					.putArg(showXplane ? 1 : 0).putArg(showYplane ? 1 : 0)
 					.putArg(showZplane ? 1 : 0).putArg(showIsoSurf ? 1 : 0)
 					.putArg(minImageValue).putArg(maxImageValue)
-					.putArg(brightness).putArg(contrast)
-					.putArg(transparencyParam.getFloat()).rewind();
+					.putArg(brightness).putArg(contrast).putArg(transparency)
+					.rewind();
 
 		}
 		return isoSurfRender;

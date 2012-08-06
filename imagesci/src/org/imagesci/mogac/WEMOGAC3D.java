@@ -114,6 +114,17 @@ public class WEMOGAC3D extends MOGAC3D {
 	 * 
 	 * @param refImage
 	 *            the reference image
+	 */
+	public WEMOGAC3D() {
+		super(CLDevice.Type.CPU);
+
+	}
+
+	/**
+	 * Instantiates a new Multi-Object Geodesic Active Contour 3D.
+	 * 
+	 * @param refImage
+	 *            the reference image
 	 * @param context
 	 *            the context
 	 * @param queue
@@ -134,6 +145,7 @@ public class WEMOGAC3D extends MOGAC3D {
 	 */
 	public WEMOGAC3D(ImageData refImage, CLDevice.Type type) {
 		super(refImage, type);
+
 	}
 
 	/* (non-Javadoc)
@@ -870,6 +882,28 @@ public class WEMOGAC3D extends MOGAC3D {
 		}
 	}
 
+	public void init() {
+		CLProgram program;
+		try {
+			program = context.createProgram(
+					getClass()
+							.getResourceAsStream("WEMogacEvolveLevelSet3D.cl"))
+					.build(define("ROWS", rows), define("COLS", cols),
+							define("SLICES", slices),
+							define("CONTAINS_OVERLAPS", containsOverlaps),
+							define("CLAMP_SPEED", clampSpeed ? 1 : 0),
+							define("NUM_LABELS", numLabels),
+							define("STRIDE", STRIDE),
+							define("MAX_DISTANCE", MAX_DISTANCE));
+
+			kernelMap = program.createCLKernels();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	/**
 	 * Sets the adaptive update.
 	 * 
@@ -900,4 +934,5 @@ public class WEMOGAC3D extends MOGAC3D {
 				containsOverlaps);
 		return vol;
 	}
+
 }

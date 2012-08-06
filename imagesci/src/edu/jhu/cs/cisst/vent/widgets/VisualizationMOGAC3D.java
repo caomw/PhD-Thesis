@@ -15,7 +15,6 @@
  */
 package edu.jhu.cs.cisst.vent.widgets;
 
-
 import java.awt.Image;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
@@ -319,7 +318,7 @@ public class VisualizationMOGAC3D extends VisualizationTriangleMesh implements
 		renderers.add(renderer = new MOGACRenderer3D(this, activeContour,
 				preferredWidth / 2, preferredHeight / 2, activeContour
 						.getResamplingRate()));
-
+		renderer.init();
 		ParamCollection params = super.create();
 		return params;
 	}

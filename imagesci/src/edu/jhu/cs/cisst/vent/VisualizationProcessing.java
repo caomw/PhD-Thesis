@@ -42,13 +42,13 @@ public abstract class VisualizationProcessing extends PApplet implements
 
 	/** The duration param. */
 	protected ParamDouble durationParam;
-	
+
 	/** The frame rate param. */
 	protected ParamInteger frameRateParam;;
 
 	/** The movie height param. */
 	protected ParamInteger movieHeightParam;
-	
+
 	/** The movie width param. */
 	protected ParamInteger movieWidthParam;
 	/** The name. */
@@ -80,9 +80,11 @@ public abstract class VisualizationProcessing extends PApplet implements
 
 	/**
 	 * Instantiates a new visualization processing.
-	 *
-	 * @param width the width
-	 * @param height the height
+	 * 
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
 	 */
 	public VisualizationProcessing(int width, int height) {
 		this.preferredWidth = width;
@@ -130,7 +132,7 @@ public abstract class VisualizationProcessing extends PApplet implements
 
 	/**
 	 * Capture screenshot.
-	 *
+	 * 
 	 * @return the p image
 	 */
 	public PImage captureScreenshot() {
@@ -211,9 +213,11 @@ public abstract class VisualizationProcessing extends PApplet implements
 
 	/**
 	 * Gets the video frames.
-	 *
-	 * @param frameRate the frame rate
-	 * @param duration the duration
+	 * 
+	 * @param frameRate
+	 *            the frame rate
+	 * @param duration
+	 *            the duration
 	 * @return the video frames
 	 * @see edu.jhu.cs.cisst.vent.Visualization#getVideoFrames(long, long)
 	 */
@@ -238,5 +242,8 @@ public abstract class VisualizationProcessing extends PApplet implements
 	@Override
 	public void setup() {
 		size(preferredWidth, preferredHeight, RENDER_METHOD);
+	}
+
+	protected void resizeRenderer(int iwidth, int iheight) {
 	}
 }
