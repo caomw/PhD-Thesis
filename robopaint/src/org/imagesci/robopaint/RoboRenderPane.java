@@ -39,7 +39,7 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 		frame = SWT_AWT.new_Frame(parent);
 		parent.getBounds();
 		try {
-			visual = createVisual(900, 700);
+			visual = createVisual(840, 700);
 			this.activeContour = visual.getActiveContour();
 			ParamCollection visualizationParameters = visual.create();
 			visual.updateVisualizationParameters();
@@ -123,5 +123,6 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 	public void dispose() {
 		if (visual != null)
 			visual.dispose();
+		activeContour.dispose();
 	}
 }

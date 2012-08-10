@@ -93,19 +93,20 @@ public class RoboPaint {
 		// shell.setMaximized(true);
 		shell.open();
 		renderPane.launch();
+		/*
 		ImageViewDescription.getInstance().setFile(
 				new File("C:\\Users\\Blake\\Desktop\\metacube.nii"));
 		GeometryViewDescription.getInstance().setLabelImageFile(
 				new File("C:\\Users\\Blake\\Desktop\\ufo_labels.nii"));
 		GeometryViewDescription.getInstance().setDistanceFieldFile(
 				new File("C:\\Users\\Blake\\Desktop\\ufo_distfield.nii"));
-
+*/
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
 		renderPane.dispose();
-		System.exit(0);
+		System.exit(1);
 	}
 }
