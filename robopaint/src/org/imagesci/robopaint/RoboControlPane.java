@@ -41,18 +41,20 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		display = parent.getDisplay();
 		final Shell shell = parent.getShell();
 
-		// Image item
+		// IMAGE SUBPANEL
 		Composite imageComposite = new Composite(bar, SWT.NONE);
 		GridLayout imageLayout = new GridLayout(3, false);
 		imageLayout.marginLeft = imageLayout.marginTop = imageLayout.marginRight = imageLayout.marginBottom = 10;
 		imageLayout.verticalSpacing = 10;
 		imageComposite.setLayout(imageLayout);
 
+		// File name label.
 		Label filenameLabel = new Label(imageComposite, SWT.NONE);
 		filenameLabel.setText("Filename.img");
 		new Label(imageComposite, SWT.NONE);
 		new Label(imageComposite, SWT.NONE);
 
+		// Row slider.
 		Label rowLabel = new Label(imageComposite, SWT.NONE);
 		rowLabel.setText("Row");
 		rowScale = new Scale(imageComposite, SWT.NONE);
@@ -76,6 +78,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 		});
 
+		// Column slider.
 		Label colLabel = new Label(imageComposite, SWT.NONE);
 		colLabel.setText("Column");
 		colScale = new Scale(imageComposite, SWT.NONE);
@@ -98,6 +101,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Slice slider.
 		Label sliceLabel = new Label(imageComposite, SWT.NONE);
 		sliceLabel.setText("Slice");
 		sliceScale = new Scale(imageComposite, SWT.NONE);
@@ -120,6 +124,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Contrast slider.
 		Label contrastLabel = new Label(imageComposite, SWT.NONE);
 		contrastLabel.setText("Contrast");
 		final Scale contrastScale = new Scale(imageComposite, SWT.NONE);
@@ -145,6 +150,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Brightness slider.
 		Label brightnessLabel = new Label(imageComposite, SWT.NONE);
 		brightnessLabel.setText("Brightness");
 		final Scale brightnessScale = new Scale(imageComposite, SWT.NONE);
@@ -170,6 +176,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Transparency slider.
 		Label transparencyLabel = new Label(imageComposite, SWT.NONE);
 		transparencyLabel.setText("Transparency");
 		final Scale transparencyScale = new Scale(imageComposite, SWT.NONE);
@@ -201,13 +208,14 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		item0.setHeight(imageComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item0.setControl(imageComposite);
 
-		// Geometry item
+		// GEOMETRY SUBPANEL
 		Composite geoComposite = new Composite(bar, SWT.NONE);
 		GridLayout geoLayout = new GridLayout(2, false);
 		geoLayout.marginLeft = geoLayout.marginTop = geoLayout.marginRight = geoLayout.marginBottom = 10;
 		geoLayout.verticalSpacing = 10;
 		geoComposite.setLayout(geoLayout);
 
+		// "Slice View" button.
 		Label isoLabel = new Label(geoComposite, SWT.NONE);
 		isoLabel.setText("Slice View");
 		Button isoButton = new Button(geoComposite, SWT.CHECK);
@@ -228,6 +236,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		});
 
 
+		// Object label name dropdown.
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
 		nameCombo = new Combo(geoComposite, SWT.NONE);
@@ -239,6 +248,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		// ***end for nameCombo listener to update current object and properties
 		// displayed when nameCombo selection changes.
 
+		// Color selection button and dialog.
 		colorLabel = new Label(geoComposite, SWT.NONE);
 		colorLabel.setText("Color");
 		Composite colorDialogComposite = new Composite(geoComposite, SWT.NONE);
@@ -265,6 +275,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 						.setColor(passColor);
 			}
 		});
+		
+		// "Visible" button.
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
 		geoVisiblityLabel.setText("Visible");
 		visibilityButton = new Button(geoComposite, SWT.CHECK);
@@ -315,13 +327,14 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		item1.setHeight(geoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item1.setControl(geoComposite);
 
-		// Paint item
+		// PAINT SUBPANEL
 		Composite paintComposite = new Composite(bar, SWT.NONE);
 		GridLayout paintLayout = new GridLayout(2, false);
 		paintLayout.marginLeft = paintLayout.marginTop = paintLayout.marginRight = paintLayout.marginBottom = 10;
 		paintLayout.verticalSpacing = 10;
 		paintComposite.setLayout(paintLayout);
 
+		// Current object selection dropdown.
 		Label currentObjectLabel = new Label(paintComposite, SWT.NONE);
 		currentObjectLabel.setText("Current object");
 		currentObjectLabel.pack();
@@ -336,6 +349,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		// paintNameCombo selection changes.
 		paintNameCombo.pack();
 
+		// Paint brush size slider.
 		Label brushSizeLabel = new Label(paintComposite, SWT.NONE);
 		brushSizeLabel.setText("Brush size");
 		final Composite brushSizeComposite = new Composite(paintComposite,
@@ -366,6 +380,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Paint mask transparency slider.
 		Label paintMaskLabel = new Label(paintComposite, SWT.NONE);
 		paintMaskLabel.setText("Paint Transparency");
 		final Composite paintMaskComposite = new Composite(paintComposite,
@@ -395,6 +410,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// "3D Brush" button.
 		Label brush3DLabel = new Label(paintComposite, SWT.NONE);
 		brush3DLabel.setText("3D Brush");
 		Button brush3DButton = new Button(paintComposite, SWT.CHECK);
@@ -421,7 +437,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		item2.setHeight(paintComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item2.setControl(paintComposite);
 
-		// Auto-segment item
+		// AUTO-SEGMENT SUBPANEL
 		Composite segComposite = new Composite(bar, SWT.NONE);
 		GridLayout segLayout = new GridLayout(2, false);
 		segLayout.marginLeft = segLayout.marginTop = segLayout.marginRight = segLayout.marginBottom = 10;
