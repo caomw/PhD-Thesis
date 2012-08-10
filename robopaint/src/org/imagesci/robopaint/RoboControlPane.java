@@ -444,6 +444,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		segLayout.verticalSpacing = 10;
 		segComposite.setLayout(segLayout);
 
+		// Current object and status selection dropdowns.
 		statusNameCombo = new Combo(segComposite, SWT.READ_ONLY);
 		String statusLabelArray[] = nameCombo.getItems();
 		for (int i = 0; i < statusLabelArray.length; i++) {
@@ -486,6 +487,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Pressure weight editable text box.
 		Label pressureLabel = new Label(segComposite, SWT.NONE);
 		pressureLabel.setText("Pressure weight");
 		pressureText = new Text(segComposite, SWT.BORDER);
@@ -528,6 +530,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Target intensity editable text box.
 		Label intensityLabel = new Label(segComposite, SWT.NONE);
 		intensityLabel.setText("Target intensity");
 		intensityText = new Text(segComposite, SWT.BORDER);
@@ -567,6 +570,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Advection weight editable text box.
 		Label advectionLabel = new Label(segComposite, SWT.NONE);
 		advectionLabel.setText("Advection weight");
 		advectionText = new Text(segComposite, SWT.BORDER);
@@ -606,6 +610,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+		// Curvature weight editable text box.
 		Label curvatureLabel = new Label(segComposite, SWT.NONE);
 		curvatureLabel.setText("Curvature weight");
 		curvatureText = new Text(segComposite, SWT.BORDER);
@@ -650,7 +655,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		item3.setHeight(segComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item3.setControl(segComposite);
 
-		// Sculpt item
+		// SCULPT SUBPANEL
 		Composite sculptComposite = new Composite(bar, SWT.NONE);
 		GridLayout sculptLayout = new GridLayout(3, false);
 		sculptLayout.marginLeft = sculptLayout.marginTop = sculptLayout.marginRight = sculptLayout.marginBottom = 10;
@@ -660,6 +665,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		Label sculptLabel = new Label(sculptComposite, SWT.NONE);
 		sculptLabel.setText("Sculpting tool: ");
 
+		// Sculpt tool selection dropdown.
 		final Combo sculptCombo = new Combo(sculptComposite, SWT.READ_ONLY);
 		sculptCombo.add("Crease");
 		sculptCombo.add("Draw");
@@ -677,6 +683,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 		new Label(sculptComposite, SWT.NONE);
 
+		// Sculpt tool size slider.
 		Label sizeLabel = new Label(sculptComposite, SWT.NONE);
 		sizeLabel.setText("Size");
 		final Scale sizeScale = new Scale(sculptComposite, SWT.NONE);
@@ -698,6 +705,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				sizeScaleLabel.pack();
 			}
 		});
+		
+		// Sculpt tool strength slider.
 		Label strengthLabel = new Label(sculptComposite, SWT.NONE);
 		strengthLabel.setText("Strength");
 		final Scale strengthScale = new Scale(sculptComposite, SWT.NONE);
