@@ -30,10 +30,10 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 	final Scale rowScale, colScale, sliceScale;
 	final Label rowScaleLabel, colScaleLabel, sliceScaleLabel, colorLabel,
 			transparencyScaleLabel;
-	final Combo nameCombo, statusCombo, paintNameCombo, statusNameCombo;
+	final Combo nameCombo, statusCombo, paintNameCombo, segmentNameCombo;
 	final Display display;
 	final Label colorDisplayLabel;
-	final Text pressureText, intensityText, advectionText, curvatureText;
+	final Text pressureText, intensityText,  curvatureText;//advectionText,
 	final Button visibilityButton;
 
 	public RoboControlPane(Composite parent) {
@@ -235,7 +235,6 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
-
 		// Object label name dropdown.
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
@@ -320,8 +319,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				geoTransparencyComposite.pack();
 			}
 		});
-*/
-		
+		*/
+
 		ExpandItem item1 = new ExpandItem(bar, SWT.NONE, 1);
 		item1.setText("Geometry");
 		item1.setHeight(geoComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
@@ -340,7 +339,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		currentObjectLabel.pack();
 		paintNameCombo = new Combo(paintComposite, SWT.READ_ONLY);
 		String labelArray[] = nameCombo.getItems();
-		for (int i = 0; i < labelArray.length; i++) {
+		for (int i = 0; i < labelArray.length - 1; i++) {
 			paintNameCombo.add(labelArray[i]);
 		}
 		paintNameCombo.select(0);
@@ -445,13 +444,13 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		segComposite.setLayout(segLayout);
 
 		// Current object and status selection dropdowns.
-		statusNameCombo = new Combo(segComposite, SWT.READ_ONLY);
+		segmentNameCombo = new Combo(segComposite, SWT.READ_ONLY);
 		String statusLabelArray[] = nameCombo.getItems();
 		for (int i = 0; i < statusLabelArray.length; i++) {
 
-			statusNameCombo.add(statusLabelArray[i]);
+			segmentNameCombo.add(statusLabelArray[i]);
 		}
-		statusNameCombo.select(0);
+		segmentNameCombo.select(0);
 		// *****end for statusNameCombo listener to update current object and
 		// properties displayed
 		// when statusNameCombo selection changes.
@@ -569,7 +568,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				}
 			}
 		});
-
+		/*
 		// Advection weight editable text box.
 		Label advectionLabel = new Label(segComposite, SWT.NONE);
 		advectionLabel.setText("Advection weight");
@@ -582,7 +581,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-
+				
 				currentText = advectionText.getText();
 
 				if (e.keyCode == SWT.CR) {
@@ -609,7 +608,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				}
 			}
 		});
-
+*/
 		// Curvature weight editable text box.
 		Label curvatureLabel = new Label(segComposite, SWT.NONE);
 		curvatureLabel.setText("Curvature weight");
@@ -757,15 +756,15 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 				int currentIndex = GeometryViewDescription.getInstance()
 						.getCurrentObjectIndex();
-				if (e.keyCode == SWT.CR&&currentIndex>=0) {
+				if (e.keyCode == SWT.CR && currentIndex >= 0) {
 					nameCombo.remove(currentIndex);
 					nameCombo.add(currentText, currentIndex);
 					paintNameCombo.remove(currentIndex);
 					paintNameCombo.add(currentText, currentIndex);
 					paintNameCombo.select(currentIndex);
-					statusNameCombo.remove(currentIndex);
-					statusNameCombo.add(currentText, currentIndex);
-					statusNameCombo.select(currentIndex);
+					segmentNameCombo.remove(currentIndex);
+					segmentNameCombo.add(currentText, currentIndex);
+					segmentNameCombo.select(currentIndex);
 					GeometryViewDescription.getInstance().getCurrentObject()
 							.setName(currentText);
 				}
@@ -785,7 +784,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				updateCurrentGeometryLabel();
 				updateCurrentSegmentParameters();
 				paintNameCombo.select(nameCombo.getSelectionIndex());
-				statusNameCombo.select(nameCombo.getSelectionIndex());
+				segmentNameCombo.select(nameCombo.getSelectionIndex());
 			}
 		});
 		// ****paintNameCombo listener to update current object and properties
@@ -803,26 +802,26 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				updateCurrentGeometryLabel();
 				updateCurrentSegmentParameters();
 				nameCombo.select(paintNameCombo.getSelectionIndex());
-				statusNameCombo.select(paintNameCombo.getSelectionIndex());
+				segmentNameCombo.select(paintNameCombo.getSelectionIndex());
 			}
 		});
 		// *****statusNameCombo listener to update current object and properties
 		// displayed when
 		// statusNameCombo selection changes.
-		statusNameCombo.addListener(SWT.Selection, new Listener() {
+		segmentNameCombo.addListener(SWT.Selection, new Listener() {
 
 			@Override
 			public void handleEvent(Event e) {
-
-				GeometryViewDescription.getInstance().setCurrentObject(
-						GeometryViewDescription.getInstance()
-								.getObjectDescriptions()
-								.get(statusNameCombo.getSelectionIndex()));
+				ObjectDescription obj = GeometryViewDescription.getInstance()
+						.getObjectDescriptions()
+						.get(segmentNameCombo.getSelectionIndex());
+				GeometryViewDescription.getInstance().setCurrentObject(obj);
 				updateCurrentGeometryLabel();
 				updateCurrentSegmentParameters();
-
-				nameCombo.select(statusNameCombo.getSelectionIndex());
-				paintNameCombo.select(statusNameCombo.getSelectionIndex());
+				if (obj.getId() != 0) {
+					nameCombo.select(segmentNameCombo.getSelectionIndex());
+					paintNameCombo.select(segmentNameCombo.getSelectionIndex());
+				}
 			}
 		});
 
@@ -879,27 +878,31 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			nameCombo.removeAll();
 			paintNameCombo.deselectAll();
 			paintNameCombo.removeAll();
-			statusNameCombo.deselectAll();
-			statusNameCombo.removeAll();
+			segmentNameCombo.deselectAll();
+			segmentNameCombo.removeAll();
 
 			break;
 		case ADD_OBJECT:
-			String name = GeometryViewDescription
+			ObjectDescription obj = GeometryViewDescription
 					.getInstance()
 					.getObjectDescriptions()
 					.get(GeometryViewDescription.getInstance()
-							.getObjectDescriptions().size() - 1).getName();
-			nameCombo.add(name);
-			nameCombo.select(0);
-			nameCombo.pack();
+							.getObjectDescriptions().size() - 1);
+			String name = obj.getName();
 
-			paintNameCombo.add(name);
-			paintNameCombo.select(0);
-			paintNameCombo.pack();
+			if (obj.getId() != 0) {
+				nameCombo.add(name);
+				nameCombo.select(0);
+				nameCombo.pack();
 
-			statusNameCombo.add(name);
-			statusNameCombo.select(0);
-			statusNameCombo.pack();
+				paintNameCombo.add(name);
+				paintNameCombo.select(0);
+				paintNameCombo.pack();
+			}
+
+			segmentNameCombo.add(name);
+			segmentNameCombo.select(0);
+			segmentNameCombo.pack();
 
 			GeometryViewDescription.getInstance().setCurrentObject(
 					nameCombo.getSelectionIndex());
@@ -913,7 +916,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 	protected void updateCurrentGeometryLabel() {
 		ObjectDescription currentObject = GeometryViewDescription.getInstance()
 				.getCurrentObject();
-		if (currentObject != null) {
+		if (currentObject != null && currentObject.getId() != 0) {
 			visibilityButton.setSelection(currentObject.isVisible());
 			Color4f passColor4f = currentObject.getColor4f();
 			RGB passRGB = new RGB((int) (255.0f * passColor4f.x),
@@ -923,9 +926,9 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			colorDisplayLabel.setBackground(passColor);
 			int trans = Math.min(100,
 					Math.max(0, (int) (currentObject.getTransparency() * 100)));
-			//geoTransparencyScale.setSelection(trans);
-			//geoTransparencyScaleLabel.setText(trans + "");
-			//geoTransparencyScaleLabel.pack();
+			// geoTransparencyScale.setSelection(trans);
+			// geoTransparencyScaleLabel.setText(trans + "");
+			// geoTransparencyScaleLabel.pack();
 		}
 	}
 
@@ -950,8 +953,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 					.getPressureWeight()));
 			intensityText.setText(Float.toString(currentObject
 					.getTargetIntensity()));
-			advectionText.setText(Float.toString(currentObject
-					.getAdvectionWeight()));
+			//advectionText.setText(Float.toString(currentObject.getAdvectionWeight()));
 			curvatureText.setText(Float.toString(currentObject
 					.getCurvatureWeight()));
 		}
