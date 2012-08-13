@@ -26,6 +26,7 @@
  */
 package org.imagesci.mogac;
 
+import static com.jogamp.opencl.CLMemory.Mem.READ_ONLY;
 import static com.jogamp.opencl.CLMemory.Mem.READ_WRITE;
 import static com.jogamp.opencl.CLMemory.Mem.USE_BUFFER;
 
@@ -75,20 +76,29 @@ public class MACWE3D extends WEMOGAC3D {
 
 	/**
 	 * Instantiates a new Multi-object Active Contours Without Edges 3D.
-	 *
-	 * @param refImage the reference image
-	 * @param context the context
-	 * @param queue the queue
+	 * 
+	 * @param refImage
+	 *            the reference image
+	 * @param context
+	 *            the context
+	 * @param queue
+	 *            the queue
 	 */
 	public MACWE3D(ImageData refImage, CLContext context, CLCommandQueue queue) {
 		super(refImage, context, queue);
 	}
 
+	public MACWE3D() {
+		super();
+	}
+
 	/**
 	 * Instantiates a new Multi-object Active Contours Without Edges 3D.
-	 *
-	 * @param refImage the reference image
-	 * @param type the type
+	 * 
+	 * @param refImage
+	 *            the reference image
+	 * @param type
+	 *            the type
 	 */
 	public MACWE3D(ImageData refImage, CLDevice.Type type) {
 		super(refImage, type);
@@ -176,7 +186,6 @@ public class MACWE3D extends WEMOGAC3D {
 	 *            the new averages
 	 */
 	public void setAverages(double[] data) {
-
 		FloatBuffer avgs = averages.getBuffer();
 		for (int i = 0; i < data.length; i++) {
 			float avg = (float) data[i];
@@ -188,13 +197,27 @@ public class MACWE3D extends WEMOGAC3D {
 		queue.putWriteBuffer(averages, true);
 	}
 
+	public void updateAverages() {
+
+		final CLKernel regionAverage = kernelMap.get("regionAverage");
+		final CLKernel sumAverages = kernelMap.get("sumAverages");
+		regionAverage.putArgs(imageLabelBuffer, distanceFieldBuffer,
+				pressureBuffer, labelMaskBuffer, averages, areas, stddev)
+				.rewind();
+		queue.put1DRangeKernel(regionAverage, 0, roundToWorkgroupPower(slices),
+				WORKGROUP_SIZE);
+		queue.finish();
+		sumAverages.putArgs(averages, areas, stddev).rewind();
+		queue.put1DRangeKernel(sumAverages, 0,
+				roundToWorkgroupPower(numLabels), WORKGROUP_SIZE);
+		queue.finish();
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.jhu.cs.cisst.algorithms.mogac.WEMOGAC3D#step()
 	 */
 	@Override
 	public boolean step() {
-		final CLKernel regionAverage = kernelMap.get("regionAverage");
-		final CLKernel sumAverages = kernelMap.get("sumAverages");
 		final CLKernel pressureSpeedKernel = kernelMap.get("acweSpeedKernel");
 		final CLKernel maxImageValue = kernelMap.get("maxImageValue");
 		final CLKernel maxTimeStep = kernelMap.get("maxTimeStep");
@@ -206,15 +229,7 @@ public class MACWE3D extends WEMOGAC3D {
 		int global_size = roundToWorkgroupPower(activeListSize);
 		long startTime = System.nanoTime();
 		if (intensityEstimation && time % intensityEstimationInterval == 0) {
-			regionAverage.putArgs(imageLabelBuffer, distanceFieldBuffer,
-					pressureBuffer, labelMaskBuffer, averages, areas, stddev)
-					.rewind();
-			queue.put1DRangeKernel(regionAverage, 0,
-					roundToWorkgroupPower(slices), WORKGROUP_SIZE);
-			queue.finish();
-			sumAverages.putArgs(averages, areas, stddev).rewind();
-			queue.put1DRangeKernel(sumAverages, 0,
-					roundToWorkgroupPower(numLabels), WORKGROUP_SIZE);
+			updateAverages();
 		}
 		pressureSpeedKernel
 				.putArgs(activeListBuffer, pressureBuffer,
@@ -476,7 +491,7 @@ public class MACWE3D extends WEMOGAC3D {
 	/**
 	 * Prints the averages.
 	 */
-	private void printAverages() {
+	public void printAverages() {
 		queue.putReadBuffer(averages, true).putReadBuffer(areas, true)
 				.putReadBuffer(stddev, true);
 		FloatBuffer avgs = averages.getBuffer();
@@ -495,5 +510,44 @@ public class MACWE3D extends WEMOGAC3D {
 		std.rewind();
 		avgs.rewind();
 		area.rewind();
+	}
+
+	public float[] getCurrentAverages() {
+		return averages.getBuffer().array();
+	}
+
+	public float getCurrentAverage(int id) {
+		return averages.getBuffer().get(id);
+	}
+
+	public void setImageSegmentation(ImageDataInt labelImage,
+			ImageDataFloat unsignedImage) {
+		super.setImageSegmentation(labelImage, unsignedImage);
+		if (image != null) {
+			pressureBuffer = context.createFloatBuffer(rows * cols * slices,
+					READ_ONLY);
+			FloatBuffer buff = pressureBuffer.getBuffer();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						buff.put(image.getFloat(i, j, k));
+					}
+				}
+			}
+			buff.rewind();
+			queue.putWriteBuffer(pressureBuffer, true);
+		}
+		targetPressure = Float.NaN;
+		averages = context.createFloatBuffer(
+				SpringlsCommon3D.roundToWorkgroupPower(numLabels * slices),
+				READ_WRITE, USE_BUFFER);
+		areas = context.createFloatBuffer(
+				SpringlsCommon3D.roundToWorkgroupPower(numLabels * slices),
+				READ_WRITE, USE_BUFFER);
+		stddev = context.createFloatBuffer(
+				SpringlsCommon3D.roundToWorkgroupPower(numLabels * slices),
+				READ_WRITE, USE_BUFFER);
+		updateAverages();
+		printAverages();
 	}
 }

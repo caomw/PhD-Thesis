@@ -845,7 +845,7 @@ kernel void IsoSurfClipRender(
     const float4 cameraDir = (float4) (camera->dir.x, camera->dir.y, camera->dir.z, 0.f);
     const float4 cameraOrig = (float4) (camera->orig.x, camera->orig.y, camera->orig.z, 0.f);
 
-    const float4 eyeRayDir = normalize(cameraX * kcx4 + cameraY * kcy4 + cameraDir);
+    float4 eyeRayDir = normalize(cameraX * kcx4 + cameraY * kcy4 + cameraDir);
     const float4 eyeRayOrig = eyeRayDir * (float4) 0.1f + cameraOrig;
 
     //--------------------------------------------------------------------------

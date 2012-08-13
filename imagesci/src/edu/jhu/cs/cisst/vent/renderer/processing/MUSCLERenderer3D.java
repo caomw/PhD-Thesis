@@ -22,7 +22,6 @@ import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 import static java.lang.Math.sqrt;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.nio.ByteBuffer;
@@ -111,7 +110,7 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 
 	/** The color. */
 	protected Color4f color = new Color4f(0.75f, 0.75f, 0.75f, 1.0f);// new
-	
+
 	/** The color buffer simulator. */
 	protected CLBuffer<FloatBuffer> colorBufferSimulator;
 
@@ -141,7 +140,7 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 
 	/** The contour colors param. */
 	protected ParamColor[] contourColorsParam;
-	
+
 	/** The contours visible param. */
 	protected ParamBoolean[] contoursVisibleParam;
 	/** The contrast. */
@@ -152,7 +151,7 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 	protected final int CUBE_DIM = 8;
 	/** The dirty. */
 	protected boolean dirty = false;
-	
+
 	/** The distance field buffer copy. */
 	protected CLBuffer<FloatBuffer> distanceFieldBufferCopy;
 	/** The enable anti alias. */
@@ -162,7 +161,7 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 	protected boolean enableFastRendering = true;
 	/** The enable shadows. */
 	protected boolean enableShadows = false;
-	
+
 	/** The image label copy. */
 	protected CLBuffer<IntBuffer> imageLabelCopy;
 	/** The index buffer copy. */
@@ -201,10 +200,10 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 	/** The copy level set image. */
 	protected CLKernel multiply, computeCapsuleColor, copyLevelSetImage,
 			bilateralFilter, maskLabels;
-	
+
 	/** The offset dist param. */
 	protected ParamFloat offsetDistParam;
-	
+
 	/** The phi rotation param. */
 	protected ParamFloat phiRotationParam;
 	/** The pixel buffer. */
@@ -240,7 +239,7 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 
 	/** The show iso surf. */
 	protected boolean showIsoSurf = true;
-	
+
 	/** The show iso surf param. */
 	protected ParamBoolean showIsoSurfParam;
 	/** The show triangles. */
@@ -309,18 +308,23 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 	protected CLBuffer<FloatBuffer> volumeColorBuffer;
 	/** The color texture. */
 	protected CLImage3d<FloatBuffer> volumeTexture, colorTexture;
-	
+
 	/** The volume tmp color buffer. */
 	protected CLBuffer<FloatBuffer> volumeTmpColorBuffer;
 
 	/**
 	 * Instantiates a new mUSCLE renderer3 d.
-	 *
-	 * @param applet the applet
-	 * @param activeContour the active contour
-	 * @param rasterWidth the raster width
-	 * @param rasterHeight the raster height
-	 * @param refreshRate the refresh rate
+	 * 
+	 * @param applet
+	 *            the applet
+	 * @param activeContour
+	 *            the active contour
+	 * @param rasterWidth
+	 *            the raster width
+	 * @param rasterHeight
+	 *            the raster height
+	 * @param refreshRate
+	 *            the refresh rate
 	 */
 	public MUSCLERenderer3D(VisualizationProcessing3D applet,
 			MuscleActiveContour3D activeContour, int rasterWidth,
@@ -348,6 +352,11 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 				}
 				if (device == null) {
 					device = CLPlatform.getDefault().getMaxFlopsDevice();
+					System.err
+							.println("Could not find GPU! Disabling Anti-aliasing...");
+					if (enableAntiAliasParam != null)
+						enableAntiAliasParam.setValue(false);
+					enableAntiAlias = false;
 				}
 				System.out.println("Springls renderer using device: "
 						+ device.getVendor() + " " + device.getVersion() + " "
@@ -509,13 +518,19 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 
 	/**
 	 * Instantiates a new springls raycast renderer.
-	 *
-	 * @param applet the applet
-	 * @param activeContour the commons
-	 * @param rasterWidth the raster width
-	 * @param rasterHeight the raster height
-	 * @param refreshRate the refresh rate
-	 * @param kernelFileName the kernel file name
+	 * 
+	 * @param applet
+	 *            the applet
+	 * @param activeContour
+	 *            the commons
+	 * @param rasterWidth
+	 *            the raster width
+	 * @param rasterHeight
+	 *            the raster height
+	 * @param refreshRate
+	 *            the refresh rate
+	 * @param kernelFileName
+	 *            the kernel file name
 	 */
 	public MUSCLERenderer3D(VisualizationProcessing3D applet,
 			MuscleActiveContour3D activeContour, int rasterWidth,
@@ -877,8 +892,9 @@ public class MUSCLERenderer3D extends RendererProcessing3D implements
 
 	/**
 	 * Update colors.
-	 *
-	 * @param flip the flip
+	 * 
+	 * @param flip
+	 *            the flip
 	 */
 	private void updateColors(boolean flip) {
 		FloatBuffer buff = colorLUTBuffer.getBuffer();

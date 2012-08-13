@@ -17,7 +17,5 @@
 	<classpathentry kind="lib" path="/jist/mipav/jre/lib/ext/jogl.all.jar"/>
 	<classpathentry kind="lib" path="/jist/mipav/jre/lib/ext/gluegen-rt.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/jist/mipav/jre/lib/ext/nativewindow.all.jar"/>
-	<classpathentry kind="lib" path="/jist/mipav/jre/lib/ext/newt.all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

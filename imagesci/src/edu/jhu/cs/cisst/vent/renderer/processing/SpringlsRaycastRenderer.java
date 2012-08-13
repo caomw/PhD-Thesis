@@ -22,7 +22,6 @@ import static com.jogamp.opencl.CLProgram.define;
 import static com.jogamp.opencl.CLProgram.CompilerOptions.ENABLE_MAD;
 import static java.lang.Math.sqrt;
 
-
 import java.awt.Color;
 import java.awt.Font;
 import java.nio.ByteBuffer;
@@ -330,7 +329,13 @@ public class SpringlsRaycastRenderer extends RendererProcessing3D implements
 					}
 				}
 				if (device == null) {
+
 					device = CLPlatform.getDefault().getMaxFlopsDevice();
+					System.err
+							.println("Could not find GPU! Disabling Anti-aliasing...");
+					if (enableAntiAliasParam != null)
+						enableAntiAliasParam.setValue(false);
+					enableAntiAlias = false;
 				}
 				System.out.println("Springls renderer using device: "
 						+ device.getVendor() + " " + device.getVersion() + " "

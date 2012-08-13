@@ -354,6 +354,11 @@ public class MOGACRenderer3D extends RendererProcessing3D implements
 				}
 				if (device == null) {
 					device = CLPlatform.getDefault().getMaxFlopsDevice();
+					System.err
+							.println("Could not find GPU! Disabling Anti-aliasing...");
+					if (enableAntiAliasParam != null)
+						enableAntiAliasParam.setValue(false);
+					enableAntiAlias = false;
 				}
 				System.out.println("Volume renderer using device: "
 						+ device.getVendor() + " " + device.getVersion() + " "

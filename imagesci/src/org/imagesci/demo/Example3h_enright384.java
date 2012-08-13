@@ -117,8 +117,8 @@ public class Example3h_enright384 extends AbstractExample {
 
 				VisualizationSpringlsActiveContour3D visual = (volRender) ? new VisualizationSpringlsActiveContourVolume3D(
 						600, 600, simulator)
-						: new VisualizationSpringlsActiveContourMesh3D(1024,
-								768, simulator);
+						: new VisualizationSpringlsActiveContourMesh3D(600,
+								600, simulator);
 
 				VisualizationApplication app = new VisualizationApplication(
 						visual);
@@ -127,7 +127,7 @@ public class Example3h_enright384 extends AbstractExample {
 				app.setShowToolBar(true);
 				app.addListener(visual);
 
-				app.setPreferredSize(new Dimension(1200, 800));
+				app.setPreferredSize(new Dimension(1024, 768));
 				app.runAndWait();
 			} else {
 				simulator.solve();

@@ -1482,6 +1482,7 @@ public class MOGAC3D extends AbstractCalculation {
 			oldDistanceFieldBuffer.release();
 		oldDistanceFieldBuffer = context.createFloatBuffer(
 				rows * cols * slices, READ_WRITE, USE_BUFFER);
+		init();
 		if (unsignedImage == null) {
 			convertLabelsToLevelSet();
 			unsignedImage = new ImageDataFloat(rows, cols, slices);
