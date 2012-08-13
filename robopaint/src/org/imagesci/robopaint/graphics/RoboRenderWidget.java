@@ -42,13 +42,14 @@ public class RoboRenderWidget extends VisualizationMOGAC3D {
 
 	public void updateImageSegmentation() {
 		((RoboRenderer) renderer).updateImageSegmentation();
+
 	}
 
 	public void updateReferenceImage() {
 		center = new Point3f(activeContour.rows * 0.5f,
 				activeContour.cols * 0.5f, activeContour.slices * 0.5f);
 		centerParam.setValue(center);
-		activeContour.init();
+
 		((RoboRenderer) renderer).updateReferenceImage();
 	}
 }

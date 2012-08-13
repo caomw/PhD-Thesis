@@ -21,6 +21,8 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 
 import org.imagesci.mogac.MOGAC3D;
+import org.imagesci.mogac.WEMOGAC3D;
+import org.imagesci.mogac.MACWE3D;
 import org.imagesci.robopaint.GeometryViewDescription;
 import org.imagesci.robopaint.ImageViewDescription;
 import org.imagesci.robopaint.ObjectDescription;
@@ -218,6 +220,12 @@ public class RoboRenderer extends MOGACRenderer3D {
 					}
 				}
 				if (device == null) {
+					System.err
+							.println("Could not find GPU! Disabling Anti-aliasing...");
+					if (enableAntiAliasParam != null)
+						enableAntiAliasParam.setValue(false);
+					enableAntiAlias = false;
+
 					device = CLPlatform.getDefault().getMaxFlopsDevice();
 				}
 				System.out.println("Volume renderer using device: "
@@ -297,7 +305,6 @@ public class RoboRenderer extends MOGACRenderer3D {
 		if (gpuColorLUT != null) {
 			gpuColorLUT.release();
 		}
-
 		enableFastRendering = true;
 		gpuColorLUT = context.createFloatBuffer(4 * simulator.getNumColors(),
 				READ_WRITE);
@@ -314,21 +321,28 @@ public class RoboRenderer extends MOGACRenderer3D {
 		final long seed = 5437897311l;
 		Random randn = new Random(seed);
 		GeometryViewDescription.getInstance().removeAllObjectDescriptions();
-		for (int i = 0; i < contourColorsParam.length; i++) {
-			Color c = new Color(randn.nextFloat(), randn.nextFloat(),
+		Color c = Color.BLACK;
+		ObjectDescription label;
+		for (int i = 1; i < contourColorsParam.length + 1; i++) {
+			c = new Color(randn.nextFloat(), randn.nextFloat(),
 					randn.nextFloat());
-			ObjectDescription label = new ObjectDescription("Label " + (i + 1),
-					masks[i + 1]);
+			label = new ObjectDescription("Label " + (i), masks[i]);
 			label.setColor(c.getRed(), c.getGreen(), c.getBlue(), 255);
-			contourColorsParam[i] = new ParamColor("Object Color ["
-					+ masks[i + 1] + "]", c);
-			contoursVisibleParam[i] = new ParamBoolean("Visibility ["
-					+ masks[i + 1] + "]", true);
+			label.setTargetIntensity(((MACWE3D) simulator).getCurrentAverage(i));
+			label.setPressureWeight(1.0f);
+			contourColorsParam[i - 1] = new ParamColor("Object Color ["
+					+ masks[i] + "]", c);
+			contoursVisibleParam[i - 1] = new ParamBoolean("Visibility ["
+					+ masks[i] + "]", true);
 			GeometryViewDescription.getInstance().addObjectDescription(label);
 		}
 		frameUpdate(0, -1);
 		updateColors();
-
+		label = new ObjectDescription("Background", 0);
+		label.setColor(c.getRed(), c.getGreen(), c.getBlue(), 255);
+		label.setTargetIntensity(((MACWE3D) simulator).getCurrentAverage(0));
+		label.setPressureWeight(0f);
+		GeometryViewDescription.getInstance().addObjectDescription(label);
 	}
 
 	public void updateReferenceImage() {
@@ -446,6 +460,7 @@ public class RoboRenderer extends MOGACRenderer3D {
 				refImageBuffer = null;
 			}
 		}
+
 		enableFastRendering = true;
 		// task.cancel();
 		dirty = true;

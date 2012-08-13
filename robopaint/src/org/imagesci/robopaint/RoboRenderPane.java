@@ -6,8 +6,8 @@ import java.awt.Panel;
 
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
+import org.imagesci.mogac.MACWE3D;
 import org.imagesci.mogac.MOGAC3D;
-import org.imagesci.mogac.WEMOGAC3D;
 import org.imagesci.robopaint.GeometryViewDescription.GeometryViewListener;
 import org.imagesci.robopaint.ImageViewDescription.ImageViewListener;
 import org.imagesci.robopaint.ImageViewDescription.ParameterName;
@@ -21,7 +21,7 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 	private static RoboRenderWidget createVisual(int width, int height) {
-		WEMOGAC3D activeContour = new WEMOGAC3D();
+		MACWE3D activeContour = new MACWE3D();
 		RoboRenderWidget visual = new RoboRenderWidget(width, height,
 				activeContour);
 		return visual;
