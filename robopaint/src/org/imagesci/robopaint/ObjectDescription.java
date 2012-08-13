@@ -24,6 +24,7 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected float targetIntensity = 0;
 	protected float advectionWeight = 0;
 	protected float curvatureWeight = 0;
+	protected boolean autoUpdateIntensity = false;
 
 	public enum Status {
 		STATIC, ACTIVE, PASSIVE
@@ -331,6 +332,14 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	public void setPlaying(boolean isPlaying) {
 
 		this.isPlaying = isPlaying;
+	}
+
+	public boolean isAutoUpdateIntensity() {
+		return autoUpdateIntensity;
+	}
+
+	public void setAutoUpdateIntensity(boolean autoUpdateIntensity) {
+		this.autoUpdateIntensity = autoUpdateIntensity;
 	}
 
 	@Override

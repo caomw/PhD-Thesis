@@ -491,6 +491,7 @@ public class RoboRenderer extends MOGACRenderer3D {
 			contourColorsParam[index].setValue(obj.getColor());
 			contoursVisibleParam[index].setValue(obj.isVisible());
 			index++;
+			if(index>=contourColorsParam.length)break;
 		}
 		updateColors(true);
 		frameUpdate(0, 0);

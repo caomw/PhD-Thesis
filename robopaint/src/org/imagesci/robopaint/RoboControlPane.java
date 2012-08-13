@@ -6,8 +6,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Combo;
@@ -30,29 +33,92 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 	final Scale rowScale, colScale, sliceScale;
 	final Label rowScaleLabel, colScaleLabel, sliceScaleLabel, colorLabel,
 			transparencyScaleLabel;
-	final Combo nameCombo, statusCombo, paintNameCombo, segmentNameCombo;
+	final Combo nameCombo, labelStatusCombo, paintNameCombo,
+			autosegmentNameCombo;
 	final Display display;
-	final Label colorDisplayLabel;
-	final Text pressureText, intensityText,  curvatureText;//advectionText,
-	final Button visibilityButton;
+	final Label colorDisplayLabel, filenameLabel;
+	final Text pressureText, intensityText, curvatureText;// advectionText,
+	final Button visibilityButton, autoUpdateButton;
 
 	public RoboControlPane(Composite parent) {
 		ExpandBar bar = new ExpandBar(parent, SWT.V_SCROLL);
 		display = parent.getDisplay();
 		final Shell shell = parent.getShell();
+		Composite outerComposite = new Composite(bar, SWT.NONE);
+		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		rowLayout.wrap = true;
+		rowLayout.pack = true;
+		rowLayout.justify = true;
+		rowLayout.type = SWT.VERTICAL;
+		rowLayout.marginLeft = 5;
+		rowLayout.marginTop = 5;
+		rowLayout.marginRight = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.spacing = 0;
 
+		outerComposite.setLayout(rowLayout);
+		
+		// File name label.
+		filenameLabel = new Label(outerComposite, SWT.SHADOW_OUT);
+		filenameLabel.setText("File: None");
+		filenameLabel.setFont(new Font(display,"Arial",10,SWT.BOLD));
 		// IMAGE SUBPANEL
-		Composite imageComposite = new Composite(bar, SWT.NONE);
+
+		Composite imageComposite = new Composite(outerComposite, SWT.NONE);
 		GridLayout imageLayout = new GridLayout(3, false);
-		imageLayout.marginLeft = imageLayout.marginTop = imageLayout.marginRight = imageLayout.marginBottom = 10;
+		imageLayout.marginLeft = imageLayout.marginTop = 10;
+		imageLayout.marginRight = imageLayout.marginBottom = 10;
 		imageLayout.verticalSpacing = 10;
 		imageComposite.setLayout(imageLayout);
 
-		// File name label.
-		Label filenameLabel = new Label(imageComposite, SWT.NONE);
-		filenameLabel.setText("Filename.img");
-		new Label(imageComposite, SWT.NONE);
-		new Label(imageComposite, SWT.NONE);
+		(new Label(imageComposite, SWT.NONE)).setText("Show Slice");
+		Composite showComposite = new Composite(imageComposite, SWT.NONE);
+		rowLayout = new RowLayout(SWT.HORIZONTAL);
+		rowLayout.wrap = false;
+		rowLayout.pack = true;
+		rowLayout.justify = false;
+		rowLayout.type = SWT.HORIZONTAL;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginTop = 0;
+		rowLayout.marginRight = 0;
+		rowLayout.marginBottom = 0;
+		rowLayout.spacing = 10;
+		showComposite.setLayout(rowLayout);
+		Label showXLabel = new Label(showComposite, SWT.NONE);
+		showXLabel.setText("Row");
+		final Button showXButton = new Button(showComposite, SWT.CHECK);
+		showXButton.setSelection(true);
+		showXButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				ImageViewDescription.getInstance().setShowRow(
+						showXButton.getSelection());
+			}
+		});
+
+		Label showYLabel = new Label(showComposite, SWT.NONE);
+		showYLabel.setText("Column");
+		final Button showYButton = new Button(showComposite, SWT.CHECK);
+		showYButton.setSelection(true);
+		showYButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				ImageViewDescription.getInstance().setShowColumn(
+						showYButton.getSelection());
+			}
+		});
+		Label showZLabel = new Label(showComposite, SWT.NONE);
+		showZLabel.setText("Slice");
+		final Button showZButton = new Button(showComposite, SWT.CHECK);
+		showZButton.setSelection(true);
+		showZButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				ImageViewDescription.getInstance().setShowSlice(
+						showZButton.getSelection());
+			}
+		});
+		(new Label(imageComposite, SWT.NONE)).setText(" ");
 
 		// Row slider.
 		Label rowLabel = new Label(imageComposite, SWT.NONE);
@@ -205,8 +271,9 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 		ExpandItem item0 = new ExpandItem(bar, SWT.NONE, 0);
 		item0.setText("Image");
-		item0.setHeight(imageComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
-		item0.setControl(imageComposite);
+		outerComposite.pack();
+		item0.setHeight(outerComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+		item0.setControl(outerComposite);
 
 		// GEOMETRY SUBPANEL
 		Composite geoComposite = new Composite(bar, SWT.NONE);
@@ -274,7 +341,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 						.setColor(passColor);
 			}
 		});
-		
+
 		// "Visible" button.
 		Label geoVisiblityLabel = new Label(geoComposite, SWT.NONE);
 		geoVisiblityLabel.setText("Visible");
@@ -412,22 +479,15 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		// "3D Brush" button.
 		Label brush3DLabel = new Label(paintComposite, SWT.NONE);
 		brush3DLabel.setText("3D Brush");
-		Button brush3DButton = new Button(paintComposite, SWT.CHECK);
+		final Button brush3DButton = new Button(paintComposite, SWT.CHECK);
 		brush3DButton.setSelection(false);
 		brush3DButton.addListener(SWT.Selection, new Listener() {
 
 			@Override
 			public void handleEvent(Event e) {
 
-				if (PaintViewDescription.getInstance().isBrush3D()) {
-
-					PaintViewDescription.getInstance().setBrush3D(false);
-				}
-
-				else {
-
-					PaintViewDescription.getInstance().setBrush3D(true);
-				}
+				PaintViewDescription.getInstance().setBrush3D(
+						brush3DButton.getSelection());
 			}
 		});
 
@@ -444,27 +504,27 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		segComposite.setLayout(segLayout);
 
 		// Current object and status selection dropdowns.
-		segmentNameCombo = new Combo(segComposite, SWT.READ_ONLY);
+		autosegmentNameCombo = new Combo(segComposite, SWT.READ_ONLY);
 		String statusLabelArray[] = nameCombo.getItems();
 		for (int i = 0; i < statusLabelArray.length; i++) {
 
-			segmentNameCombo.add(statusLabelArray[i]);
+			autosegmentNameCombo.add(statusLabelArray[i]);
 		}
-		segmentNameCombo.select(0);
+		autosegmentNameCombo.select(0);
 		// *****end for statusNameCombo listener to update current object and
 		// properties displayed
 		// when statusNameCombo selection changes.
-		statusCombo = new Combo(segComposite, SWT.READ_ONLY);
-		statusCombo.add("Active");
-		statusCombo.add("Passive");
-		statusCombo.add("Static");
-		statusCombo.select(0);
-		statusCombo.addListener(SWT.Selection, new Listener() {
+		labelStatusCombo = new Combo(segComposite, SWT.READ_ONLY);
+		labelStatusCombo.add("Active");
+		labelStatusCombo.add("Passive");
+		labelStatusCombo.add("Static");
+		labelStatusCombo.select(0);
+		labelStatusCombo.addListener(SWT.Selection, new Listener() {
 
 			@Override
 			public void handleEvent(Event e) {
 
-				int index = statusCombo.getSelectionIndex();
+				int index = labelStatusCombo.getSelectionIndex();
 
 				if (index == 0) {
 
@@ -568,6 +628,20 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				}
 			}
 		});
+		Label autoUpdate = new Label(segComposite, SWT.NONE);
+		autoUpdate.setText("Auto-update intensity");
+		autoUpdateButton = new Button(segComposite, SWT.CHECK);
+		autoUpdateButton.setSelection(false);
+		autoUpdateButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				GeometryViewDescription
+						.getInstance()
+						.getCurrentObject()
+						.setAutoUpdateIntensity(autoUpdateButton.getSelection());
+
+			}
+		});
 		/*
 		// Advection weight editable text box.
 		Label advectionLabel = new Label(segComposite, SWT.NONE);
@@ -608,7 +682,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				}
 			}
 		});
-*/
+		*/
 		// Curvature weight editable text box.
 		Label curvatureLabel = new Label(segComposite, SWT.NONE);
 		curvatureLabel.setText("Curvature weight");
@@ -650,7 +724,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		});
 
 		ExpandItem item3 = new ExpandItem(bar, SWT.NONE, 3);
-		item3.setText("Auto-segment");
+		item3.setText("Automated Paint");
 		item3.setHeight(segComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item3.setControl(segComposite);
 
@@ -704,7 +778,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				sizeScaleLabel.pack();
 			}
 		});
-		
+
 		// Sculpt tool strength slider.
 		Label strengthLabel = new Label(sculptComposite, SWT.NONE);
 		strengthLabel.setText("Strength");
@@ -762,9 +836,9 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 					paintNameCombo.remove(currentIndex);
 					paintNameCombo.add(currentText, currentIndex);
 					paintNameCombo.select(currentIndex);
-					segmentNameCombo.remove(currentIndex);
-					segmentNameCombo.add(currentText, currentIndex);
-					segmentNameCombo.select(currentIndex);
+					autosegmentNameCombo.remove(currentIndex);
+					autosegmentNameCombo.add(currentText, currentIndex);
+					autosegmentNameCombo.select(currentIndex);
 					GeometryViewDescription.getInstance().getCurrentObject()
 							.setName(currentText);
 				}
@@ -784,7 +858,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				updateCurrentGeometryLabel();
 				updateCurrentSegmentParameters();
 				paintNameCombo.select(nameCombo.getSelectionIndex());
-				segmentNameCombo.select(nameCombo.getSelectionIndex());
+				autosegmentNameCombo.select(nameCombo.getSelectionIndex());
 			}
 		});
 		// ****paintNameCombo listener to update current object and properties
@@ -802,25 +876,26 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				updateCurrentGeometryLabel();
 				updateCurrentSegmentParameters();
 				nameCombo.select(paintNameCombo.getSelectionIndex());
-				segmentNameCombo.select(paintNameCombo.getSelectionIndex());
+				autosegmentNameCombo.select(paintNameCombo.getSelectionIndex());
 			}
 		});
 		// *****statusNameCombo listener to update current object and properties
 		// displayed when
 		// statusNameCombo selection changes.
-		segmentNameCombo.addListener(SWT.Selection, new Listener() {
+		autosegmentNameCombo.addListener(SWT.Selection, new Listener() {
 
 			@Override
 			public void handleEvent(Event e) {
 				ObjectDescription obj = GeometryViewDescription.getInstance()
 						.getObjectDescriptions()
-						.get(segmentNameCombo.getSelectionIndex());
+						.get(autosegmentNameCombo.getSelectionIndex());
 				GeometryViewDescription.getInstance().setCurrentObject(obj);
 				updateCurrentGeometryLabel();
 				updateCurrentSegmentParameters();
 				if (obj.getId() != 0) {
-					nameCombo.select(segmentNameCombo.getSelectionIndex());
-					paintNameCombo.select(segmentNameCombo.getSelectionIndex());
+					nameCombo.select(autosegmentNameCombo.getSelectionIndex());
+					paintNameCombo.select(autosegmentNameCombo
+							.getSelectionIndex());
 				}
 			}
 		});
@@ -863,9 +938,12 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			rowScaleLabel.setText(rowScale.getSelection() + "");
 			colScaleLabel.setText(colScale.getSelection() + "");
 			sliceScaleLabel.setText(sliceScale.getSelection() + "");
+			filenameLabel.setText(ImageViewDescription.getInstance()
+					.getImageFile().getAbsolutePath());
 			rowScaleLabel.pack();
 			colScaleLabel.pack();
 			sliceScaleLabel.pack();
+			filenameLabel.pack();
 		}
 	}
 
@@ -878,8 +956,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			nameCombo.removeAll();
 			paintNameCombo.deselectAll();
 			paintNameCombo.removeAll();
-			segmentNameCombo.deselectAll();
-			segmentNameCombo.removeAll();
+			autosegmentNameCombo.deselectAll();
+			autosegmentNameCombo.removeAll();
 
 			break;
 		case ADD_OBJECT:
@@ -900,9 +978,9 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				paintNameCombo.pack();
 			}
 
-			segmentNameCombo.add(name);
-			segmentNameCombo.select(0);
-			segmentNameCombo.pack();
+			autosegmentNameCombo.add(name);
+			autosegmentNameCombo.select(0);
+			autosegmentNameCombo.pack();
 
 			GeometryViewDescription.getInstance().setCurrentObject(
 					nameCombo.getSelectionIndex());
@@ -939,21 +1017,23 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			if (GeometryViewDescription.getInstance().getCurrentObject()
 					.getStatus() == Status.ACTIVE) {
 
-				statusCombo.select(0);
+				labelStatusCombo.select(0);
 			} else if (GeometryViewDescription.getInstance().getCurrentObject()
 					.getStatus() == Status.PASSIVE) {
 
-				statusCombo.select(1);
+				labelStatusCombo.select(1);
 			} else if (GeometryViewDescription.getInstance().getCurrentObject()
 					.getStatus() == Status.STATIC) {
 
-				statusCombo.select(2);
+				labelStatusCombo.select(2);
 			}
 			pressureText.setText(Float.toString(currentObject
 					.getPressureWeight()));
 			intensityText.setText(Float.toString(currentObject
 					.getTargetIntensity()));
-			//advectionText.setText(Float.toString(currentObject.getAdvectionWeight()));
+			autoUpdateButton
+					.setSelection(currentObject.isAutoUpdateIntensity());
+			// advectionText.setText(Float.toString(currentObject.getAdvectionWeight()));
 			curvatureText.setText(Float.toString(currentObject
 					.getCurvatureWeight()));
 		}
