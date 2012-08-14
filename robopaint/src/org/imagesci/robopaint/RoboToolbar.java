@@ -25,38 +25,41 @@ import org.imagesci.robopaint.icons.PlaceHolder;
 /**
  * @author TYung
  * 
- * The RoboToolbar constructs a GUI layout for the toolbar functionality located under the
- * menubar of the RoboPaint application.
  */
 public class RoboToolbar {
 	/**
-	 * @param parent parent shell object
+	 * 
+	 * @param parent
+	 *            parent shell object
 	 */
 	public RoboToolbar(Shell parent) {
 
 		final Shell shell = parent;
 		Display display = parent.getDisplay();
 
-		// Loading images to be used as icons on the toolbar.
-		Image openImage = new Image(display, PlaceHolder.class
+		Image openImage = new Image(
+				display,
+				PlaceHolder.class
 						.getResourceAsStream("./toolbarButtonGraphics/general/Open24.gif"));
-		Image saveImage = new Image(display, PlaceHolder.class
+		Image saveImage = new Image(
+				display,
+				PlaceHolder.class
 						.getResourceAsStream("./toolbarButtonGraphics/general/Save24.gif"));
-		final Image playImage = new Image(display, PlaceHolder.class
+		final Image playImage = new Image(
+				display,
+				PlaceHolder.class
 						.getResourceAsStream("./toolbarButtonGraphics/media/Play24.gif"));
-		final Image stopImage = new Image(display, PlaceHolder.class
+		final Image stopImage = new Image(
+				display,
+				PlaceHolder.class
 						.getResourceAsStream("./toolbarButtonGraphics/media/Stop24.gif"));
 
-		// Initiates the toolbar.
 		CoolBar bar = new CoolBar(parent, SWT.BORDER);
 
-		// Initiates the files portion of the toolbar.
 		CoolItem fileItems = new CoolItem(bar, SWT.NONE);
 		Composite fileComposite = new Composite(bar, SWT.NONE);
 		GridLayout fileLayout = new GridLayout(2, true);
 		fileComposite.setLayout(fileLayout);
-		
-		// Sets up the "Open" button.
 		Button openButton = new Button(fileComposite, SWT.PUSH);
 		openButton.setImage(openImage);
 		openButton.addSelectionListener(new SelectionAdapter() {
@@ -78,8 +81,6 @@ public class RoboToolbar {
 
 			}
 		});
-		
-		// Sets up the "Save" button.
 		Button saveButton = new Button(fileComposite, SWT.PUSH);
 		saveButton.setImage(saveImage);
 		Point fileSize = fileComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -87,10 +88,7 @@ public class RoboToolbar {
 		fileItems.setPreferredSize(fileItems
 				.computeSize(fileSize.x, fileSize.y));
 
-		// Initiates the automatic segmentation portion of the toolbar.
 		CoolItem segItems = new CoolItem(bar, SWT.NONE);
-		
-		// Sets up the segmentation "Play/Stop" button.
 		final Button playButton = new Button(bar, SWT.PUSH);
 		playButton.setImage(playImage);
 		playButton.addListener(SWT.Selection, new Listener() {
@@ -98,18 +96,11 @@ public class RoboToolbar {
 			@Override
 			public void handleEvent(Event e) {
 
-				if (GeometryViewDescription.getInstance().getCurrentObject()
-						.getPlaying()) {
-
-					GeometryViewDescription.getInstance().getCurrentObject()
-							.setPlaying(false);
+				if (ObjectDescription.getPlaying()) {
+					ObjectDescription.setPlaying(false);
 					playButton.setImage(playImage);
-				}
-
-				else {
-
-					GeometryViewDescription.getInstance().getCurrentObject()
-							.setPlaying(true);
+				} else {
+					ObjectDescription.setPlaying(true);
 					playButton.setImage(stopImage);
 				}
 			}
@@ -118,10 +109,7 @@ public class RoboToolbar {
 		segItems.setControl(playButton);
 		segItems.setPreferredSize(segItems.computeSize(segSize.x, segSize.y));
 
-		// Initiates the segmentation tool portion of the toolbar.
 		CoolItem toolItems = new CoolItem(bar, SWT.NONE);
-		
-		// Sets up the tool selection dropdown.
 		final Combo toolCombo = new Combo(bar, SWT.READ_ONLY);
 		toolCombo.add("Paint");
 		toolCombo.add("Auto-segment");
