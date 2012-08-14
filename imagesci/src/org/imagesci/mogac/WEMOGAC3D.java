@@ -904,6 +904,203 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	}
 
+	public void setImageSegmentation(ImageDataInt labelImage,
+			ImageDataFloat unsignedImage) {
+		this.rows = image.getRows();
+		this.cols = image.getCols();
+		this.slices = image.getSlices();
+		this.labelImage = labelImage;
+		int mask = 0x00000001;
+		int l = 0;
+		this.labels = labelImage.toArray3d();
+		if (containsOverlaps) {
+			TreeSet<Integer> labelHash = new TreeSet<Integer>();
+			int totalMask = 0;
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						l = labels[i][j][k];
+						totalMask |= l;
+						labelHash.add(l);
+					}
+				}
+			}
+			numObjects = 0;
+			while (totalMask != 0) {
+				if ((totalMask & 0x01) != 0) {
+					numObjects++;
+				}
+				totalMask >>= 1;
+			}
+			numLabels = labelHash.size();
+			l = 0;
+			labelMasks = new int[numLabels];
+			for (Integer val : labelHash) {
+				labelMasks[l++] = val;
+			}
+			forceIndexes = new int[numLabels];
+			for (int i = 0; i < numLabels; i++) {
+				mask = labelMasks[i];
+				forceIndexes[i] = -1;
+				for (int b = 0; b < numObjects; b++) {
+					if ((0x01 << b) == mask) {
+						forceIndexes[i] = b;
+						break;
+					}
+				}
+			}
+		} else {
+			TreeSet<Integer> labelHash = new TreeSet<Integer>();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						l = labels[i][j][k];
+						labelHash.add(l);
+					}
+				}
+			}
+			numLabels = labelHash.size();
+			numObjects = numLabels - 1;
+			l = 0;
+
+			labelMasks = new int[numLabels];
+			for (Integer val : labelHash) {
+				labelMasks[l++] = val;
+			}
+			forceIndexes = new int[numLabels];
+			for (int i = 0; i < numLabels; i++) {
+				forceIndexes[i] = i - 1;
+			}
+		}
+		if (imageLabelBuffer != null)
+			imageLabelBuffer.release();
+		if (oldImageLabelBuffer != null)
+			oldImageLabelBuffer.release();
+		imageLabelBuffer = context.createIntBuffer(rows * cols * slices,
+				READ_WRITE, USE_BUFFER);
+		oldImageLabelBuffer = context.createIntBuffer(rows * cols * slices,
+				READ_WRITE, USE_BUFFER);
+		IntBuffer label = imageLabelBuffer.getBuffer();
+		IntBuffer oldLabel = oldImageLabelBuffer.getBuffer();
+		for (int k = 0; k < slices; k++) {
+			for (int j = 0; j < cols; j++) {
+				for (int i = 0; i < rows; i++) {
+					int lab = labels[i][j][k];
+					if (i == 0 || j == 0 || k == 0 || i == rows - 1
+							|| j == cols - 1 || k == slices - 1) {
+						lab = 0;
+					}
+					label.put(lab);
+					oldLabel.put(lab);
+				}
+			}
+		}
+		label.rewind();
+		oldLabel.rewind();
+		queue.putWriteBuffer(imageLabelBuffer, true).putWriteBuffer(
+				oldImageLabelBuffer, true);
+		if (distanceFieldBuffer != null)
+			distanceFieldBuffer.release();
+		if (oldDistanceFieldBuffer != null)
+			oldDistanceFieldBuffer.release();
+		oldDistanceFieldBuffer = context.createFloatBuffer(
+				rows * cols * slices, READ_WRITE, USE_BUFFER);
+		init();
+		if (unsignedImage == null) {
+			convertLabelsToLevelSet();
+			unsignedImage = new ImageDataFloat(rows, cols, slices);
+			unsignedImage.setName(image.getName() + "_distfield");
+			queue.putReadBuffer(distanceFieldBuffer, true);
+			FloatBuffer buff = distanceFieldBuffer.getBuffer();
+			FloatBuffer oldUnsignedLevelSet = oldDistanceFieldBuffer
+					.getBuffer();
+			this.distField = unsignedImage.toArray3d();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						float val = distField[i][j][k];
+						if (i == 0 || j == 0 || k == 0 || i == rows - 1
+								|| j == cols - 1 || k == slices - 1) {
+							val = Math.max(val, 3);
+							distField[i][j][k] = Math.max(buff.get(), 0);
+						} else {
+							distField[i][j][k] = buff.get();
+						}
+						oldUnsignedLevelSet.put(val);
+					}
+				}
+			}
+			oldUnsignedLevelSet.rewind();
+			queue.putWriteBuffer(oldDistanceFieldBuffer, true);
+			buff.rewind();
+		} else {
+			distanceFieldBuffer = context.createFloatBuffer(rows * cols
+					* slices, READ_WRITE, USE_BUFFER);
+
+			FloatBuffer unsignedLevelSet = distanceFieldBuffer.getBuffer();
+			FloatBuffer oldUnsignedLevelSet = oldDistanceFieldBuffer
+					.getBuffer();
+			this.distField = unsignedImage.toArray3d();
+			for (int k = 0; k < slices; k++) {
+				for (int j = 0; j < cols; j++) {
+					for (int i = 0; i < rows; i++) {
+						float val = distField[i][j][k];
+						if (i == 0 || j == 0 || k == 0 || i == rows - 1
+								|| j == cols - 1 || k == slices - 1) {
+							val = Math.max(val, 3);
+						}
+						unsignedLevelSet.put(val);
+						oldUnsignedLevelSet.put(val);
+					}
+				}
+			}
+			unsignedLevelSet.rewind();
+			oldUnsignedLevelSet.rewind();
+			queue.putWriteBuffer(distanceFieldBuffer, true).putWriteBuffer(
+					oldDistanceFieldBuffer, true);
+		}
+		if (labelMaskBuffer != null)
+			labelMaskBuffer.release();
+		if (forceIndexesBuffer != null)
+			forceIndexesBuffer.release();
+		if (deltaLevelSetBuffer != null)
+			deltaLevelSetBuffer.release();
+		if (idBuffer != null)
+			idBuffer.release();
+
+		labelMaskBuffer = context.createIntBuffer(labelMasks.length, READ_ONLY,
+				USE_BUFFER);
+		labelMaskBuffer.getBuffer().put(labelMasks).rewind();
+		forceIndexesBuffer = context.createIntBuffer(forceIndexes.length,
+				READ_ONLY, USE_BUFFER);
+		forceIndexesBuffer.getBuffer().put(forceIndexes).rewind();
+
+		idBuffer = context.createIntBuffer(rows * cols * slices * 7,
+				READ_WRITE, USE_BUFFER);
+		deltaLevelSetBuffer = context.createFloatBuffer(rows * cols * slices
+				* 7, READ_WRITE, USE_BUFFER);
+		queue.putWriteBuffer(labelMaskBuffer, true).putWriteBuffer(
+				forceIndexesBuffer, true);
+		this.distFieldImage = unsignedImage;
+		this.labelImage = labelImage;
+
+		if (image != null) {
+			this.labelImage.setName(image.getName() + "_labels");
+			distFieldImage.setName(image.getName() + "_distfield");
+		} else {
+			this.labelImage.setName("labels");
+			distFieldImage.setName("distfield");
+		}
+		CLDevice.Type type = queue.getDevice().getType();
+		if (type == CLDevice.Type.CPU) {
+			WORKGROUP_SIZE = STRIDE;
+		} else if (type == CLDevice.Type.GPU) {
+			WORKGROUP_SIZE = 128;
+
+		}
+		rebuildNarrowBand();
+	}
+
 	/**
 	 * Sets the adaptive update.
 	 * 

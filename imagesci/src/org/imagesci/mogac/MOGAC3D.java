@@ -118,7 +118,7 @@ public class MOGAC3D extends AbstractCalculation {
 	/** The dice threshold. */
 	protected double diceThreshold = 0.995;
 	/** The dirty bit. */
-	boolean dirty = true;
+	protected boolean dirty = true;
 	/** The unsigned level set buffer. */
 	public CLBuffer<FloatBuffer> distanceFieldBuffer = null;
 
@@ -1588,5 +1588,13 @@ public class MOGAC3D extends AbstractCalculation {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setVectorFieldWeight(float f) {
+		this.vecFieldWeight = f;
+	}
+
+	public void setPressureWeight(float f) {
+		this.pressureWeight = f;
 	}
 }

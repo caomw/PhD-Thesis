@@ -512,8 +512,9 @@ public class MACWE3D extends WEMOGAC3D {
 		area.rewind();
 	}
 
-	public float[] getCurrentAverages() {
-		return averages.getBuffer().array();
+	public FloatBuffer getCurrentAverages() {
+		queue.putReadBuffer(averages, true);
+		return averages.getBuffer();
 	}
 
 	public float getCurrentAverage(int id) {
@@ -548,6 +549,6 @@ public class MACWE3D extends WEMOGAC3D {
 				SpringlsCommon3D.roundToWorkgroupPower(numLabels * slices),
 				READ_WRITE, USE_BUFFER);
 		updateAverages();
-		printAverages();
 	}
+
 }
