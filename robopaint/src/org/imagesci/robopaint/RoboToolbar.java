@@ -112,7 +112,6 @@ public class RoboToolbar {
 		CoolItem toolItems = new CoolItem(bar, SWT.NONE);
 		final Combo toolCombo = new Combo(bar, SWT.READ_ONLY);
 		toolCombo.add("Paint");
-		toolCombo.add("Auto-segment");
 		toolCombo.add("Sculpt");
 		toolCombo.select(0);
 		toolCombo.addListener(SWT.Selection, new Listener() {
@@ -126,12 +125,11 @@ public class RoboToolbar {
 
 				case 0:
 					RoboPaint.setTool(Tools.PAINT);
+					GeometryViewDescription.getInstance().setSliceView(true);
 					break;
 				case 1:
-					RoboPaint.setTool(Tools.AUTOSEG);
-					break;
-				case 2:
 					RoboPaint.setTool(Tools.SCULPT);
+					GeometryViewDescription.getInstance().setSliceView(false);
 					break;
 				}
 			}

@@ -35,7 +35,7 @@ public class RoboSegment extends MACWE3D {
 
 		int global_size = roundToWorkgroupPower(activeListSize);
 		long startTime = System.nanoTime();
-		if (intensityEstimation && time % intensityEstimationInterval == 0) {
+		if (time % intensityEstimationInterval == 0) {
 			updateAveragesAutoIntensity();
 		}
 		pressureSpeedKernel
@@ -223,11 +223,11 @@ public class RoboSegment extends MACWE3D {
 
 	public void updateAveragesAutoIntensity() {
 
-		final CLKernel regionAverage = kernelMap.get("regionAverage");
+		final CLKernel regionAverage = kernelMap.get("regionAverageAutoUpdate");
 		final CLKernel sumAverages = kernelMap.get("sumAveragesAutoUpdate");
 		regionAverage.putArgs(imageLabelBuffer, distanceFieldBuffer,
-				pressureBuffer, labelMaskBuffer, averages, areas, stddev)
-				.rewind();
+				pressureBuffer, labelMaskBuffer, averages, areas, stddev,
+				objectStatusBuffer).rewind();
 		queue.put1DRangeKernel(regionAverage, 0, roundToWorkgroupPower(slices),
 				WORKGROUP_SIZE);
 		queue.finish();

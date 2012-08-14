@@ -243,10 +243,11 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	 *            the new pressure weight.
 	 */
 	public void setPressureWeight(float pressureWeight) {
-
+		boolean change = (pressureWeight != this.pressureWeight);
 		this.pressureWeight = pressureWeight;
-		GeometryViewDescription.getInstance().fireUpdate(
-				ParameterName.CHANGE_PRESSURE);
+		if (change)
+			GeometryViewDescription.getInstance().fireUpdate(
+					ParameterName.CHANGE_PRESSURE, this);
 
 	}
 
@@ -267,10 +268,11 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	 *            the new target intensity.
 	 */
 	public void setTargetIntensity(float targetIntensity) {
-
+		boolean change = (targetIntensity != this.targetIntensity);
 		this.targetIntensity = targetIntensity;
-		GeometryViewDescription.getInstance().fireUpdate(
-				ParameterName.CHANGE_TARGET_INTENSITY);
+		if (change)
+			GeometryViewDescription.getInstance().fireUpdate(
+					ParameterName.CHANGE_TARGET_INTENSITY, this);
 
 	}
 
@@ -312,11 +314,12 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	 *            the new curvature weight.
 	 */
 	public void setCurvatureWeight(float curvatureWeight) {
-
+		boolean change = (curvatureWeight != this.curvatureWeight);
 		this.curvatureWeight = curvatureWeight;
 
-		GeometryViewDescription.getInstance().fireUpdate(
-				ParameterName.CHANGE_CURVATURE);
+		if (change)
+			GeometryViewDescription.getInstance().fireUpdate(
+					ParameterName.CHANGE_CURVATURE, this);
 	}
 
 	/**
@@ -357,7 +360,11 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	}
 
 	public void setAutoUpdateIntensity(boolean autoUpdateIntensity) {
+		boolean change = (autoUpdateIntensity != this.autoUpdateIntensity);
 		this.autoUpdateIntensity = autoUpdateIntensity;
+		if (change)
+			GeometryViewDescription.getInstance().fireUpdate(
+					ParameterName.CHANGE_AUTO_UPDATE_INTENSITY, this);
 	}
 
 	@Override

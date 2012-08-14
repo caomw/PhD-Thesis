@@ -1661,6 +1661,35 @@ kernel void sumAveragesAutoUpdate(global float* averages,global float* areas,glo
 	areas[id]=area;
 	stddev[id]=sqrt(std/area-val*val);
 }
+kernel void regionAverageAutoUpdate(global int* labels,global float* levelset,global float* pressures,global int* labelMask,global float* averages,global float* areas,global float* stddev,global char* objectStatus){
+    uint k = get_global_id(0);
+    if(k>=SLICES)return;
+  	int offset;
+	averages+=k*NUM_LABELS;
+	areas+=k*NUM_LABELS;
+	stddev+=k*NUM_LABELS;
+	int currentLabel;
+	float w;
+	float area=0;
+	float avg=0;
+	float std=0;
+	for(int n=0;n<NUM_LABELS;n++){
+		areas[n]=0;
+		if((objectStatus[n]&AUTO_UPDATE_INTENSITY)!=0)averages[n]=0;
+		stddev[n]=0;
+	}
+	labels+=k*ROWS*COLS;
+	pressures+=k*ROWS*COLS;
+	for(int ij=0;ij<ROWS*COLS;ij++){
+		currentLabel=labels[ij];
+		offset=getOffset(currentLabel,labelMask);
+		avg=pressures[ij];
+		std=avg*avg;
+		stddev[offset]+=std;
+		if((objectStatus[offset]&AUTO_UPDATE_INTENSITY)!=0)averages[offset]+=avg;
+		areas[offset]+=1.0f;
+	}
+}
 kernel void regionAverage(global int* labels,global float* levelset,global float* pressures,global int* labelMask,global float* averages,global float* areas,global float* stddev){
     uint k = get_global_id(0);
     if(k>=SLICES)return;

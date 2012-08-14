@@ -26,6 +26,7 @@ import org.imagesci.mogac.MACWE3D;
 import org.imagesci.robopaint.GeometryViewDescription;
 import org.imagesci.robopaint.ImageViewDescription;
 import org.imagesci.robopaint.ObjectDescription;
+import org.imagesci.robopaint.RoboControlPane;
 import org.imagesci.robopaint.segmentation.RoboSegment;
 import org.imagesci.springls.SpringlsConstants;
 
@@ -54,6 +55,7 @@ public class RoboRenderer extends MOGACRenderer3D {
 	public RoboRenderer(VisualizationProcessing3D applet, MOGAC3D simulator,
 			int rasterWidth, int rasterHeight, int refreshRate) {
 		super(applet, simulator, rasterWidth, rasterHeight, refreshRate);
+		enableAntiAlias=false;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -174,6 +176,7 @@ public class RoboRenderer extends MOGACRenderer3D {
 					for (ObjectDescription obj : GeometryViewDescription
 							.getInstance().getObjectDescriptions()) {
 						obj.setTargetIntensity(averages.get(obj.getId()));
+						RoboControlPane.updateTargetIntensity(obj);
 					}
 				}
 
@@ -317,7 +320,6 @@ public class RoboRenderer extends MOGACRenderer3D {
 		gpuColorLUT = context.createFloatBuffer(4 * simulator.getNumColors(),
 				READ_WRITE);
 		colors = new Color4f[simulator.getNumColors()];
-		showIsoSurf = true;
 		transparency = 0.5f;
 		// task.cancel();
 		dirty = true;

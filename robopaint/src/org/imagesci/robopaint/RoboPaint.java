@@ -93,14 +93,16 @@ public class RoboPaint {
 		// shell.setMaximized(true);
 		shell.open();
 		renderPane.launch();
-		
-		ImageViewDescription.getInstance().setFile(
-				new File("C:\\Users\\Blake\\Desktop\\metacube.nii"));
-		GeometryViewDescription.getInstance().setLabelImageFile(
-				new File("C:\\Users\\Blake\\Desktop\\ufo_labels.nii"));
-		GeometryViewDescription.getInstance().setDistanceFieldFile(
-				new File("C:\\Users\\Blake\\Desktop\\ufo_distfield.nii"));
-
+		try {
+			ImageViewDescription.getInstance().setFile(
+					new File("C:\\Users\\Blake\\Desktop\\metacube.nii"));
+			GeometryViewDescription.getInstance().setLabelImageFile(
+					new File("C:\\Users\\Blake\\Desktop\\ufo_labels.nii"));
+			GeometryViewDescription.getInstance().setDistanceFieldFile(
+					new File("C:\\Users\\Blake\\Desktop\\ufo_distfield.nii"));
+		} catch (Exception e) {
+			System.err.println("Could not find file.");
+		}
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();

@@ -5,6 +5,10 @@ import javax.vecmath.Color4f;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
@@ -37,7 +41,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			autosegmentNameCombo;
 	final Display display;
 	final Label colorDisplayLabel, filenameLabel;
-	final Text pressureText, intensityText, curvatureText;// advectionText,
+	static Text pressureText, intensityText, curvatureText;// advectionText,
 	final Button visibilityButton, autoUpdateButton;
 
 	public RoboControlPane(Composite parent) {
@@ -283,6 +287,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		geoComposite.setLayout(geoLayout);
 
 		// "Slice View" button.
+		/*
 		Label isoLabel = new Label(geoComposite, SWT.NONE);
 		isoLabel.setText("Slice View");
 		Button isoButton = new Button(geoComposite, SWT.CHECK);
@@ -301,11 +306,42 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				}
 			}
 		});
-
+*/
 		// Object label name dropdown.
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
 		nameCombo = new Combo(geoComposite, SWT.NONE);
+		// Listeners
+		// **nameCombo listener to update nameCombo and paintNameCombo names for
+		// current object.
+
+		nameCombo.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+
+				String currentText = nameCombo.getText();
+				int currentIndex = GeometryViewDescription.getInstance()
+						.getCurrentObjectIndex();
+				if (currentIndex >= 0
+						&& currentIndex < paintNameCombo.getItems().length
+						&& currentIndex < autosegmentNameCombo.getItems().length
+						&& currentIndex < nameCombo.getItems().length
+						&& nameCombo.getSelectionIndex() == -1) {
+					nameCombo.remove(currentIndex);
+					nameCombo.add(currentText, currentIndex);
+					paintNameCombo.remove(currentIndex);
+					paintNameCombo.add(currentText, currentIndex);
+					paintNameCombo.select(currentIndex);
+					autosegmentNameCombo.remove(currentIndex);
+					autosegmentNameCombo.add(currentText, currentIndex);
+					autosegmentNameCombo.select(currentIndex);
+					GeometryViewDescription.getInstance().getCurrentObject()
+							.setName(currentText);
+				}
+			}
+
+		});
 		// *visibilityButton listener to update visible property of current
 		// object.
 		// **end for nameCombo listener to update nameCombo and paintNameCombo
@@ -548,93 +584,53 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 		// Pressure weight editable text box.
 		Label pressureLabel = new Label(segComposite, SWT.NONE);
-		pressureLabel.setText("Pressure weight");
+		pressureLabel.setText("Pressure Weight");
 		pressureText = new Text(segComposite, SWT.BORDER);
 		/*
 		pressureText.setText(Float.toString(PaintViewDescription.getInstance()
 				.getCurrentObject().getPressureWeight()));
 		*/
-		pressureText.addKeyListener(new KeyListener() {
-
-			String currentText;
-			float newValue;
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				if (e.keyCode == SWT.CR) {
-
-					currentText = pressureText.getText();
-
-					try {
-
-						newValue = Float.parseFloat(currentText);
-					}
-
-					catch (NumberFormatException err) {
-
-						return;
-					}
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-				if (e.keyCode == SWT.CR) {
-
+		pressureText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				try {
+					float newValue = Float.parseFloat(pressureText.getText());
 					GeometryViewDescription.getInstance().getCurrentObject()
 							.setPressureWeight(newValue);
+				} catch (NumberFormatException err) {
+
+					return;
 				}
+
 			}
+
 		});
 
 		// Target intensity editable text box.
 		Label intensityLabel = new Label(segComposite, SWT.NONE);
-		intensityLabel.setText("Target intensity");
+		intensityLabel.setText("Target Object Intensity");
 		intensityText = new Text(segComposite, SWT.BORDER);
-
-		intensityText.addKeyListener(new KeyListener() {
-
-			String currentText;
-			float newValue;
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				if (e.keyCode == SWT.CR) {
-
-					currentText = intensityText.getText();
-
-					try {
-
-						newValue = Float.parseFloat(currentText);
-					}
-
-					catch (NumberFormatException err) {
-
-						return;
-					}
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-				if (e.keyCode == SWT.CR) {
-
+		intensityText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				try {
+					float newValue = Float.parseFloat(intensityText.getText());
 					GeometryViewDescription.getInstance().getCurrentObject()
 							.setTargetIntensity(newValue);
+				} catch (NumberFormatException err) {
+
+					return;
 				}
+
 			}
+
 		});
 		Label autoUpdate = new Label(segComposite, SWT.NONE);
-		autoUpdate.setText("Auto-update intensity");
+		autoUpdate.setText("Target Intensity Auto-Update");
 		autoUpdateButton = new Button(segComposite, SWT.CHECK);
 		autoUpdateButton.setSelection(false);
 		autoUpdateButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
+
 				GeometryViewDescription
 						.getInstance()
 						.getCurrentObject()
@@ -685,42 +681,22 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		*/
 		// Curvature weight editable text box.
 		Label curvatureLabel = new Label(segComposite, SWT.NONE);
-		curvatureLabel.setText("Curvature weight");
+		curvatureLabel.setText("Curvature Weight");
 		curvatureText = new Text(segComposite, SWT.BORDER);
 
-		curvatureText.addKeyListener(new KeyListener() {
-
-			String currentText;
-			float newValue;
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				currentText = curvatureText.getText();
-
-				if (e.keyCode == SWT.CR) {
-
-					try {
-
-						newValue = Float.parseFloat(currentText);
-					}
-
-					catch (NumberFormatException err) {
-
-						return;
-					}
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-				if (e.keyCode == SWT.CR) {
-
+		curvatureText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				try {
+					float newValue = Float.parseFloat(curvatureText.getText());
 					GeometryViewDescription.getInstance().getCurrentObject()
 							.setCurvatureWeight(newValue);
+				} catch (NumberFormatException err) {
+
+					return;
 				}
+
 			}
+
 		});
 
 		ExpandItem item3 = new ExpandItem(bar, SWT.NONE, 3);
@@ -809,41 +785,6 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		item4.setHeight(sculptComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 		item4.setControl(sculptComposite);
 
-		// Listeners
-		// **nameCombo listener to update nameCombo and paintNameCombo names for
-		// current object.
-		nameCombo.addKeyListener(new KeyListener() {
-
-			String currentText;
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				if (e.keyCode == SWT.CR) {
-
-					currentText = nameCombo.getText();
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-				int currentIndex = GeometryViewDescription.getInstance()
-						.getCurrentObjectIndex();
-				if (e.keyCode == SWT.CR && currentIndex >= 0) {
-					nameCombo.remove(currentIndex);
-					nameCombo.add(currentText, currentIndex);
-					paintNameCombo.remove(currentIndex);
-					paintNameCombo.add(currentText, currentIndex);
-					paintNameCombo.select(currentIndex);
-					autosegmentNameCombo.remove(currentIndex);
-					autosegmentNameCombo.add(currentText, currentIndex);
-					autosegmentNameCombo.select(currentIndex);
-					GeometryViewDescription.getInstance().getCurrentObject()
-							.setName(currentText);
-				}
-			}
-		});
 		// ***nameCombo listener to update current object and properties
 		// displayed when nameCombo
 		// selection changes.
@@ -851,14 +792,16 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 			@Override
 			public void handleEvent(Event e) {
-				GeometryViewDescription.getInstance().setCurrentObject(
-						GeometryViewDescription.getInstance()
-								.getObjectDescriptions()
-								.get(nameCombo.getSelectionIndex()));
-				updateCurrentGeometryLabel();
-				updateCurrentSegmentParameters();
-				paintNameCombo.select(nameCombo.getSelectionIndex());
-				autosegmentNameCombo.select(nameCombo.getSelectionIndex());
+				if (nameCombo.getSelectionIndex() >= 0) {
+					GeometryViewDescription.getInstance().setCurrentObject(
+							GeometryViewDescription.getInstance()
+									.getObjectDescriptions()
+									.get(nameCombo.getSelectionIndex()));
+					updateCurrentGeometryLabel();
+					updateCurrentSegmentParameters();
+					paintNameCombo.select(nameCombo.getSelectionIndex());
+					autosegmentNameCombo.select(nameCombo.getSelectionIndex());
+				}
 			}
 		});
 		// ****paintNameCombo listener to update current object and properties
@@ -921,6 +864,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 								.getCurrentSculpt().getStrength()));
 			}
 		});
+
 	}
 
 	@Override
@@ -989,7 +933,25 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			updateCurrentGeometryLabel();
 			updateCurrentSegmentParameters();
 			break;
+
+		default:
+			break;
 		}
+	}
+
+	public static final void updateTargetIntensity(
+			ObjectDescription currentObject) {
+		if (GeometryViewDescription.getInstance().getCurrentObject() == currentObject)
+
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					String txt = ""
+							+ GeometryViewDescription.getInstance()
+									.getCurrentObject().getTargetIntensity();
+					if (txt != intensityText.getText())
+						intensityText.setText(txt);
+				}
+			});
 	}
 
 	protected void updateCurrentGeometryLabel() {

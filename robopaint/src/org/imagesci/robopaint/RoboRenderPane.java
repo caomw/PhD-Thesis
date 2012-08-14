@@ -109,6 +109,7 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 			activeContour.setObjectStatus(currentObject.getId(),
 					currentObject.getObjectStatus());
 		case CHANGE_PRESSURE:
+
 			activeContour.setPressureWeight(currentObject.getId(),
 					currentObject.getPressureWeight());
 			break;
