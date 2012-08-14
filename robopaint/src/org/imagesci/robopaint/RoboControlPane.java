@@ -57,11 +57,11 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		rowLayout.spacing = 0;
 
 		outerComposite.setLayout(rowLayout);
-		
+
 		// File name label.
 		filenameLabel = new Label(outerComposite, SWT.SHADOW_OUT);
 		filenameLabel.setText("File: None");
-		filenameLabel.setFont(new Font(display,"Arial",10,SWT.BOLD));
+		filenameLabel.setFont(new Font(display, "Arial", 10, SWT.BOLD));
 		// IMAGE SUBPANEL
 
 		Composite imageComposite = new Composite(outerComposite, SWT.NONE);
@@ -71,7 +71,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		imageLayout.verticalSpacing = 10;
 		imageComposite.setLayout(imageLayout);
 
-		(new Label(imageComposite, SWT.NONE)).setText("Show Slice");
+		(new Label(imageComposite, SWT.NONE)).setText("Show Planes");
 		Composite showComposite = new Composite(imageComposite, SWT.NONE);
 		rowLayout = new RowLayout(SWT.HORIZONTAL);
 		rowLayout.wrap = false;
@@ -411,7 +411,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		}
 		paintNameCombo.select(0);
 		// ****end for paintNameCombo listener to update current object and
-		// properties displayed when
+		// properties dised when
 		// paintNameCombo selection changes.
 		paintNameCombo.pack();
 
@@ -949,6 +949,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 	@Override
 	public void updateParameter(GeometryViewDescription g,
+			ObjectDescription currentObject,
 			org.imagesci.robopaint.GeometryViewDescription.ParameterName p) {
 		switch (p) {
 		case REMOVE_ALL_OBJECTS:

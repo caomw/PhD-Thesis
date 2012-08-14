@@ -21,11 +21,12 @@ import org.eclipse.swt.widgets.ExpandItem;
  */
 public class GeometryViewDescription {
 	public static interface GeometryViewListener {
-		public void updateParameter(GeometryViewDescription g, ParameterName p);
+		public void updateParameter(GeometryViewDescription g,
+				ObjectDescription currentObject, ParameterName p);
 	}
 
 	public enum ParameterName {
-		ADD_OBJECT, REMOVE_ALL_OBJECTS, CLOSE_DISTFIELD_IMAGE, CLOSE_LABEL_IMAGE, HIDE_ALL, OPEN_DISTFIELD_IMAGE, OPEN_IMAGE_SEGMENTATION, OPEN_LABEL_IMAGE, CHANGE_OBJECT_COLOR, CHANGE_OBJECT_VISIBILITY, OPEN_MESH
+		CHANGE_AUTO_UPDATE_INTENSITY,CHANGE_TARGET_INTENSITY, CHANGE_CURVATURE, CHANGE_PRESSURE, START_STOP_SEGMENTATION, ADD_OBJECT, REMOVE_ALL_OBJECTS, CLOSE_DISTFIELD_IMAGE, CLOSE_LABEL_IMAGE, HIDE_ALL, OPEN_DISTFIELD_IMAGE, OPEN_IMAGE_SEGMENTATION, OPEN_LABEL_IMAGE, CHANGE_OBJECT_COLOR, CHANGE_OBJECT_VISIBILITY, OPEN_MESH
 	}
 
 	protected static final GeometryViewDescription description = new GeometryViewDescription();
@@ -98,7 +99,7 @@ public class GeometryViewDescription {
 	 */
 	public void fireUpdate(ParameterName param) {
 		for (GeometryViewListener g : listeners) {
-			g.updateParameter(this, param);
+			g.updateParameter(this, this.getCurrentObject(), param);
 		}
 	}
 

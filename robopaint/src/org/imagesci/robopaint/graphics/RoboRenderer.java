@@ -26,6 +26,7 @@ import org.imagesci.mogac.MACWE3D;
 import org.imagesci.robopaint.GeometryViewDescription;
 import org.imagesci.robopaint.ImageViewDescription;
 import org.imagesci.robopaint.ObjectDescription;
+import org.imagesci.robopaint.segmentation.RoboSegment;
 import org.imagesci.springls.SpringlsConstants;
 
 import processing.opengl2.PGraphicsOpenGL2;
@@ -168,7 +169,14 @@ public class RoboRenderer extends MOGACRenderer3D {
 					simulator.distanceFieldBuffer.getBuffer().rewind();
 					queue.putWriteBuffer(imageLabelBufferCopy, true)
 							.putWriteBuffer(distanceFieldBufferCopy, true);
+					FloatBuffer averages = ((RoboSegment) simulator)
+							.getCurrentAverages();
+					for (ObjectDescription obj : GeometryViewDescription
+							.getInstance().getObjectDescriptions()) {
+						obj.setTargetIntensity(averages.get(obj.getId()));
+					}
 				}
+
 			}
 			maskLabels.setArgs(imageLabelBufferCopy, volumeColorBuffer,
 					gpuColorLUT).rewind();
@@ -328,21 +336,23 @@ public class RoboRenderer extends MOGACRenderer3D {
 					randn.nextFloat());
 			label = new ObjectDescription("Label " + (i), masks[i]);
 			label.setColor(c.getRed(), c.getGreen(), c.getBlue(), 255);
+			GeometryViewDescription.getInstance().addObjectDescription(label);
+
 			label.setTargetIntensity(((MACWE3D) simulator).getCurrentAverage(i));
 			label.setPressureWeight(1.0f);
 			contourColorsParam[i - 1] = new ParamColor("Object Color ["
 					+ masks[i] + "]", c);
 			contoursVisibleParam[i - 1] = new ParamBoolean("Visibility ["
 					+ masks[i] + "]", true);
-			GeometryViewDescription.getInstance().addObjectDescription(label);
 		}
 		frameUpdate(0, -1);
 		updateColors();
 		label = new ObjectDescription("Background", 0);
+
+		GeometryViewDescription.getInstance().addObjectDescription(label);
 		label.setColor(c.getRed(), c.getGreen(), c.getBlue(), 255);
 		label.setTargetIntensity(((MACWE3D) simulator).getCurrentAverage(0));
 		label.setPressureWeight(0f);
-		GeometryViewDescription.getInstance().addObjectDescription(label);
 	}
 
 	public void updateReferenceImage() {
@@ -491,7 +501,8 @@ public class RoboRenderer extends MOGACRenderer3D {
 			contourColorsParam[index].setValue(obj.getColor());
 			contoursVisibleParam[index].setValue(obj.isVisible());
 			index++;
-			if(index>=contourColorsParam.length)break;
+			if (index >= contourColorsParam.length)
+				break;
 		}
 		updateColors(true);
 		frameUpdate(0, 0);

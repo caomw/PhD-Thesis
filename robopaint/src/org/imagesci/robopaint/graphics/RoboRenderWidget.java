@@ -29,6 +29,7 @@ public class RoboRenderWidget extends VisualizationMOGAC3D {
 		renderers.add(renderer = new RoboRenderer(this, activeContour,
 				preferredWidth / 2, preferredHeight / 2, activeContour
 						.getResamplingRate()));
+
 		renderer.init();
 		init();
 		visualizationParameters = new ParamCollection(name);

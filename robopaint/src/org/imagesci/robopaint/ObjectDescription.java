@@ -19,18 +19,25 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	protected boolean visible = true;
 	protected Color4f color = new Color4f();
 	protected int id = -1;
-	protected boolean isPlaying = false;
-	protected float pressureWeight = 0;
+	protected static boolean isPlaying = false;
+	protected float pressureWeight = 1;
 	protected float targetIntensity = 0;
 	protected float advectionWeight = 0;
-	protected float curvatureWeight = 0;
+	protected float curvatureWeight = 0.1f;
 	protected boolean autoUpdateIntensity = false;
 
 	public enum Status {
 		STATIC, ACTIVE, PASSIVE
 	};
 
+	private static final int statusMasks[] = { 1, 2, 4 };
+
 	protected Status status = Status.ACTIVE;
+
+	public byte getObjectStatus() {
+		return (byte) (((autoUpdateIntensity) ? 8 : 0) | statusMasks[status
+				.ordinal()]);
+	}
 
 	/**
 	 * Returns the status of an object/label.
@@ -238,6 +245,9 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	public void setPressureWeight(float pressureWeight) {
 
 		this.pressureWeight = pressureWeight;
+		GeometryViewDescription.getInstance().fireUpdate(
+				ParameterName.CHANGE_PRESSURE);
+
 	}
 
 	/**
@@ -259,6 +269,9 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	public void setTargetIntensity(float targetIntensity) {
 
 		this.targetIntensity = targetIntensity;
+		GeometryViewDescription.getInstance().fireUpdate(
+				ParameterName.CHANGE_TARGET_INTENSITY);
+
 	}
 
 	/**
@@ -301,6 +314,9 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	public void setCurvatureWeight(float curvatureWeight) {
 
 		this.curvatureWeight = curvatureWeight;
+
+		GeometryViewDescription.getInstance().fireUpdate(
+				ParameterName.CHANGE_CURVATURE);
 	}
 
 	/**
@@ -318,7 +334,7 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	 * 
 	 * @return true if the segmentation is playing.
 	 */
-	public boolean getPlaying() {
+	public static boolean getPlaying() {
 
 		return isPlaying;
 	}
@@ -329,9 +345,11 @@ public class ObjectDescription implements Comparable<ObjectDescription> {
 	 * @param isPlaying
 	 *            true if the segmentation is playing.
 	 */
-	public void setPlaying(boolean isPlaying) {
+	public static void setPlaying(boolean play) {
 
-		this.isPlaying = isPlaying;
+		isPlaying = play;
+		GeometryViewDescription.getInstance().fireUpdate(
+				ParameterName.START_STOP_SEGMENTATION);
 	}
 
 	public boolean isAutoUpdateIntensity() {

@@ -12,6 +12,7 @@ import org.imagesci.robopaint.GeometryViewDescription.GeometryViewListener;
 import org.imagesci.robopaint.ImageViewDescription.ImageViewListener;
 import org.imagesci.robopaint.ImageViewDescription.ParameterName;
 import org.imagesci.robopaint.graphics.RoboRenderWidget;
+import org.imagesci.robopaint.segmentation.RoboSegment;
 
 import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
 import edu.jhu.ece.iacl.jist.pipeline.parameter.ParamCollection;
@@ -21,14 +22,21 @@ import edu.jhu.ece.iacl.jist.structures.image.ImageDataInt;
 
 public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 	private static RoboRenderWidget createVisual(int width, int height) {
-		MACWE3D activeContour = new MACWE3D();
+		RoboSegment activeContour = new RoboSegment();
+		activeContour.setCurvatureWeight(0.1f);
+		activeContour.setPressureWeight(1.0f);
+		activeContour.setIntensityEstimation(false);
+		activeContour.setClampSpeed(true);
+		activeContour.setMaxIterations(1000000);
+
 		RoboRenderWidget visual = new RoboRenderWidget(width, height,
 				activeContour);
+
 		return visual;
 
 	}
 
-	private MOGAC3D activeContour;
+	private RoboSegment activeContour;
 	private Frame frame;
 
 	private RoboRenderWidget visual;
@@ -40,7 +48,7 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 		parent.getBounds();
 		try {
 			visual = createVisual(840, 700);
-			this.activeContour = visual.getActiveContour();
+			this.activeContour = ((RoboSegment) visual.getActiveContour());
 			ParamCollection visualizationParameters = visual.create();
 			visual.updateVisualizationParameters();
 			ParamInputView inputView = visualizationParameters.getInputView();
@@ -66,6 +74,7 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 
 	@Override
 	public void updateParameter(GeometryViewDescription g,
+			ObjectDescription currentObject,
 			org.imagesci.robopaint.GeometryViewDescription.ParameterName p) {
 		switch (p) {
 		case OPEN_LABEL_IMAGE:
@@ -92,7 +101,28 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 
 			visual.updateVisualizationParameters();
 			break;
-
+		case CHANGE_TARGET_INTENSITY:
+			activeContour.setTargetIntensity(currentObject.getId(),
+					currentObject.getTargetIntensity());
+			break;
+		case CHANGE_AUTO_UPDATE_INTENSITY:
+			activeContour.setObjectStatus(currentObject.getId(),
+					currentObject.getObjectStatus());
+		case CHANGE_PRESSURE:
+			activeContour.setPressureWeight(currentObject.getId(),
+					currentObject.getPressureWeight());
+			break;
+		case CHANGE_CURVATURE:
+			activeContour.setCurvatureWeight(currentObject.getId(),
+					currentObject.getCurvatureWeight());
+			break;
+		case START_STOP_SEGMENTATION:
+			if (ObjectDescription.getPlaying()) {
+				visual.playEvent();
+			} else {
+				visual.stopEvent();
+			}
+			break;
 		case ADD_OBJECT:
 		case REMOVE_ALL_OBJECTS:
 			break;
