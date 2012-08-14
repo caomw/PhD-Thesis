@@ -306,7 +306,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 				}
 			}
 		});
-*/
+		*/
 		// Object label name dropdown.
 		Label geoNameLabel = new Label(geoComposite, SWT.NONE);
 		geoNameLabel.setText("Name");
@@ -624,7 +624,7 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 		});
 		Label autoUpdate = new Label(segComposite, SWT.NONE);
-		autoUpdate.setText("Target Intensity Auto-Update");
+		autoUpdate.setText("Auto-Update Intensity");
 		autoUpdateButton = new Button(segComposite, SWT.CHECK);
 		autoUpdateButton.setSelection(false);
 		autoUpdateButton.addListener(SWT.Selection, new Listener() {
