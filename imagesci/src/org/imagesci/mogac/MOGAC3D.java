@@ -1352,7 +1352,8 @@ public class MOGAC3D extends AbstractCalculation {
 			oldDistanceFieldBuffer.release();
 		distanceFieldBuffer = context.createFloatBuffer(rows * cols * slices,
 				READ_WRITE, USE_BUFFER);
-
+		oldDistanceFieldBuffer = context.createFloatBuffer(
+				rows * cols * slices, READ_WRITE, USE_BUFFER);
 		FloatBuffer unsignedLevelSet = distanceFieldBuffer.getBuffer();
 		FloatBuffer oldUnsignedLevelSet = oldDistanceFieldBuffer.getBuffer();
 		this.distField = unsignedImage.toArray3d();
@@ -1371,6 +1372,7 @@ public class MOGAC3D extends AbstractCalculation {
 		}
 		unsignedLevelSet.rewind();
 		oldUnsignedLevelSet.rewind();
+
 		queue.putWriteBuffer(distanceFieldBuffer, true).putWriteBuffer(
 				oldDistanceFieldBuffer, true);
 		this.distFieldImage = unsignedImage;
