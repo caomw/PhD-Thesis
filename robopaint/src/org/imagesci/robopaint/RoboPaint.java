@@ -93,6 +93,8 @@ public class RoboPaint {
 		// shell.setMaximized(true);
 		shell.open();
 		renderPane.launch();
+
+		/*
 		try {
 			ImageViewDescription.getInstance().setFile(
 					new File("C:\\Users\\Blake\\Desktop\\metacube.nii"));
@@ -103,6 +105,7 @@ public class RoboPaint {
 		} catch (Exception e) {
 			System.err.println("Could not find file.");
 		}
+*/
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
