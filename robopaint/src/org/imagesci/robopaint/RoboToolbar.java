@@ -27,6 +27,13 @@ import org.imagesci.robopaint.icons.PlaceHolder;
  * 
  */
 public class RoboToolbar {
+	protected RoboPaint roboPaint;
+
+	public RoboToolbar(RoboPaint roboPaint, Shell parent) {
+		this(parent);
+		this.roboPaint = roboPaint;
+	}
+
 	/**
 	 * 
 	 * @param parent
@@ -67,22 +74,21 @@ public class RoboToolbar {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-				fileDialog.setText("Open");
-				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.img", "*.hdr", "*.nii" };
-				fileDialog.setFilterExtensions(filterExtensions);
-				fileDialog.open();
-				File f = new File(fileDialog.getFilterPath(), fileDialog
-						.getFileName());
-				if (f.exists() && !f.isDirectory()) {
-					ImageViewDescription.getInstance().setFile(f);
+				if (roboPaint.openReferenceImage()) {
+					roboPaint.roboMenubar.importLabelsItem.setEnabled(true);
 				}
 
 			}
 		});
 		Button saveButton = new Button(fileComposite, SWT.PUSH);
 		saveButton.setImage(saveImage);
+		saveButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				roboPaint.saveSegmentation();
+			}
+		});
 		Point fileSize = fileComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		fileItems.setControl(fileComposite);
 		fileItems.setPreferredSize(fileItems
@@ -113,7 +119,9 @@ public class RoboToolbar {
 		final Combo toolCombo = new Combo(bar, SWT.READ_ONLY);
 		toolCombo.add("Paint");
 		toolCombo.add("Sculpt");
-		toolCombo.select(0);
+		toolCombo
+				.select(GeometryViewDescription.getInstance().isSliceView() ? 0
+						: 1);
 		toolCombo.addListener(SWT.Selection, new Listener() {
 
 			@Override

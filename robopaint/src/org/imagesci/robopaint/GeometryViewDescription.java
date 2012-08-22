@@ -43,7 +43,7 @@ public class GeometryViewDescription {
 
 	protected ExpandBar bar;
 	protected File distfieldFile;
-	protected boolean showSliceView = true;
+	protected boolean showSliceView = false;
 	protected ObjectDescription currentObject;
 
 	public ObjectDescription getCurrentObject() {

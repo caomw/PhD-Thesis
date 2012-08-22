@@ -11,12 +11,27 @@ import edu.jhu.cs.cisst.vent.widgets.VisualizationMOGAC3D;
 import edu.jhu.ece.iacl.jist.pipeline.parameter.ParamCollection;
 
 public class RoboRenderWidget extends VisualizationMOGAC3D {
+	public RoboRenderer getRenderer() {
+		return (RoboRenderer) renderer;
+	}
 
 	public RoboRenderWidget(int width, int height, MOGAC3D activeContour) {
 		super(width, height, activeContour);
+		this.scale = 0.7f;
+		this.tx = 180;
 		// TODO Auto-generated constructor stub
 	}
 
+	public void playEvent() {
+		getRenderer().syncPaint();
+		super.playEvent();
+
+	}
+	public void stopEvent() {
+		getRenderer().syncPaint();
+		super.stopEvent();
+
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -34,6 +49,8 @@ public class RoboRenderWidget extends VisualizationMOGAC3D {
 		init();
 		visualizationParameters = new ParamCollection(name);
 		createVisualizationParameters(visualizationParameters);
+		txParam.setValue(tx);
+		tyParam.setValue(ty);
 		return visualizationParameters;
 	}
 

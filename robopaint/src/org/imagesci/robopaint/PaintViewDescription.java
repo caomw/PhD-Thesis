@@ -13,9 +13,9 @@ package org.imagesci.robopaint;
  * @author TYung
  */
 public class PaintViewDescription {
-	protected int paintBrushSize = 10;
+	protected int paintBrushSize = 4;
 	protected float transparency = 0.5f;
-	protected boolean isBrush3D = false;
+	protected boolean isBrush3D = true;
 	protected static final PaintViewDescription description = new PaintViewDescription();
 
 	/**

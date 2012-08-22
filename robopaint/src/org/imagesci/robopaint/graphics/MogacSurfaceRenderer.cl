@@ -146,6 +146,28 @@ inline Matrix4f invertMatrix3x3(Matrix4f M){
 		0,0,0,1};
 		return  Minv;
 }
+inline float distanceToSegment(float4 pt,float4 pt1,float4 pt2){
+	float r=pt1.w;
+	pt1.w=0;
+	pt2.w=0;
+    float4 diff = pt - pt1; 
+    float4 dir=  pt2 - pt1;
+    
+    float extent=length(dir);
+    dir=normalize(dir);
+    float t= dot(dir,diff);
+    float4 closest;
+    if (t > 0){
+        if (t < extent){
+            closest = pt1 + t*dir;
+        } else {
+            closest = pt2;
+        }
+    } else {
+        closest = pt1;
+    }
+    return (distance(pt,closest)-r); 
+}
 //Get index into volume
 inline uint getHashValue(int i, int j, int k) {
 	return (k * (ROWS * COLS)) + (j * ROWS) + i;
@@ -302,7 +324,45 @@ kernel void copyLevelSetImage(global float* srcImage,global int* labels,const gl
 	if(i==ROWS-1||j==COLS-1||k==SLICES-1||i==0||j==0||k==0)grad.w=max(grad.w,1.5f);
 	destImage[id]=grad;
 }
-
+kernel void copyPaint(			
+						global int* labels,
+						global float* distfield,
+						global float4* lineSegments,
+                        int lineSegmentOffset,
+                        int diskRadius,
+                        int currentLabel,
+                        int is3D,
+                        int isSculpt,
+                        int isPainting){
+    
+    uint id=get_global_id(0);
+	if(id>=ROWS*COLS*SLICES)return;
+	
+	int i,j,k;
+	getRowColSlice(id,&i,&j,&k);
+	float4 pt=(float4)((float)i,(float)j,(float)k,(float)0);
+	float4 start=lineSegments[0];
+	float4 end=lineSegments[1];
+	float4 hitNormal=lineSegments[2];
+	
+	start.w=diskRadius;
+	
+	
+	float planeDist=clamp(fabs(dot(hitNormal,pt-start))-1.0f,-4.0f,4.0f);		
+	float dist=clamp(distanceToSegment(pt,start,end),-4.0f,4.0f);
+	
+	if(!is3D&&!isSculpt)dist=max(dist,planeDist);
+	int lastLabel=labels[id];
+	
+	if(isSculpt&&lastLabel!=0){
+		currentLabel=lastLabel;
+	}
+	
+	float lastDist=(lastLabel==currentLabel)?-distfield[id]:distfield[id];
+	distfield[id]=fabs(min(lastDist,dist));
+	labels[id]=(dist<0)?currentLabel:lastLabel;
+	
+}
 float4 QuatMult(const float4 q1, const float4 q2) {
     float4 r;
 
@@ -372,6 +432,7 @@ float IntersectVolume(const global float4* colors,Matrix4f modelViewMatrix,globa
 	float minDist;
 	float4 diffuse=(float4)(0,0,0,0);
 	float lastD=2*epsilon;
+	int hitLabel=0;
 	do {
 		r0.w=1;
 		float4 pt=worldToImage(transform4(r0,modelViewMatrix));
@@ -402,6 +463,7 @@ float IntersectVolume(const global float4* colors,Matrix4f modelViewMatrix,globa
 					for(int kk=-1;kk<=1;kk++){
 						int l= getLabelIntValue(labels,i+ii,j+jj,k+kk);
 						if(l>0){	
+							hitLabel=l;
 							diffuse+=getColor(l,colors);
 							label++;
 						}
@@ -414,6 +476,7 @@ float IntersectVolume(const global float4* colors,Matrix4f modelViewMatrix,globa
 	    		*steps= s;
 				diffuse/=(float)label;
 				diffuse.w=1.0f;
+				grad.w=hitLabel;
 				*hitNormal = grad;
 				*hitDiffuse=diffuse;
 	    		return d;
@@ -471,6 +534,59 @@ float IntersectBoundingSphere(const float4 eyeRayOrig, const float4 eyeRayDir) {
         } else
             return -1.f;
     }
+}
+float IntersectSphere(const float4 eyeRayOrig, const float4 sphereCenter,const float4 eyeRayDir,float r,float4* imagePoint,float4* normal) {
+    const float4 op = sphereCenter-eyeRayOrig;
+    const float b = dot(op, eyeRayDir);
+    float det = b * b - dot(op, op) + r*r;
+    if (det < 0.f)
+        return 1E10f;
+    else
+        det = sqrt(det);
+    float t = b - det;
+    if (t > 0.f){
+    	*imagePoint=eyeRayOrig+eyeRayDir*t;
+		*normal=normalize(*imagePoint-sphereCenter);
+		return t;
+    } else {
+        return 1E10f;
+    }
+}
+float IntersectCapsule(const float4 eyeRayOrig,float4 alpha,float4 beta,const float4 eyeRayDir,float r,float4* imagePoint,float4* normal) {
+	float4 lambda1 =((alpha + (beta - alpha) * 0.382));
+	float4 lambda2 =((alpha + (beta - alpha) * 0.618));	
+	float4 params;
+	bool hilow=false;
+	float t1=0,t2=1E10f;
+	float t=1E10f;
+	t=t1 = IntersectSphere(eyeRayOrig,lambda1,eyeRayDir,r,imagePoint,normal);
+	t2 = IntersectSphere(eyeRayOrig,lambda2,eyeRayDir,r,imagePoint,normal);
+	
+	while (distance(beta,alpha)>0.1f) {
+		if (t1 > t2) {
+			alpha = lambda1;
+			lambda1 = lambda2;
+			t1 = t2;
+			lambda2 = (alpha + (beta - alpha) * 0.618f);
+			params = lambda2;
+			hilow = true;
+		} else {
+			beta = lambda2;
+			lambda2 = lambda1;
+			t2 = t1;
+			lambda1 = (alpha + (beta - alpha) * 0.382f);
+			params = lambda1;
+			hilow = false;
+		}
+		t=IntersectSphere(eyeRayOrig,params,eyeRayDir,r,imagePoint,normal);
+		if (hilow) {
+			t2 = t;
+		} else {
+			t1 = t;
+		}
+	}
+	return t;
+	
 }
 float4 Phong(const float4 light, const float4 eye, const float4 pt, float4 N, const float4 diffuse,int twoSided) {
 
@@ -606,8 +722,285 @@ float4 getIsoContourColor(float4 sliceHitPoint,read_only image3d_t volume,const 
 	return diffuse;
 }
 
+
+inline uint getIndex2D(int i, int j) {
+	return (j * WIDTH) + i;
+}
+inline float8 getImageValue8(__global float8* image,int i,int j){
+	int r = clamp(i,(int)0,(int)( WIDTH - 1));
+	int c = clamp(j,(int)0, (int)(HEIGHT - 1));
+	return image[getIndex2D(r,c)];
+}
+inline float8 interpolate8(__global float8* data,float x,float y){
+	int y0, x0, y1, x1;
+	float dx, dy, hx, hy;
+	x1 = ceil(x);
+	y1 = ceil(y);
+	x0 = floor(x);
+	y0 = floor(y);
+	dx = x - x0;
+	dy = y - y0;	
+	// Introduce more variables to reduce computation
+	hx = 1.0f - dx;
+	hy = 1.0f - dy;
+	// Optimized below
+	return ((getImageValue8(data,x0,y0) * hx + getImageValue8(data,x1,y0) * dx) * hy
+		  + (getImageValue8(data,x0,y1) * hx + getImageValue8(data,x1,y1) * dx) * dy);
+}
+
+kernel void radarOverlayRender(			
+						global float* pixels,
+						global float4* overlayPixels,
+						global float4* radarPixels,
+						global float4* slicePixels,
+						global float8* depthmap,
+						read_only image3d_t refImage,
+						read_only image3d_t volume,
+						const global int* labels,  
+						const global float4* colors, 
+						float minImageValue,
+                        float maxImageValue,
+                        float brightness,
+                        float contrast,
+                        float transparency,
+                        float sweepAngle,
+                        float zoomInv,
+                        int mouseX,
+                        int mouseY){
+	const sampler_t imageSampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_LINEAR;
+	const int gid = get_global_id(0);	
+	
+	
+	
+	const int x = (gid % INSET_WIDTH)-INSET_WIDTH/2;
+    const int y = (gid / INSET_WIDTH)-INSET_HEIGHT/2;
+    				
+	float8 reference=interpolate8(depthmap,mouseX,mouseY);
+	int label=(int)round(reference.s3);
+	
+	const float4 SWEEP_LINE=(float4)(1.0f,0.666f,0.25f,1.0f);
+	const float4 GRID_LINE=(float4)(0.25f,0.666f,1.0f,1.0f);
+	const float4 NORMAL_LINE=(float4)(0.25f,1.0f,0.666f,1.0f);
+	const float4 BACKGROUND=(float4)(0.0f,0.0f,0.0f,0.0f);
+	const float RADIUS_SQR=(INSET_WIDTH/2-6)*(INSET_WIDTH/2-6);
+	if(label==0){
+		overlayPixels[gid]=BACKGROUND;
+		radarPixels[gid]=BACKGROUND;
+		slicePixels[gid]=BACKGROUND;
+		return;
+	}
+	if(x*x+y*y>RADIUS_SQR){
+		slicePixels[gid]=overlayPixels[gid]=(fabs(sqrt((float)(x*x+y*y))-(INSET_WIDTH/2-4))<2)?GRID_LINE:BACKGROUND;
+		radarPixels[gid]=(fabs(sqrt((float)(x*x+y*y))-(INSET_WIDTH/2-4))<2)?SWEEP_LINE:BACKGROUND;
+		return;
+	}
+	
+	
+	float4 hitNormal=(float4)(reference.s0,reference.s1,reference.s2,0);
+	float4 xAxis;
+	if(hitNormal.z>hitNormal.x){
+		if(hitNormal.z>hitNormal.y){
+			xAxis=(float4)(hitNormal.z,0,-hitNormal.x,0);
+		} else{
+			xAxis=(float4)(0,-hitNormal.z,hitNormal.y,0);
+		}
+	} else {
+		if(hitNormal.x>hitNormal.y){
+			xAxis=(float4)(hitNormal.z,0,-hitNormal.x,0);
+		} else {
+			xAxis=(float4)(0,-hitNormal.z,hitNormal.y,0);
+		}
+	}
+	
+	float4 hitPoint=(float4)(reference.s4,reference.s5,reference.s6,0);	
+	float4 yAxis=cross(xAxis,hitNormal);
+	float scale=8.0f*zoomInv/INSET_WIDTH;
+	float4 inPlanePoint=hitPoint+scale*(x*xAxis+y*yAxis);
+	float sliceSweep=5.0f*sin(sweepAngle);
+	float sliceWeight=fabs(sin(sweepAngle));
+	float4 xAxis2=(cos(sweepAngle)*xAxis+sin(sweepAngle)*yAxis);
+	float4 offPlanePoint=hitPoint+scale*(x*xAxis2+y*hitNormal);
+	float4 slicePlanePoint=inPlanePoint+sliceSweep*hitNormal;
+	float lineDist=fabs(y*cos(sweepAngle)-x*sin(sweepAngle));
+	float4 sweepLineColor=(x*x+y*y<64)?GRID_LINE:((lineDist<=2)?SWEEP_LINE:BACKGROUND);
+	if(inPlanePoint.x<0||inPlanePoint.y<0||inPlanePoint.z<0||inPlanePoint.x>=ROWS||inPlanePoint.y>=COLS||inPlanePoint.z>=SLICES){
+		overlayPixels[gid]=mix((float4)(1,1,1,1),sweepLineColor,sweepLineColor.w);
+	} else {
+		float4 tmp=read_imagef(refImage,imageSampler,inPlanePoint);
+		float val=(tmp.x-minImageValue)/(maxImageValue-minImageValue);
+		val=clamp(val*contrast + brightness,0.0f,1.0f);
+		float4 diffuse=getIsoContourColor(inPlanePoint,volume,labels,colors);
+		diffuse=(1-transparency)*(float4)(val,val,val,1.0f)+transparency*diffuse;
+		diffuse.w=1.0f;
+		overlayPixels[gid]=mix(diffuse,sweepLineColor,sweepLineColor.w);
+	}
+	sweepLineColor=(x*x+y*y<64+2*sign(sliceSweep)*sliceSweep*sliceSweep)?GRID_LINE:BACKGROUND;
+	if(slicePlanePoint.x<0||slicePlanePoint.y<0||slicePlanePoint.z<0||slicePlanePoint.x>=ROWS||slicePlanePoint.y>=COLS||slicePlanePoint.z>=SLICES){
+		slicePixels[gid]=mix((float4)(1,1,1,1),sweepLineColor,sweepLineColor.w);
+	} else {
+		float4 tmp=read_imagef(refImage,imageSampler,slicePlanePoint);
+		float val=(tmp.x-minImageValue)/(maxImageValue-minImageValue);
+		val=clamp(val*contrast + brightness,0.0f,1.0f);
+		float4 diffuse=getIsoContourColor(slicePlanePoint,volume,labels,colors);
+		diffuse=(1-transparency)*(float4)(val,val,val,1.0f)+transparency*diffuse;
+		diffuse.w=1.0f;
+		slicePixels[gid]=mix(diffuse,sweepLineColor,sweepLineColor.w);
+	}
+	
+	sweepLineColor=(x*x+(y)*(y)<64)?GRID_LINE:((abs(x)<=2&&(y)>=0)?NORMAL_LINE:((abs(y)<=2)?GRID_LINE:BACKGROUND));
+	if(offPlanePoint.x<0||offPlanePoint.y<0||offPlanePoint.z<0||offPlanePoint.x>=ROWS||offPlanePoint.y>=COLS||offPlanePoint.z>=SLICES){
+		radarPixels[gid]=mix((float4)(1,1,1,1),sweepLineColor,sweepLineColor.w);
+	} else {
+		float4 tmp=read_imagef(refImage,imageSampler,offPlanePoint);
+		float val=(tmp.x-minImageValue)/(maxImageValue-minImageValue);
+		val=clamp(val*contrast + brightness,0.0f,1.0f);
+		float4 diffuse=getIsoContourColor(offPlanePoint,volume,labels,colors);
+		diffuse=(1-transparency)*(float4)(val,val,val,1.0f)+transparency*diffuse;
+		diffuse.w=1.0f;
+		radarPixels[gid]=mix(diffuse,sweepLineColor,sweepLineColor.w);
+	}
+
+	
+
+}
+kernel void paintOverlayRender(			
+						global float* pixels,
+						global float4* paintPixels,
+						global float8* referenceDepthmap,
+						global float8* depthmap,
+						global float4* lineSegments,
+                        const global RenderingConfig *config,                  
+						read_only image3d_t refImage,
+						read_only image3d_t volume,
+						const global int* labels,
+                        const global Matrix4f* modelViewMatrix,
+                        const global Matrix4f* modelViewInverseMatrix,
+						const global float4* colors,
+						float minImageValue,
+                        float maxImageValue,
+                        float brightness,
+                        float contrast,
+                        float transparency,
+                        int lineSegmentOffset,
+                        int lastMouseX,
+                        int lastMouseY,
+                        int mouseX,
+                        int mouseY,	
+                        int diskRadius,
+                        int currentLabel,
+                        int is3D,
+                        int isSculpt,
+                        int isPainting){
+                        
+	const sampler_t imageSampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_LINEAR;
+	const int gid = get_global_id(0);	
+	const int x = (gid % WIDTH);
+    const int y = (gid / WIDTH);
+    const float4 light = (float4) (config->light[0], config->light[1], config->light[2], 0.f);
+    const global Camera *camera = &config->camera;
+    const float invWidth = 1.f / WIDTH;
+    const float invHeight = 1.f / HEIGHT;
+    const float kcx = (x) * invWidth - .5f;
+    const float4 kcx4 = (float4) kcx;
+    const float kcy = (y) * invHeight - .5f;
+    const float4 kcy4 = (float4) kcy;
+    const float4 cameraX = (float4) (camera->x.x, camera->x.y, camera->x.z, 0.f);
+    const float4 cameraY = (float4) (camera->y.x, camera->y.y, camera->y.z, 0.f);
+    const float4 cameraDir = (float4) (camera->dir.x, camera->dir.y, camera->dir.z, 0.f);
+    const float4 cameraOrig = (float4) (camera->orig.x, camera->orig.y, camera->orig.z, 0.f);
+    float4 eyeRayDir = normalize(cameraX * kcx4 + cameraY * kcy4 + cameraDir);
+    const float4 eyeRayOrig = eyeRayDir * (float4) 0.1f + cameraOrig;
+    Matrix4f Minv=*modelViewInverseMatrix;
+    Matrix4f M=*modelViewMatrix;			
+	float8 reference=interpolate8(referenceDepthmap,mouseX,mouseY);
+	int label1=(int)round(reference.s3);
+	const float4 BACKGROUND=(float4)(0.0f,0.0f,0.0f,0.0f);	
+	float4 hitNormal=(float4)(reference.s0,reference.s1,reference.s2,0);	
+	float4 hitPoint=(float4)(reference.s4,reference.s5,reference.s6,0);	
+	
+	reference=interpolate8(referenceDepthmap,lastMouseX,lastMouseY);
+	float4 lastHitPoint=(float4)(reference.s4,reference.s5,reference.s6,0);	
+	float4 lastHitNormal=(float4)(reference.s0,reference.s1,reference.s2,0);	
+	
+	if(gid==0){
+		lineSegments[0]=lastHitPoint;
+		lineSegments[1]=hitPoint;
+		lineSegments[2]=hitNormal;
+	}
+	reference=depthmap[gid];
+	int label2=(int)round(reference.s3);
+	if(label1==0){
+		paintPixels[gid]=BACKGROUND;	
+		return;
+	}
+	float4 imagePoint=(float4)(reference.s4,reference.s5,reference.s6,0);
+	float4 imageNormal=(float4)(reference.s0,reference.s1,reference.s2,0);
+	float4 spherePoint;
+	float4 diffuse=getColor(currentLabel,colors);
+	diffuse.w=0.5f;		
+	eyeRayOrig.w=1.0f;
+	float4 cameraCenter=worldToImage(transform4(eyeRayOrig,M));
+	float4 rayDir=normalize(transform4(eyeRayDir,M));
+	
+	if(isSculpt){
+		float4 normal;
+		float t=IntersectCapsule(cameraCenter,lastHitPoint,hitPoint,rayDir,diskRadius,&spherePoint,&normal);
+		if(t<1E10f&&(label2==0||t<distance(cameraCenter,imagePoint))){
+			imageNormal=normalize(transform4(normal,Minv));
+			spherePoint.w=1.0f; 
+			imagePoint=spherePoint;
+			spherePoint=transform4(imageToWorld(spherePoint),Minv);
+ 			float4 color=clamp(Phong(light, eyeRayOrig,spherePoint, imageNormal, diffuse,0), (float4) (0.f, 0.f, 0.f, 1.0f), (float4) (1.f, 1.f, 1.f, 1.0f));
+			color.w=1.0f;
+			paintPixels[gid]= color;
+			if(isPainting){
+				depthmap[gid].s0=normal.x;
+				depthmap[gid].s1=normal.y;
+				depthmap[gid].s2=normal.z;
+				depthmap[gid].s3=currentLabel;
+				
+				depthmap[gid].s4=imagePoint.x;
+				depthmap[gid].s5=imagePoint.y;
+				depthmap[gid].s6=imagePoint.z;
+				
+			 	int offset = 3 * (x + y * WIDTH);
+				pixels[offset]=color.x;
+				pixels[offset+1]=color.y;
+				pixels[offset+2]=color.z;
+			}
+		} else {
+			paintPixels[gid]=BACKGROUND;		
+		}
+	} else {
+		float planeDist=dot(hitNormal,hitPoint-imagePoint);
+		if((is3D||fabs(planeDist)<0.5f)&&distanceToSegment(imagePoint,lastHitPoint,hitPoint)<=diskRadius){
+			paintPixels[gid]=diffuse;
+			if(isPainting){
+				if(label2!=0){
+					float4 tmp=read_imagef(refImage,imageSampler,imagePoint);
+					float val=(tmp.x-minImageValue)/(maxImageValue-minImageValue);
+			    	val=clamp(val*contrast + brightness,0.0f,1.0f);	
+			    	diffuse=(1-transparency)*(float4)(val,val,val,1.0f)+transparency*diffuse;
+				 	imageNormal=normalize(transform4(imageNormal,Minv));
+				 	imagePoint.w=1.0f;
+		 			spherePoint=transform4(imageToWorld(imagePoint),Minv);
+		 			diffuse=clamp(Phong(light, eyeRayOrig,spherePoint, imageNormal, diffuse,1), (float4) (0.f, 0.f, 0.f, 1.0f), (float4) (1.f, 1.f, 1.f, 1.0f));
+				}
+				int offset = 3 * (x + y * WIDTH);
+				pixels[offset]=diffuse.x;
+				pixels[offset+1]=diffuse.y;
+				pixels[offset+2]=diffuse.z;
+			}
+		} else {
+			paintPixels[gid]=BACKGROUND;
+		}
+	}
+}
+
 kernel void RoboRender(
 						global float* pixels,
+						global float4* depthmap,
+						global float4* referenceDepthmap,
                         const global RenderingConfig *config,                  
 						read_only image3d_t refImage,
 						read_only image3d_t volume,
@@ -625,6 +1018,7 @@ kernel void RoboRender(
                         int showYplane,
                         int showZplane,
                         int showIsoSurf,
+                        int isPainting,
                         float minImageValue,
                         float maxImageValue,
                         float brightness,
@@ -649,9 +1043,7 @@ kernel void RoboRender(
         return;
 
     const float epsilon = config->actvateFastRendering ? (config->epsilon * (1.f / 0.75f)) : config->epsilon;
- 
     const uint maxIterations = max(1u, config->actvateFastRendering ? (config->maxIterations - 1) : config->maxIterations);
-
     const float4 light = (float4) (config->light[0], config->light[1], config->light[2], 0.f);
     const global Camera *camera = &config->camera;
 
@@ -680,11 +1072,12 @@ kernel void RoboRender(
 	float4 diffuse=(float4)(0,0,0,0); 
     float distSet = IntersectBoundingSphere(eyeRayOrig, eyeRayDir);
     float4 hitPoint=(float4)(0,0,0,0);
-    float4 hitNormal;
-    
+    float4 surfHitPoint=(float4)(0,0,0,0);
+    float4 hitNormal=(float4)(0,0,0,0);
     int hitLabel=0;
-
     int hitClipPlane=0;
+    
+    int objectId=-1;
     if (distSet >= 0.f) {
         //--------------------------------------------------------------------------
         // Find the intersection with the set
@@ -697,9 +1090,11 @@ kernel void RoboRender(
         eyeRayDir.w=0;
         float4 rayDir=transform4(eyeRayDir,M);
 		const float4 imageOrig=(float4)(ROWS*0.5f,COLS*0.5f,SLICES*0.5f,0.0f);
-		float4 surfHitPoint;
+		
         if(showIsoSurf){
         	distSet = IntersectVolume(colors,M,labels,volume,rayOrigWorld, eyeRayDir, maxIterations, epsilon, &hitPoint, &hitNormal, &steps,&diffuse);
+        	hitLabel=(int)(hitNormal.w);
+        	hitNormal.w=0;
         	surfHitPoint=worldToImage(transform4(hitPoint,M));
         	if (distSet > epsilon)distSet = -1.f;
        	} else {
@@ -716,7 +1111,9 @@ kernel void RoboRender(
 			diffuse=(1-transparency)*(float4)(val,val,val,1.0f)+transparency*diffuse;
 	        distSet=0;
 	        hitClipPlane=1;
+	        hitLabel=-(closestPlane+1);
 	        hitNormal=sliceHitNormal;
+	        surfHitPoint=sliceHitPoint;
 	        hitPoint=transform4(imageToWorld(sliceHitPoint),Minv);
         } 
     }
@@ -758,6 +1155,14 @@ kernel void RoboRender(
         pixels[offset++] = color.s0;
         pixels[offset++] = color.s1;
         pixels[offset  ] = color.s2;
+	    
+	    if(!isPainting){
+		    offset=2*(x + y * width);
+			hitNormal.w=(float)hitLabel;
+			surfHitPoint.w=0;
+			referenceDepthmap[offset]=depthmap[offset]=hitNormal;
+			referenceDepthmap[offset+1]=depthmap[offset+1]=surfHitPoint;
+		}
     }
 }
 

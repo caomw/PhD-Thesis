@@ -40,6 +40,13 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 	private Frame frame;
 
 	private RoboRenderWidget visual;
+	
+	public RoboSegment getActiveContour(){
+		return activeContour;
+	}
+	public RoboRenderWidget getWidget() {
+		return visual;
+	}
 
 	public RoboRenderPane(Composite parent) {
 		parent.getDisplay();
@@ -47,7 +54,7 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 		frame = SWT_AWT.new_Frame(parent);
 		parent.getBounds();
 		try {
-			visual = createVisual(840, 700);
+			visual = createVisual(830, 670);
 			this.activeContour = ((RoboSegment) visual.getActiveContour());
 			ParamCollection visualizationParameters = visual.create();
 			visual.updateVisualizationParameters();
@@ -60,15 +67,18 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 		}
 	}
 
+	RoboPaint roboPaint;
+
+	public RoboRenderPane(RoboPaint roboPaint, Composite renderComp) {
+		this(renderComp);
+		this.roboPaint = roboPaint;
+	}
+
 	public void launch() {
 		if (visual != null) {
-			Panel p = new Panel(new BorderLayout());
-			if (visual != null) {
-				p.add(visual.getComponent(), BorderLayout.CENTER);
-				frame.add(p);
-				frame.pack();
-				frame.setVisible(true);
-			}
+			frame.add(visual.getComponent());
+			frame.setVisible(true);
+
 		}
 	}
 

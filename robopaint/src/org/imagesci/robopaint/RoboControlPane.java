@@ -461,6 +461,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		final Scale brushSizeScale = new Scale(brushSizeComposite, SWT.NONE);
 		brushSizeScale.setMinimum(0);
 		brushSizeScale.setMaximum(50);
+		brushSizeScale.setSelection(PaintViewDescription.getInstance()
+				.getPaintBrushSize());
 		brushSizeScale.setPageIncrement(5);
 		brushSizeScale.setIncrement(5);
 		final Label brushSizeScaleLabel = new Label(brushSizeComposite,
@@ -516,7 +518,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 		Label brush3DLabel = new Label(paintComposite, SWT.NONE);
 		brush3DLabel.setText("3D Brush");
 		final Button brush3DButton = new Button(paintComposite, SWT.CHECK);
-		brush3DButton.setSelection(false);
+		brush3DButton.setSelection(PaintViewDescription.getInstance()
+				.isBrush3D());
 		brush3DButton.addListener(SWT.Selection, new Listener() {
 
 			@Override
@@ -865,6 +868,13 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			}
 		});
 
+	}
+
+	protected RoboPaint roboPaint;
+
+	public RoboControlPane(RoboPaint roboPaint, Composite controlComp) {
+		this(controlComp);
+		this.roboPaint = roboPaint;
 	}
 
 	@Override

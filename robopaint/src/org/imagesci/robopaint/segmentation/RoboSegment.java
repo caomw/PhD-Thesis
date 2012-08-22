@@ -269,9 +269,10 @@ public class RoboSegment extends MACWE3D {
 				.putWriteBuffer(objectStatusBuffer, true);
 	}
 
-	public void setImageSegmentation(ImageDataInt labelImage,
+	public boolean setImageSegmentation(ImageDataInt labelImage,
 			ImageDataFloat unsignedImage) {
-		super.setImageSegmentation(labelImage, unsignedImage);
+		if (!super.setImageSegmentation(labelImage, unsignedImage))
+			return false;
 		if (image != null) {
 			pressureBuffer = context.createFloatBuffer(rows * cols * slices,
 					READ_ONLY);
@@ -318,5 +319,6 @@ public class RoboSegment extends MACWE3D {
 				.putWriteBuffer(curvatureWeightsBuffer, true)
 				.putWriteBuffer(objectStatusBuffer, true);
 		updateAverages();
+		return true;
 	}
 }
