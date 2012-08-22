@@ -33,20 +33,15 @@ public class RoboMenubar {
 		
 		// Sets up the "Open All..." menu option.
 		MenuItem openAllItem = new MenuItem(fileSubMenu, SWT.PUSH);
-		openAllItem.setText("&Open All ...\tCtrl+O");
+		openAllItem.setText("&Open Existing Segmentation\tCtrl+O");
 		openAllItem.setAccelerator(SWT.MOD1 + 'O');
 		openAllItem.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-				fileDialog.setText("Open");
-				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.nii", "*.img", "*.hdr" };
-				fileDialog.setFilterExtensions(filterExtensions);
-				fileDialog.open();
-
+				if (roboPaint.openReferenceImage())
+					importLabelsItem.setEnabled(true);
 			}
 		});
 		
@@ -59,18 +54,8 @@ public class RoboMenubar {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-				fileDialog.setText("Open");
-				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.nii", "*.img", "*.hdr" };
-				fileDialog.setFilterExtensions(filterExtensions);
-				fileDialog.open();
-				File f = new File(fileDialog.getFilterPath(), fileDialog
-						.getFileName());
-				if (f.exists() && !f.isDirectory()) {
-					ImageViewDescription.getInstance().setFile(f);
+				if (roboPaint.openReferenceImage())
 					importLabelsItem.setEnabled(true);
-				}
 			}
 		});
 		
@@ -82,17 +67,7 @@ public class RoboMenubar {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-				fileDialog.setText("Open Label Image");
-				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.nii", "*.img", "*.hdr" };
-				fileDialog.setFilterExtensions(filterExtensions);
-				fileDialog.open();
-				File f = new File(fileDialog.getFilterPath(), fileDialog
-						.getFileName());
-				if (f.exists() && !f.isDirectory()) {
-					GeometryViewDescription.getInstance().setLabelImageFile(f);
+				if (roboPaint.openLabelImage()) {
 					importDistfieldItem.setEnabled(true);
 				}
 			}
@@ -106,19 +81,8 @@ public class RoboMenubar {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-
-				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-				fileDialog.setText("Open Distance Field");
-				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.nii", "*.img", "*.hdr" };
-				fileDialog.setFilterExtensions(filterExtensions);
-				fileDialog.open();
-				File f = new File(fileDialog.getFilterPath(), fileDialog
-						.getFileName());
-				if (f.exists() && !f.isDirectory()) {
-					GeometryViewDescription.getInstance().setDistanceFieldFile(
-							f);
-					importDistfieldItem.setEnabled(true);
+				if (roboPaint.openDistanceFieldImage()) {
+					importMeshItem.setEnabled(true);
 				}
 			}
 		});
@@ -135,7 +99,7 @@ public class RoboMenubar {
 				FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 				fileDialog.setText("Open Triangle Mesh");
 				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.nii", "*.img", "*.hdr" };
+				String[] filterExtensions = { "*.vtk", "*.stl" };
 				fileDialog.setFilterExtensions(filterExtensions);
 				fileDialog.open();
 			}
@@ -146,7 +110,12 @@ public class RoboMenubar {
 		saveItem.setText("&Save\tCtrl+S");
 		saveItem.setAccelerator(SWT.MOD1 + 'S');
 		saveItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
 
+				roboPaint.saveSegmentation();
+
+			}
 		});
 
 		// Sets up "Save As" menu option.
@@ -157,13 +126,8 @@ public class RoboMenubar {
 
 			@Override
 			public void widgetSelected(SelectionEvent event) {
+				roboPaint.saveAsSegmentation();
 
-				FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
-				fileDialog.setText("Save As");
-				fileDialog.setFilterPath("C:/");
-				String[] filterExtensions = { "*.nii", "*.img", "*.hdr" };
-				fileDialog.setFilterExtensions(filterExtensions);
-				fileDialog.open();
 			}
 		});
 		
@@ -188,5 +152,12 @@ public class RoboMenubar {
 		});
 
 		parent.setMenuBar(mbar);
+	}
+
+	RoboPaint roboPaint;
+
+	public RoboMenubar(RoboPaint roboPaint, Shell shell) {
+		this(shell);
+		this.roboPaint = roboPaint;
 	}
 }
