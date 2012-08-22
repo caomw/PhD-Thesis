@@ -904,11 +904,27 @@ public class WEMOGAC3D extends MOGAC3D {
 
 	}
 
-	public void setImageSegmentation(ImageDataInt labelImage,
+	public boolean setImageSegmentation(ImageDataInt labelImage,
 			ImageDataFloat unsignedImage) {
+		if (image.getRows() != labelImage.getRows()
+				|| image.getCols() != labelImage.getCols()
+				|| image.getSlices() != labelImage.getSlices()) {
+			System.err
+					.println("Dimensions for label image do not match reference image.");
+			return false;
+		}
+		if (unsignedImage != null
+				&& (image.getRows() != unsignedImage.getRows()
+						|| image.getCols() != unsignedImage.getCols() || image
+						.getSlices() != unsignedImage.getSlices())) {
+			System.err
+					.println("Dimensions for distance field image do not match reference image.");
+			return false;
+		}
 		this.rows = image.getRows();
 		this.cols = image.getCols();
 		this.slices = image.getSlices();
+
 		this.labelImage = labelImage;
 		int mask = 0x00000001;
 		int l = 0;
@@ -1099,6 +1115,7 @@ public class WEMOGAC3D extends MOGAC3D {
 
 		}
 		rebuildNarrowBand();
+		return true;
 	}
 
 	/**

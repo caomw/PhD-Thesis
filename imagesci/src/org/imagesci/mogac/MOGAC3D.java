@@ -1341,8 +1341,8 @@ public class MOGAC3D extends AbstractCalculation {
 
 	}
 
-	public void setLabelImage(ImageDataInt labelImage) {
-		setImageSegmentation(labelImage, null);
+	public boolean setLabelImage(ImageDataInt labelImage) {
+		return setImageSegmentation(labelImage, null);
 	}
 
 	public void setDistanceFieldImage(ImageDataFloat unsignedImage) {
@@ -1383,8 +1383,23 @@ public class MOGAC3D extends AbstractCalculation {
 		}
 	}
 
-	public void setImageSegmentation(ImageDataInt labelImage,
+	public boolean setImageSegmentation(ImageDataInt labelImage,
 			ImageDataFloat unsignedImage) {
+		if (image.getRows() != labelImage.getRows()
+				|| image.getCols() != labelImage.getCols()
+				|| image.getSlices() != labelImage.getSlices()) {
+			System.err
+					.println("Dimensions for label image do not match reference image.");
+			return false;
+		}
+		if (unsignedImage != null
+				&& (image.getRows() != unsignedImage.getRows()
+						|| image.getCols() != unsignedImage.getCols() || image
+						.getSlices() != unsignedImage.getSlices())) {
+			System.err
+					.println("Dimensions for distance field image do not match reference image.");
+			return false;
+		}
 		this.rows = image.getRows();
 		this.cols = image.getCols();
 		this.slices = image.getSlices();
@@ -1571,6 +1586,7 @@ public class MOGAC3D extends AbstractCalculation {
 			this.labelImage.setName("labels");
 			distFieldImage.setName("distfield");
 		}
+		return true;
 	}
 
 	public void init() {

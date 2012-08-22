@@ -521,9 +521,10 @@ public class MACWE3D extends WEMOGAC3D {
 		return averages.getBuffer().get(id);
 	}
 
-	public void setImageSegmentation(ImageDataInt labelImage,
+	public boolean setImageSegmentation(ImageDataInt labelImage,
 			ImageDataFloat unsignedImage) {
-		super.setImageSegmentation(labelImage, unsignedImage);
+		if (!super.setImageSegmentation(labelImage, unsignedImage))
+			return false;
 		if (image != null) {
 			pressureBuffer = context.createFloatBuffer(rows * cols * slices,
 					READ_ONLY);
@@ -549,6 +550,7 @@ public class MACWE3D extends WEMOGAC3D {
 				SpringlsCommon3D.roundToWorkgroupPower(numLabels * slices),
 				READ_WRITE, USE_BUFFER);
 		updateAverages();
+		return true;
 	}
 
 }

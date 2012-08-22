@@ -117,7 +117,7 @@ public class VisualizationTriangleMesh extends VisualizationProcessing3D
 	protected float rotRate = 0.01f;
 
 	/** The scale. */
-	float scale = 1;
+	protected float scale = 1;
 
 	/** The scale object. */
 	protected float scaleObject = 1;
@@ -135,7 +135,7 @@ public class VisualizationTriangleMesh extends VisualizationProcessing3D
 	protected ParamBoolean showAxesParam;
 
 	/** The translation in y. */
-	float tx = 0, ty = 0;
+	protected float tx = 0, ty = 0;
 
 	/** The scale param. */
 	protected ParamDouble txParam, tyParam, scaleParam;
@@ -615,8 +615,9 @@ public class VisualizationTriangleMesh extends VisualizationProcessing3D
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            the arguments
 	 */
 	public static void main(String[] args) {
 
