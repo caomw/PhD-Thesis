@@ -74,6 +74,20 @@ public class RoboRenderer extends MOGACRenderer3D {
 	CLKernel copyPaint;
 	protected int insetWidth, insetHeight;
 
+	public Point3f getCurrentMouseLocation3D() {
+		queue.putReadBuffer(depthmapBuffer, true);
+		FloatBuffer buff = depthmapBuffer.getBuffer();
+		int x = (int) Math.round((applet.mouseX * config.getHeight())
+				/ applet.height);
+		int y = (int) Math.round(((applet.height - applet.mouseY) * config
+				.getHeight()) / applet.height);
+
+		float x3 = buff.get(8 * (y * config.getWidth() + x) + 4);
+		float y3 = buff.get(8 * (y * config.getWidth() + x) + 5);
+		float z3 = buff.get(8 * (y * config.getWidth() + x) + 6);
+		return new Point3f(x3, y3, z3);
+	}
+
 	public RoboRenderer(VisualizationProcessing3D applet, MOGAC3D simulator,
 			int rasterWidth, int rasterHeight, int refreshRate) {
 		super(applet, simulator, rasterWidth, rasterHeight, refreshRate);
@@ -122,11 +136,12 @@ public class RoboRenderer extends MOGACRenderer3D {
 	 */
 	@Override
 	public void draw() {
-		applet.strokeWeight(0);
-		applet.fill(255, 255, 255);
-		applet.rect(0, 0, applet.width, applet.height);
-		GL2 gl = (GL2) ((PGraphicsOpenGL2) applet.g).beginGL();
-		if (isoSurfRender != null) {
+		if (isoSurfRender == null) {
+			applet.strokeWeight(0);
+			applet.fill(255, 255, 255);
+			applet.rect(0, 0, applet.width, applet.height);
+		} else {
+			GL2 gl = (GL2) ((PGraphicsOpenGL2) applet.g).beginGL();
 			gl.glEnable(GL.GL_TEXTURE_2D);
 
 			if (!applet.mousePressed) {
@@ -275,6 +290,7 @@ public class RoboRenderer extends MOGACRenderer3D {
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDisable(GL.GL_TEXTURE_2D);
 
+			((PGraphicsOpenGL2) applet.g).endGL();
 		}
 
 		if (ImageViewDescription.getInstance().getImage() != null) {
@@ -286,6 +302,12 @@ public class RoboRenderer extends MOGACRenderer3D {
 										simulator.rows, simulator.cols,
 										simulator.slices), 10,
 								applet.height - 20);
+				textRenderer
+						.draw("Change the current slice with 'a'/'z' for row, 's'/'x' for column, or 'd'/'c' for slice.",
+								10, applet.height - 40);
+				textRenderer
+						.draw("Double click on image to align slice planes with image location.",
+								10, applet.height - 60);
 			} else if (GeometryViewDescription.getInstance()
 					.getDistanceFieldImageFile() == null) {
 				textRenderer
@@ -295,9 +317,12 @@ public class RoboRenderer extends MOGACRenderer3D {
 										simulator.slices), 10,
 								applet.height - 20);
 
-				textRenderer.draw(
-						"To paint, hold down Shift and Left Click + Drag.", 10,
-						applet.height - 40);
+				textRenderer
+						.draw("To paint or sculpt, hold down Shift and Left Click + Drag.",
+								10, applet.height - 40);
+				textRenderer
+						.draw("Use paint/sculpt drop-down to switch between 2D/3D object view.",
+								10, applet.height - 60);
 			} else {
 				textRenderer
 						.draw("Remember to periodically save (Ctrl+S) the image segmentation!",
@@ -317,10 +342,10 @@ public class RoboRenderer extends MOGACRenderer3D {
 			textRenderer.draw(
 					"To get started, open a reference image (Ctrl+R).", 10,
 					applet.height - 20);
+
 			textRenderer.endRendering();
 		}
 
-		((PGraphicsOpenGL2) applet.g).endGL();
 	}
 
 	int lastMouseX, lastMouseY;
@@ -561,7 +586,7 @@ public class RoboRenderer extends MOGACRenderer3D {
 			gpuColorLUT.release();
 		}
 		enableFastRendering = true;
-		System.out.println("NUMBER OF COLORS " + simulator.getNumColors()+" "+simulator.rows+" "+simulator.cols+" "+simulator.slices);
+
 		gpuColorLUT = context.createFloatBuffer(4 * simulator.getNumColors(),
 				READ_WRITE);
 		colors = new Color4f[simulator.getNumColors()];
@@ -592,7 +617,6 @@ public class RoboRenderer extends MOGACRenderer3D {
 			contoursVisibleParam[i - 1] = new ParamBoolean("Visibility ["
 					+ masks[i] + "]", true);
 		}
-		frameUpdate(1, -1);
 		updateColors();
 		label = new ObjectDescription("Background", 0);
 
@@ -600,6 +624,21 @@ public class RoboRenderer extends MOGACRenderer3D {
 		label.setColor(c.getRed(), c.getGreen(), c.getBlue(), 255);
 		label.setTargetIntensity(((MACWE3D) simulator).getCurrentAverage(0));
 		label.setPressureWeight(0f);
+		/*
+		System.err
+				.println("Copy simulator to paint on image segmentation load.");
+		simulator.queue.putReadBuffer(simulator.imageLabelBuffer, true)
+				.putReadBuffer(simulator.distanceFieldBuffer, true);
+		imageLabelBufferCopy.getBuffer()
+				.put(simulator.imageLabelBuffer.getBuffer()).rewind();
+		distanceFieldBufferCopy.getBuffer()
+				.put(simulator.distanceFieldBuffer.getBuffer()).rewind();
+		simulator.imageLabelBuffer.getBuffer().rewind();
+		simulator.distanceFieldBuffer.getBuffer().rewind();
+		queue.putWriteBuffer(imageLabelBufferCopy, true).putWriteBuffer(
+				distanceFieldBufferCopy, true);
+				*/
+		frameUpdate(1, -1);
 	}
 
 	public void updateReferenceImage() {
@@ -922,8 +961,9 @@ public class RoboRenderer extends MOGACRenderer3D {
 						* simulator.cols * simulator.slices, WORKGROUP_SIZE);
 				copyPaint
 						.putArgs(imageLabelBufferCopy, distanceFieldBufferCopy,
-								lineSegmentBuffer)
+								lineSegmentBuffer, gpuColorLUT)
 						.putArg(lineSegmentOffset)
+
 						.putArg(PaintViewDescription.getInstance()
 								.getPaintBrushSize())
 						.putArg(current.getId())

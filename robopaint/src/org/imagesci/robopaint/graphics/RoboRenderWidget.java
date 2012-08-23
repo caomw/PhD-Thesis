@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.vecmath.Point3f;
 
 import org.imagesci.mogac.MOGAC3D;
+import org.imagesci.robopaint.ImageViewDescription;
+import org.imagesci.robopaint.RoboPaint;
 
 import edu.jhu.cs.cisst.vent.renderer.processing.RendererProcessing3D;
 import edu.jhu.cs.cisst.vent.widgets.VisualizationMOGAC3D;
@@ -22,16 +24,69 @@ public class RoboRenderWidget extends VisualizationMOGAC3D {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void keyTyped() {
+
+		switch (key) {
+		case 'a':
+			ImageViewDescription.getInstance().setRow(
+					Math.min(ImageViewDescription.getInstance().getRow() + 1,
+							ImageViewDescription.getInstance().getImageRows()));
+			break;
+		case 'z':
+			ImageViewDescription.getInstance()
+					.setRow(Math.max(ImageViewDescription.getInstance()
+							.getRow() - 1, 1));
+			break;
+		case 's':
+			ImageViewDescription.getInstance().setCol(
+					Math.min(ImageViewDescription.getInstance().getCol() + 1,
+							ImageViewDescription.getInstance().getImageCols()));
+			break;
+		case 'x':
+			ImageViewDescription.getInstance()
+					.setCol(Math.max(ImageViewDescription.getInstance()
+							.getCol() - 1, 1));
+			break;
+		case 'd':
+			ImageViewDescription.getInstance()
+					.setSlice(
+							Math.min(ImageViewDescription.getInstance()
+									.getSlice() + 1, ImageViewDescription
+									.getInstance().getImageSlices()));
+			break;
+		case 'c':
+			ImageViewDescription.getInstance().setSlice(
+					Math.max(ImageViewDescription.getInstance().getSlice() - 1,
+							1));
+			break;
+		default:
+			super.keyTyped();
+		}
+
+	}
+
+	public void mousePressed() {
+		super.mousePressed();
+		if (mouseEvent.getClickCount() == 2) {
+			Point3f pt = getRenderer().getCurrentMouseLocation3D();
+			ImageViewDescription.getInstance().setRow((int) (pt.x + 1));
+			ImageViewDescription.getInstance().setCol((int) (pt.y + 1));
+			ImageViewDescription.getInstance().setSlice((int) (pt.z + 1));
+		}
+	}
+
 	public void playEvent() {
 		getRenderer().syncPaint();
 		super.playEvent();
 
 	}
+
 	public void stopEvent() {
 		getRenderer().syncPaint();
 		super.stopEvent();
 
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

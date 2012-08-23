@@ -144,6 +144,7 @@ public class GeometryViewDescription {
 
 	public void setDistanceFieldFile(File f) {
 		this.distfieldFile = f;
+		
 		if (f != null) {
 			fireUpdate(ParameterName.OPEN_DISTFIELD_IMAGE);
 		} else {

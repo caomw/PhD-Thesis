@@ -328,6 +328,7 @@ kernel void copyPaint(
 						global int* labels,
 						global float* distfield,
 						global float4* lineSegments,
+						global float4* colors,
                         int lineSegmentOffset,
                         int diskRadius,
                         int currentLabel,
@@ -354,7 +355,8 @@ kernel void copyPaint(
 	if(!is3D&&!isSculpt)dist=max(dist,planeDist);
 	int lastLabel=labels[id];
 	
-	if(isSculpt&&lastLabel!=0){
+	
+	if(isSculpt&&lastLabel>0){
 		currentLabel=lastLabel;
 	}
 	
@@ -629,7 +631,6 @@ kernel void maskLabels(global int* labels,global float4* volumeColorBuffer,globa
 	    int label=abs(labels[gid]);
 	    if(label>0&&colors[label-1].w==0){
 	    	label=-label;	
-
 	    }
 	    volumeColorBuffer[gid].w=(label<=0)?4.0f:-4.0f;
 	    labels[gid]=label;

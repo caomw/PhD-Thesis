@@ -40,10 +40,11 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 	private Frame frame;
 
 	private RoboRenderWidget visual;
-	
-	public RoboSegment getActiveContour(){
+
+	public RoboSegment getActiveContour() {
 		return activeContour;
 	}
+
 	public RoboRenderWidget getWidget() {
 		return visual;
 	}
@@ -88,12 +89,15 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 			org.imagesci.robopaint.GeometryViewDescription.ParameterName p) {
 		switch (p) {
 		case OPEN_LABEL_IMAGE:
+			visual.getRenderer().syncPaint();
 			activeContour.setLabelImage(new ImageDataInt(NIFTIReaderWriter
 					.getInstance().read(g.getLabelImageFile())));
 
 			visual.updateImageSegmentation();
 			break;
 		case OPEN_DISTFIELD_IMAGE:
+
+			visual.getRenderer().syncPaint();
 			activeContour.setDistanceFieldImage(new ImageDataFloat(
 					NIFTIReaderWriter.getInstance().read(
 							g.getDistanceFieldImageFile())));
@@ -101,6 +105,8 @@ public class RoboRenderPane implements ImageViewListener, GeometryViewListener {
 			visual.updateImageSegmentation();
 			break;
 		case OPEN_IMAGE_SEGMENTATION:
+
+			visual.getRenderer().syncPaint();
 			activeContour.setImageSegmentation(
 					new ImageDataInt(NIFTIReaderWriter.getInstance().read(
 							g.getLabelImageFile())),

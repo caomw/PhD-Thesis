@@ -879,7 +879,8 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 
 	@Override
 	public void updateParameter(ImageViewDescription g, ParameterName p) {
-		if (p == ParameterName.OPEN_REFERENCE_IMAGE) {
+		switch (p) {
+		case OPEN_REFERENCE_IMAGE:
 			rowScale.setMaximum(g.getImageRows());
 			colScale.setMaximum(g.getImageCols());
 			sliceScale.setMaximum(g.getImageSlices());
@@ -898,6 +899,34 @@ public class RoboControlPane implements ImageViewDescription.ImageViewListener,
 			colScaleLabel.pack();
 			sliceScaleLabel.pack();
 			filenameLabel.pack();
+			break;
+		case CHANGE_ROW:
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					rowScale.setSelection(ImageViewDescription.getInstance()
+							.getRow());
+					rowScaleLabel.setText(rowScale.getSelection() + "");
+				}
+			});
+			break;
+		case CHANGE_COL:
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					colScale.setSelection(ImageViewDescription.getInstance()
+							.getCol());
+					colScaleLabel.setText(colScale.getSelection() + "");
+				}
+			});
+			break;
+		case CHANGE_SLICE:
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					sliceScale.setSelection(ImageViewDescription.getInstance()
+							.getSlice());
+					sliceScaleLabel.setText(sliceScale.getSelection() + "");
+				}
+			});
+			break;
 		}
 	}
 

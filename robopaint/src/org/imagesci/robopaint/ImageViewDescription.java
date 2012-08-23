@@ -31,7 +31,7 @@ public class ImageViewDescription {
 	}
 
 	public enum ParameterName {
-		SLICE_VISIBILITY,CHANGE_BRIGHTNESS, CHANGE_COL, CHANGE_CONTRAST, CHANGE_ROW, CHANGE_SLICE, CHANGE_TRANSPARENCY, CLOSE_IMAGE, OPEN_REFERENCE_IMAGE
+		SLICE_VISIBILITY, CHANGE_BRIGHTNESS, CHANGE_COL, CHANGE_CONTRAST, CHANGE_ROW, CHANGE_SLICE, CHANGE_TRANSPARENCY, CLOSE_IMAGE, OPEN_REFERENCE_IMAGE
 	}
 
 	protected static final ImageViewDescription description = new ImageViewDescription();
@@ -224,8 +224,10 @@ public class ImageViewDescription {
 	 *            the new column.
 	 */
 	public void setCol(int col) {
+		boolean change = (col != this.col);
 		this.col = col;
-		fireUpdate(ParameterName.CHANGE_COL);
+		if (change)
+			fireUpdate(ParameterName.CHANGE_COL);
 
 	}
 
@@ -266,8 +268,10 @@ public class ImageViewDescription {
 	 *            the new row.
 	 */
 	public void setRow(int row) {
+		boolean change = (row != this.row);
 		this.row = row;
-		fireUpdate(ParameterName.CHANGE_ROW);
+		if (change)
+			fireUpdate(ParameterName.CHANGE_ROW);
 	}
 
 	/**
@@ -310,8 +314,10 @@ public class ImageViewDescription {
 	 *            the new slice.
 	 */
 	public void setSlice(int slice) {
+		boolean change = (slice != this.slice);
 		this.slice = slice;
-		fireUpdate(ParameterName.CHANGE_SLICE);
+		if (change)
+			fireUpdate(ParameterName.CHANGE_SLICE);
 	}
 
 	/**
