@@ -720,18 +720,21 @@ __kernel void advectZalesak(__global Springl3D* capsules,float h,uint elements){
 	capsules[id]=capsule;
 	
 }
+
 float4 enright(float t,float4 pt,float T){
-	float su=sinpi(SCALE_UP/ROWS*pt.x);
-	float sv=sinpi(SCALE_UP/COLS*pt.y);
-	float sw=sinpi(SCALE_UP/SLICES*pt.z);
+	float su=(float)sinpi(SCALE_UP/ROWS*pt.x);
+	float sv=(float)sinpi(SCALE_UP/COLS*pt.y);
+	float sw=(float)sinpi(SCALE_UP/SLICES*pt.z);
 	float4 vel;
-	float dt=1.28f*cospi(t/T);
+	float dt=1.28f*(float)cospi(t/T);
 	vel.x=SCALE_DOWN*2*su*su*sinpi(2*SCALE_UP/COLS*pt.y)*sinpi(2*SCALE_UP/SLICES*pt.z);
 	vel.y=-SCALE_DOWN*sinpi(2*SCALE_UP/ROWS*pt.x)*sv*sv*sinpi(2*SCALE_UP/SLICES*pt.z);
 	vel.z=-SCALE_DOWN*sinpi(2*SCALE_UP/ROWS*pt.x)*sinpi(2*SCALE_UP/COLS*pt.y)*sw*sw;
 	vel.w=0;
 	return vel*dt;
 }
+
+
 __kernel void advectEnright(__global Springl3D* capsules,float h,float t,float T,uint elements){
 	uint id=get_global_id(0);
 	if(id>=elements)return;
@@ -743,8 +746,8 @@ __kernel void advectEnright(__global Springl3D* capsules,float h,float t,float T
 	pt=capsule.particle;
 	pt.w=1;
 	float4 k1=h*enright(t,pt,T);
-	float4 k2=h*enright(t+0.5f*h,pt+0.5*k1,T);
-	float4 k3=h*enright(t+0.5f*h,pt+0.5*k2,T);
+	float4 k2=h*enright(t+0.5f*h,pt+0.5f*k1,T);
+	float4 k3=h*enright(t+0.5f*h,pt+0.5f*k2,T);
 	float4 k4=h*enright(t+h,pt+k3,T);
 	vel=(1.0f/6.0f)*(k1+2*k2+2*k3+k4);
 	
