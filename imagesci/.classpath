@@ -11,24 +11,13 @@
 	<classpathentry kind="lib" path="lib/core.jar"/>
 	<classpathentry kind="lib" path="lib/video.jar"/>
 	<classpathentry kind="lib" path="lib/opengl2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/customizer.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/dnsns.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/j3dcore.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/j3dutils.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/jhdf5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/jhdf5obj.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/jhdfobj.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/jmf.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/jocl.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/jogl.all.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/localedata.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/mediaplayer.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/multiplayer.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/nativewindow.all.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/newt.all.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/sunjce_provider.jar"/>
-	<classpathentry kind="lib" path="C:/Users/bclucas/workspace/imagesci_win64/jre/lib/ext/vecmath.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/Processing JDK"/>
+	<classpathentry kind="lib" path="/home/blake/git/imagesci/imagesci/lib/core.jar"/>
+	<classpathentry kind="lib" path="/home/blake/git/imagesci/imagesci/lib/j3dcore.jar"/>
+	<classpathentry kind="lib" path="/home/blake/git/imagesci/imagesci/lib/j3dutils.jar"/>
+	<classpathentry kind="lib" path="/home/blake/git/jogamp-all-platforms/jar/jogl-all.jar"/>
+	<classpathentry kind="lib" path="/home/blake/git/jogamp-all-platforms/jar/gluegen.jar"/>
+	<classpathentry kind="lib" path="/home/blake/git/jogamp-all-platforms/jar/jocl.jar"/>
+	<classpathentry kind="lib" path="/home/blake/git/imagesci/imagesci/lib/jmf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
