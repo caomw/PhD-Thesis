@@ -1,8 +1,12 @@
 package org.imagesci.playground;
 
-import javax.vecmath.Point2f;
-
 public class FluidParticle {
 	public float radius;
-	public Point2f location;
+	public float x;
+	public float y;
+	public FluidParticle(float x, float y, float r){
+		this.x=x;
+		this.y=y;
+		radius=r;
+	}
 }

@@ -33,11 +33,11 @@ ContourArray isoContour;
 IsoContourGenerator gen;
 ParticleVolume particleGrid;
 public void setup() {
-  size(1024,1024);
+  size(800,800);
   background(102);
   	backgroundImage=PImageReaderWriter
 			.getInstance().read(new File("source.png"));
-  	backgroundImage.resize(64,64);
+  	backgroundImage.resize(32,32);
   	System.out.println("Size "+backgroundImage.width+" "+backgroundImage.height);
 	ImageDataFloat sourceImage = PImageReaderWriter.convertToGray(backgroundImage);
 	gen=new IsoContourGenerator(true);
@@ -50,33 +50,40 @@ public void setup() {
 			img[i][j] -= 127.5f;
 		}
 	}
-	ImageDataFloat initImage = df.solve(sourceImage, 15.0);
-	isoContour=gen.solve(initImage);
+	ImageDataFloat levelSet = df.solve(sourceImage, 15.0);
+	particleGrid=new ParticleVolume(levelSet);
+	isoContour=gen.solve(levelSet);
 }
 
 public void draw() {
-  stroke(255,0,0);
-  strokeWeight(1.0f);
-  noFill();
-  image(backgroundImage,-0.5f*width/(float)backgroundImage.width,-0.5f*height/(float)backgroundImage.height, width,height);
+ 
+  fill(255);
+  rect(0,0,width,height);
   
+  image(backgroundImage,-0.5f*width/(float)backgroundImage.width,-0.5f*height/(float)backgroundImage.height, width,height);
+  ellipseMode(RADIUS); 
   float scaleX=width/(float)backgroundImage.width;
   float scaleY=height/(float)backgroundImage.height;
-  
-  pushMatrix();
+  fill(255,64,64,128);
+  stroke(0,0,0,255);
+  strokeWeight(1.0f);
+  for(FluidParticle p:particleGrid.particles){
+	  ellipse(scaleX*p.x,scaleY*p.y,scaleX*p.radius,scaleY*p.radius);
+  }
+  stroke(192,192,192);
+  strokeWeight(3.0f);
   for(int i=0;i<isoContour.indexes.length;i+=2){
 	  Point2f pt1=isoContour.points[isoContour.indexes[i]];
 	  Point2f pt2=isoContour.points[isoContour.indexes[i+1]];
 	  line(scaleX*pt1.x,scaleY*pt1.y,scaleX*pt2.x,scaleY*pt2.y);
   }
-  strokeWeight(5.0f);
-  stroke(255,128,0);
+  strokeWeight(6.0f);
+  stroke(192,255,192);
   for(int i=0;i<isoContour.indexes.length;i+=2){
 	  Point2f pt1=isoContour.points[isoContour.indexes[i]];
 	  Point2f pt2=isoContour.points[isoContour.indexes[i+1]];
 	  point(scaleX*0.5f*(pt1.x+pt2.x),scaleY*0.5f*(pt1.y+pt2.y));
   }
-  popMatrix();
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "org.imagesci.playground.SpringlFluid2D" };
