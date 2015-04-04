@@ -58,12 +58,25 @@ public void setup() {
 public void draw() {
  
   fill(255);
+  noStroke();
   rect(0,0,width,height);
   
   image(backgroundImage,-0.5f*width/(float)backgroundImage.width,-0.5f*height/(float)backgroundImage.height, width,height);
   ellipseMode(RADIUS); 
   float scaleX=width/(float)backgroundImage.width;
   float scaleY=height/(float)backgroundImage.height;
+  
+  noFill();
+  strokeWeight(1.0f);
+  stroke(128,128,128,128);
+  for (int i = 0; i < backgroundImage.width; i++) {
+	  line(scaleX*i,0,scaleX*i,scaleY*height);
+  }
+  
+  for (int j = 0; j < backgroundImage.height; j++) {
+	  line(0,scaleY*j,scaleX*width,scaleY*j);
+  }
+  
   fill(255,64,64,128);
   stroke(0,0,0,255);
   strokeWeight(1.0f);
@@ -77,13 +90,24 @@ public void draw() {
 	  Point2f pt2=isoContour.points[isoContour.indexes[i+1]];
 	  line(scaleX*pt1.x,scaleY*pt1.y,scaleX*pt2.x,scaleY*pt2.y);
   }
+  
+  strokeWeight(3.0f);
+  stroke(255,64,64,128);
+  for(int i=0;i<isoContour.indexes.length;i++){
+	  Point2f pt=isoContour.points[isoContour.indexes[i]];
+	  point(scaleX*pt.x,scaleY*pt.y);
+  }
+  
   strokeWeight(6.0f);
   stroke(192,255,192);
+  
   for(int i=0;i<isoContour.indexes.length;i+=2){
 	  Point2f pt1=isoContour.points[isoContour.indexes[i]];
 	  Point2f pt2=isoContour.points[isoContour.indexes[i+1]];
 	  point(scaleX*0.5f*(pt1.x+pt2.x),scaleY*0.5f*(pt1.y+pt2.y));
   }
+  
+
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "org.imagesci.playground.SpringlFluid2D" };

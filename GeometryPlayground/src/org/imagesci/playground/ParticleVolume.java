@@ -14,8 +14,8 @@ public class ParticleVolume {
 		int c = img[0].length;
 		for (int i = 0; i < 2*r; i++) {
 			for (int j = 0; j < 2*c; j++) {
-				float x=0.5f*i;
-				float y=0.5f*j;
+				float x=0.5f*i+radius;
+				float y=0.5f*j+radius;
 				double l=DataOperations.interpolate(x, y, img, r, c);
 				if(l<0){
 					particles.add(new FluidParticle(x,y,radius));
