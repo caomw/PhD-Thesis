@@ -1,0 +1,24 @@
+README: FileConverter.java
+On the cvs repository under "package: edu.jhu.ece.iacl.io"
+
+1). This program inter-converts files among the following imaging file formats:
+	-FreeSurfers' ascii format
+	-MIPAV's xml format
+	-DX's File format
+2). The program is run by providing the following commands and arguments on the command line:
+	--$ java FileConverter [infile.ext] [outfile.ext] [x] [y] [z]
+	Where [infiles.ext] is the input filename with extension (file path) to be read from, [outfile.ext] 
+	(file path) is the output file to be writen to after the file format converison, [x] is image size x value, 
+	[y] is image size y value and [z] is image size z value.
+	The extension (ext) is either "xml" for Mipav, "dx" for DX, or "asc" for freesurfer.
+3). if incorrect number of command line arguments are provided, the input dialog boxes will pop-up to direct the user in 
+	entering data appropriately.
+4). The associated class files are:
+	-DXSurfaceReader.java
+	-DXSurfaceWriter.java
+	-FreeSurferAsciiReader.java
+	-FreeSurferAsciiWriter.java
+	-MipavSurfaceXMLReader.java
+	-MipavSurfaceXMLWriter.java
+	
+	
