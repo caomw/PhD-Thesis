@@ -23,14 +23,19 @@ public class SpringlFluid2D extends PApplet {
 
 PImage backgroundImage;
 ParticleVolume particleGrid;
+ImageDataFloat particleLevelSet;
 PMatrix2D Pose;
 float lastMouseX=0,lastMouseY=0;
+ContourArray contour;
 public void setup() {
   size(800,800);
+  int sample=16;
   background(102);
   	backgroundImage=PImageReaderWriter
 			.getInstance().read(new File("source.png"));
-  	backgroundImage.resize(32,32);
+  	int w=backgroundImage.width;
+  	int h=backgroundImage.height;
+  	backgroundImage.resize(w/sample,h/sample);
   	System.out.println("Size "+backgroundImage.width+" "+backgroundImage.height);
 	ImageDataFloat sourceImage = PImageReaderWriter.convertToGray(backgroundImage);
 	DistanceField2D df = new DistanceField2D();
@@ -46,6 +51,14 @@ public void setup() {
 	particleGrid=new ParticleVolume(levelSet);
 	Pose=new PMatrix2D();
 	Pose.reset();
+	//sample=2;
+	particleLevelSet=particleGrid.createLevelSet(sample);
+	IsoContourGenerator gen=new IsoContourGenerator(true);
+	contour=gen.solve(particleLevelSet);
+	for(Point2f pt:contour.points){
+		pt.x/=sample;
+		pt.y/=sample;
+	}
 }
 public void mousePressed(){
 	if(mouseButton==LEFT){
@@ -140,10 +153,20 @@ public void draw() {
   
   strokeWeight(6.0f);
   stroke(192,255,192);
-  
   for(FluidInterfaceParticle ip:particleGrid.interfaceParticles){
 	  point(scaleX*ip.x,scaleY*ip.y);
   }
+  
+  noFill();
+  stroke(64,64,255,255);
+  strokeWeight(2.0f);
+  for(int i=0;i<contour.indexes.length;i+=2){
+	  Point2f pt1=contour.points[contour.indexes[i]];
+	  Point2f pt2=contour.points[contour.indexes[i+1]];
+	  line(scaleX*pt1.x,scaleY*pt1.y,scaleX*pt2.x,scaleY*pt2.y);
+	  
+  }
+  
   popMatrix();
   
   /*
