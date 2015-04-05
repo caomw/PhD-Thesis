@@ -49,9 +49,12 @@ public void setup() {
 }
 public void mousePressed(){
 	if(mouseButton==LEFT){
-		float oldScale=Pose.m00;
-		lastMouseX=mouseX;
-		lastMouseY=mouseY;
+		PMatrix2D PoseInv=Pose.get();
+		PoseInv.invert();
+		PVector target=new PVector();
+		PoseInv.mult(new PVector(mouseX,mouseY), target);
+		lastMouseX=target.x;
+		lastMouseY=target.y;
 	}
 }
 public void mouseDragged(){
@@ -61,25 +64,25 @@ public void mouseDragged(){
 	}
 	if(mouseButton==LEFT){
 		float scale=1.0f+10.0f*(mouseY-pmouseY)/(float)height;
-		
 		Pose.translate(lastMouseX, lastMouseY);
 		Pose.scale(scale,scale);
 		Pose.translate(-lastMouseX, -lastMouseY);
-		/*
-		System.out.println("Pose =["+lastMouseX+","+lastMouseY+"]\n"+
-			Pose.m00+" "+Pose.m01+" "+Pose.m02+"\n"+
-			Pose.m10+" "+Pose.m11+" "+Pose.m12+"\n");
-		*/
 	}
 			
 }
 
 public void mouseWheel(MouseEvent event) {
 	float e = event.getCount();
-	float scale=1.0f+30.0f*Math.signum(e)/(float)height;		
-	Pose.translate(mouseX, mouseY);
+	float scale=1.0f+30.0f*Math.signum(e)/(float)height;	
+	PMatrix2D PoseInv=Pose.get();
+	PoseInv.invert();
+	PVector target=new PVector();
+	PoseInv.mult(new PVector(mouseX,mouseY), target);
+	lastMouseX=target.x;
+	lastMouseY=target.y;
+	Pose.translate(lastMouseX, lastMouseY);
 	Pose.scale(scale,scale);
-	Pose.translate(-mouseX, -mouseY);
+	Pose.translate(-lastMouseX, -lastMouseY);
 }
 public void draw() {
 
@@ -143,9 +146,11 @@ public void draw() {
   }
   popMatrix();
   
- // stroke(0);
-//  fill(0);
- // text("Scale: "+String.format("%4.1f",scale)+" ("+transX+","+transY+")",5,15,0);
+  /*
+  stroke(0);
+  fill(0);
+  text(" ("+Math.round(lastMouseX)+","+Math.round(lastMouseY)+")",5,15,0);
+  */
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "org.imagesci.playground.SpringlFluid2D" };
