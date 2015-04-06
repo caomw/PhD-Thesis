@@ -10,6 +10,7 @@ import processing.core.PImage;
 import processing.core.PMatrix2D;
 import processing.core.PVector;
 import processing.event.MouseEvent;
+import edu.jhu.ece.iacl.jist.io.NIFTIReaderWriter;
 import edu.jhu.ece.iacl.jist.io.PImageReaderWriter;
 import edu.jhu.ece.iacl.jist.structures.image.ImageDataFloat;
 
@@ -28,7 +29,7 @@ PMatrix2D Pose;
 float lastMouseX=0,lastMouseY=0;
 ContourArray contour;
 public void setup() {
-  size(800,800);
+  size(1440,800);
   int sample=16;
   background(102);
   	backgroundImage=PImageReaderWriter
@@ -51,8 +52,13 @@ public void setup() {
 	particleGrid=new ParticleVolume(levelSet);
 	Pose=new PMatrix2D();
 	Pose.reset();
-	//sample=2;
-	particleLevelSet=particleGrid.createLevelSet(sample);
+	Pose.translate(width*0.25f-backgroundImage.width*0.5f,0);
+	sample=8;
+	NIFTIReaderWriter.getInstance().write(particleGrid.createUnsignedLevelSet(sample), new File("/home/blake/tmp/unsigned.nii"));
+	NIFTIReaderWriter.getInstance().write(particleGrid.createParticleLevelSet(sample), new File("/home/blake/tmp/signed.nii"));
+	NIFTIReaderWriter.getInstance().write(particleLevelSet=particleGrid.createSignedLevelSet(sample), new File("/home/blake/tmp/newsigned.nii"));
+	
+	
 	IsoContourGenerator gen=new IsoContourGenerator(true);
 	contour=gen.solve(particleLevelSet);
 	for(Point2f pt:contour.points){
@@ -104,12 +110,15 @@ public void draw() {
   rect(0,0,width,height);
   pushMatrix();
   applyMatrix(Pose);
-  
-  image(backgroundImage,-0.5f*width/(float)backgroundImage.width,-0.5f*height/(float)backgroundImage.height, width,height);
-  ellipseMode(RADIUS); 
-  float scaleX=width/(float)backgroundImage.width;
   float scaleY=height/(float)backgroundImage.height;
-  
+  float scaleX=scaleY;
+  imageMode(CORNER);
+  image(backgroundImage,
+		  -0.5f*scaleX,-0.5f*scaleY,//half pixel shift to fix centering
+		  scaleX*backgroundImage.width,scaleY*backgroundImage.height);
+  ellipseMode(RADIUS); 
+  //float scaleX=width/(float)backgroundImage.width;
+
   noFill();
   strokeWeight(1.0f);
   stroke(128,128,128,128);

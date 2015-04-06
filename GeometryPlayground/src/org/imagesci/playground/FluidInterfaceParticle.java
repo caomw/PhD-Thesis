@@ -1,6 +1,7 @@
 package org.imagesci.playground;
 
 import javax.vecmath.Point2f;
+import javax.vecmath.Vector2f;
 
 public class FluidInterfaceParticle extends FluidParticle{
 	public float x1,y1;
@@ -13,6 +14,34 @@ public class FluidInterfaceParticle extends FluidParticle{
 		this.x2=x2;
 		this.y2=y2;
 		update();
+	}
+	public float distance(float px,float py) {
+		Vector2f dir = new Vector2f();
+		Point2f pt1 = new Point2f(x1,y1);
+		Point2f pt2 = new Point2f(x2,y2);
+		Point2f pt=new Point2f(px,py);
+		dir.sub(pt2, pt1);
+		double len = dir.length();
+		dir.scale(1.0f / ((float) len));
+		Vector2f diff = new Vector2f();
+		diff.sub(pt, pt1);
+		double mSegmentParameter = dir.dot(diff);
+		Point2f lastClosestSegmentPoint=new Point2f();
+		if (0 < mSegmentParameter) {
+			if (mSegmentParameter < len) {
+				lastClosestSegmentPoint.x = dir.x;
+				lastClosestSegmentPoint.y = dir.y;
+				lastClosestSegmentPoint.scale((float) mSegmentParameter);
+				lastClosestSegmentPoint.add(pt1);
+			} else {
+				lastClosestSegmentPoint.x = pt2.x;
+				lastClosestSegmentPoint.y = pt2.y;
+			}
+		} else {
+			lastClosestSegmentPoint.x = pt1.x;
+			lastClosestSegmentPoint.y = pt1.y;
+		}
+		return pt.distance(lastClosestSegmentPoint);
 	}
 	public void update() {
 		

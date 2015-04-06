@@ -895,7 +895,6 @@ public class NIFTIReaderWriter extends FileReaderWriter<ImageData> {
 			}
 			newHeader.setDim(dims);
 			newHeader.setPixdim(pixelRes);
-			System.out.println("HEADER SIZE " + newHeader.getSizeofHdr());
 			byte[] buffer = null;
 			switch (img.getType()) {
 			case DOUBLE:
