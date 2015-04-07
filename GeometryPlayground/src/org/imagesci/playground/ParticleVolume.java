@@ -13,8 +13,9 @@ public class ParticleVolume {
 	private Vector<LinkedList<FluidParticle>> lut;
 	private int width, height;
 	ImageDataFloat unsignedLevelSet;
+	ImageDataFloat signedLevelSet;
 	ImageDataFloat particleLevelSet;
-
+	final float density=0.5f;
 	public ParticleVolume(ImageDataFloat levelSet) {
 		width = levelSet.getRows();
 		height = levelSet.getCols();
@@ -29,7 +30,7 @@ public class ParticleVolume {
 				float x = 0.5f * i + radius;
 				float y = 0.5f * j + radius;
 				double l = DataOperations.interpolate(x, y, img, r, c);
-				if (l < 0.0f) {
+				if (l < -radius*0.75f) {
 					particles.add(new FluidParticle(x, y, radius));
 				}
 			}
@@ -83,13 +84,13 @@ public class ParticleVolume {
 		return neighbors;
 	}
 
-	private float evaluateParticleLevelSet(float x, float y) {
+	private float evaluateParticleLevelSet(float x, float y,float r) {
 		float minDistance = 1.0f;
 		LinkedList<FluidParticle> particles = getNeighbors(x, y, 2);
 		for (FluidParticle p : particles) {
 			float d = (float) Math.sqrt((p.x - x) * (p.x - x) + (p.y - y)
 					* (p.y - y));
-			float w = d - 2 * p.radius;
+			float w = d - r;
 			minDistance = Math.min(minDistance, w);
 		}
 		return minDistance;
@@ -113,58 +114,6 @@ public class ParticleVolume {
 				minParticle = p;
 			}
 		}
-		if(minParticle==null)return 1.0f;
-		/*
-		float nx = x - minParticle.x;
-		float ny = y - minParticle.y;
-		float len = (float) Math.sqrt(nx * nx + ny * ny);
-		nx /= len;
-		ny /= len;
-		float minR = minParticle.radius;//-
-		float maxR = 3 * minParticle.radius;
-		float scaleX = unsignedLevelSet.getRows() / (float) width;
-		float scaleY = unsignedLevelSet.getCols() / (float) height;
-
-		float c=maxR;
-		float a=minR;
-		float b=0.5f*(minR+maxR);
-		
-		final float phi = (1 + (float)Math.sqrt(5)) / 2;
-		final float resphi = 2 - phi;
-		float t = b;
-		float eps=1E-3f*(c-a);
-		float fx=0,fb;
-		
-		fb=fx=evaluateUnsignedLevelSet((minParticle.x + nx * t) * scaleX, (minParticle.y + ny * t) * scaleY);
-		
-		while ((c - a) > eps) {
-			//count++;
-			if (c - b > b - a)
-				t = b + resphi * (c - b);
-			else
-				t = b - resphi * (b - a);
-			fx = evaluateUnsignedLevelSet((minParticle.x + nx * t) * scaleX, (minParticle.y + ny * t) * scaleY);
-			//System.out.println(count +"["+a+","+b+","+c+"] "+fx+" "+fb);
-			if (fx < fb) {
-				if (c - b > b - a) {
-					a=b;
-					b=t;
-					fb=fx;
-				} else {
-					c=b;
-					b=t;
-					fb=fx;
-				}
-			} else {
-				if (c - b > b - a) {
-					c=t;
-				} else {
-					a=t;
-				}
-			}
-			
-		}
-		*/
 		return minDistance-0.5f;//Math.min(len-t,1.0f);////;
 		
 	}
@@ -184,7 +133,7 @@ public class ParticleVolume {
 			for (int j = 0; j < h; j++) {
 				x = i / (float) res;
 				y = j / (float) res;
-				data[i][j] = evaluateParticleLevelSet(x, y);
+				data[i][j] = evaluateParticleLevelSet(x, y,density);
 			}
 		}
 		return particleLevelSet;
@@ -193,17 +142,22 @@ public class ParticleVolume {
 	public ImageDataFloat createSignedLevelSet(int res) {
 		int w = res * width;
 		int h = res * height;
-		ImageDataFloat img = new ImageDataFloat(w, h);
-		float data[][] = img.toArray2d();
-		float x, y;
+		//particleLevelSet = new ImageDataFloat(w, h);
+		float pdata[][] = particleLevelSet.toArray2d();
+		signedLevelSet= new ImageDataFloat(w, h);
+		float udata[][] = unsignedLevelSet.toArray2d();
+		float sdata[][]=signedLevelSet.toArray2d();
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				x = i / (float) res;
-				y = j / (float) res;
-				data[i][j] = evaluateSignedLevelSet(x, y);
+				float val=udata[i][j];
+				if(pdata[i][j]+density<Math.abs(val)){
+					sdata[i][j]=-density;
+				} else {
+					sdata[i][j]=udata[i][j];
+				}
 			}
 		}
-		return img;
+		return signedLevelSet;
 	}
 
 	public ImageDataFloat createUnsignedLevelSet(int res) {
@@ -211,10 +165,9 @@ public class ParticleVolume {
 		int h = res * height;
 		unsignedLevelSet = new ImageDataFloat(w, h);
 		float data[][] = unsignedLevelSet.toArray2d();
-		float x, y;
 		for (int i = 0; i < w; i++) {
 			for (int j = 0; j < h; j++) {
-				data[i][j] = 0.5f;
+				data[i][j] = density;
 			}
 		}
 		for (FluidInterfaceParticle p : interfaceParticles) {

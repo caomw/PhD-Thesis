@@ -53,7 +53,7 @@ public void setup() {
 	Pose=new PMatrix2D();
 	Pose.reset();
 	Pose.translate(width*0.25f-backgroundImage.width*0.5f,0);
-	sample=8;
+	sample=2;
 	
 	NIFTIReaderWriter.getInstance().write(particleGrid.createUnsignedLevelSet(sample), new File("unsigned.nii"));
 	NIFTIReaderWriter.getInstance().write(particleGrid.createParticleLevelSet(sample), new File("signed.nii"));
