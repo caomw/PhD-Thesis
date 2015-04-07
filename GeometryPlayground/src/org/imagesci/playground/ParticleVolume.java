@@ -229,8 +229,11 @@ public class ParticleVolume {
 					Math.ceil(res * Math.max(p.y1 + r, p.y2 + r)));
 			for (int i = mnX; i <= mxX; i++) {
 				for (int j = mnY; j <= mxY; j++) {
-					data[i][j] = Math.min(data[i][j],
-							p.distance(i / (float) res, j / (float) res));
+					float d=p.distance(i / (float) res, j / (float) res);
+					float oldD=data[i][j];
+					if(Math.abs(d)<Math.abs(oldD)){
+						data[i][j] = d;
+					}
 				}
 			}
 		}

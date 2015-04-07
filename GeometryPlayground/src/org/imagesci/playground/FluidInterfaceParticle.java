@@ -41,7 +41,10 @@ public class FluidInterfaceParticle extends FluidParticle{
 			lastClosestSegmentPoint.x = pt1.x;
 			lastClosestSegmentPoint.y = pt1.y;
 		}
-		return pt.distance(lastClosestSegmentPoint);
+		diff.sub(pt, lastClosestSegmentPoint);
+		Vector2f norm=new Vector2f(y1-y2,x2-x1);
+		float sign=Math.signum(diff.dot(norm));
+		return pt.distance(lastClosestSegmentPoint)*sign;
 	}
 	public void update() {
 		

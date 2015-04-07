@@ -54,9 +54,10 @@ public void setup() {
 	Pose.reset();
 	Pose.translate(width*0.25f-backgroundImage.width*0.5f,0);
 	sample=8;
-	NIFTIReaderWriter.getInstance().write(particleGrid.createUnsignedLevelSet(sample), new File("/home/blake/tmp/unsigned.nii"));
-	NIFTIReaderWriter.getInstance().write(particleGrid.createParticleLevelSet(sample), new File("/home/blake/tmp/signed.nii"));
-	NIFTIReaderWriter.getInstance().write(particleLevelSet=particleGrid.createSignedLevelSet(sample), new File("/home/blake/tmp/newsigned.nii"));
+	
+	NIFTIReaderWriter.getInstance().write(particleGrid.createUnsignedLevelSet(sample), new File("unsigned.nii"));
+	NIFTIReaderWriter.getInstance().write(particleGrid.createParticleLevelSet(sample), new File("signed.nii"));
+	NIFTIReaderWriter.getInstance().write(particleLevelSet=particleGrid.createSignedLevelSet(sample), new File("newsigned.nii"));
 	
 	
 	IsoContourGenerator gen=new IsoContourGenerator(true);
