@@ -30,7 +30,7 @@ public class ParticleVolume {
 				float x = 0.5f * i + radius;
 				float y = 0.5f * j + radius;
 				double l = DataOperations.interpolate(x, y, img, r, c);
-				if (l < -radius*0.75f) {
+				if (l < -radius) {
 					particles.add(new FluidParticle(x, y, radius));
 				}
 			}
