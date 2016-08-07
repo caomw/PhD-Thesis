@@ -187,7 +187,7 @@ __kernel void relaxNeighbors(__global Springl2D* capsules,__global CapsuleNeighb
 			if(ci.capsuleId==-1)break;
 			//Closest point should be recomputed each time and does not need to be stored
 			nbr=capsules[ci.capsuleId];
-			pt2=edgeDistanceSquared(start,nbr.vertexes[ci.vertexId],nbr.vertexes[(ci.vertexId+1)%3]);
+			pt2=edgeDistanceSquared(start,nbr.vertexes[ci.vertexId],nbr.vertexes[(ci.vertexId+1)%2]);
 			dir=SCALE_UP *(pt2-start);
 			len = length(dir);
 			w = maxForce*clamp(((len - 2 * PARTICLE_RADIUS)/ (MAX_VEXT + 2 * PARTICLE_RADIUS)),-1.0f,1.0f);
