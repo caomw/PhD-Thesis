@@ -1,5 +1,5 @@
-# Unifying Deformable Model Representations through New Geometric Data Structures
-
+## Unifying Deformable Model Representations through New Geometric Data Structures
+[Full Text Download](http://cs.jhu.edu/~blake/docs/blake_lucas_thesis.pdf)
 
 [![Example0a](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example0a.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example0a_image2d.java)
 [![Example0b](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example0b.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example0b_image3d.java)
