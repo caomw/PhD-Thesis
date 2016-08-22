@@ -29,7 +29,7 @@
 [![Example3g](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example3g.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example3g_enright256.java)
 [![Example4a](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example4a.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example4a_muscle2d.java)
 [![Example4b](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example4b.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example4b_muscle3d.java)
-[![Example4c](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example4c.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example4c_muscle2d.java)
+[![Example4c](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example4c.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example4c_muscle3d.java)
 [![Example4d](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example4d.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example4d_muscle_acwe2d.java)
 [![Example4e](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example4e.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example4e_muscle_deform.java)
 
