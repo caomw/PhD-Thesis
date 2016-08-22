@@ -16,7 +16,7 @@
 [![Example2d](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2d.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2d_wemogac2d.java)
 [![Example2e](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2e.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2e_mogac3d.java)
 [![Example2f](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2f.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2f_mogac3d.java)
-[![Example2g](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2g.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2g_wemogac2d.java)
+[![Example2g](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2g.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2g_wemogac3d.java)
 [![Example2h](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2h.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2h_wemogac3d.java)
 [![Example2i](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2i.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2i_macwe2d.java)
 [![Example2j](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/docs/Example2j.jpg)](https://github.com/bclucas/PhD-Thesis/blob/master/imagesci/src/org/imagesci/demo/Example2j_macwe3d.java)
